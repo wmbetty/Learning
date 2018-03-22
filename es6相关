@@ -1,0 +1,65 @@
+1.for-of循环
+for (let value of [1, 2, 3]) {
+  console.log(value); //输出 1 2 3
+}
+
+2.模块导入导出：import,export
+
+3.省略function
+
+4.创建类
+其prototype不可枚举；继承：extends；使用getter、setter拦截其存取行为。
+
+5.let,const
+
+6.箭头函数
+let arr = [6, 8, 10, 20, 15, 9];
+arr.forEach((item, i) => console.log(item, i));
+let newArr = arr.filter((item) => (item<10));
+console.log(newArr);
+
+7.字符串模版
+ES6中允许使用反引号 ` 来创建字符串，
+此种方法创建的字符串里面可以包含由美元符号加花括号包裹的变量${vraible}
+//产生一个随机数
+let num = Math.random();
+//将这个数字输出到console
+console.log(`your num is ${num}`);
+
+8.解构
+若一个函数要返回多个值，常规的做法是返回一个对象，将每个值做为这个对象的属性返回。
+在ES6中，利用解构这一特性，可以直接返回一个数组，然后数组中的值会自动被解析到对应接收该值的变量中
+function getVal() {
+    return [1, 2];
+}
+var [x,y] = getVal(); //函数返回值的解构
+console.log('x:'+x+', y:'+y);
+
+9.默认参数
+//运用ES6的默认参数
+function sayHello2(name='tom'){  //如果没有传这个参数，才会有默认值，
+    console.log(`Hello ${name}`);
+}
+sayHello2();//输出：Hello tom
+
+10.Proxy
+
+11.新增数据类型Symbol
+方法：查找symbol：
+    Symbol.for()：创建新的symbol；先查找现有symbol是否存在，如果存在则使用现有的；
+    Symbol()：生成新的symbol；
+    Symbol.keyFor()：返回已登记的symbol类型值的key。
+
+12.异步相关：Promise ［all、race、then、catch等］
+与jquery promise的区别：
+  （1）ES6 Promise是一个构造函数，jquery Promise为对象；
+  （2）ES6在new Promise对象时，传入函数，在该函数内部设置resolve、reject［状态不受外界影响］；
+    jquery Promise可以任意位置设置状态。
+  （3）ES6 Promise的异步处理函数将进入事件循环的任务消息队列，
+  优先级比一般的网络、延时异步更高，且该队列为microtask，将在同一事件循环中得到处理。
+
+13.Generator遍历器
+通过next方法进行遍历，每次遍历返回一个状态对象｛value:, done:boolean｝；
+通过状态对象done的状态决定遍历是否结束。且每次暂停位置由yield指令决定。
+亦可通过for...of进行遍历，返回done为true的value值，而非状态对象。
+通过Generator，可按需控制每个yield的执行时机。
