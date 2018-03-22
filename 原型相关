@@ -1,0 +1,18 @@
+1.每个JS对象一定对应一个原型对象，并从原型对象继承属性和方法。
+
+2.对象__proto__属性的值就是它所对应的原型对象。
+
+3.只有函数才有prototype属性。
+
+4.创建函数时，JS会为这个函数自动添加prototype属性，值是一个有 constructor 属性的对象。
+而一旦你把这个函数当作构造函数（constructor）调用（即通过new关键字调用），
+那么JS就会帮你创建该构造函数的实例，实例继承构造函数prototype的所有属性和方法（
+实例通过设置自己的__proto__指向承构造函数的prototype来实现这种继承）。
+
+5.JS正是通过__proto__和prototype的合作实现了原型链，以及对象的继承,
+构造函数，通过prototype来存储要共享的属性和方法，也可以设置prototype指向现存的对象来继承该对象
+
+6.对象的__proto__指向自己构造函数的prototype。
+obj.__proto__.__proto__...的原型链由此产生，
+包括我们的操作符instanceof正是通过探测obj.__proto__.__proto__... === Constructor.prototype
+来验证obj是否是Constructor的实例,ES规范定义对象字面量的原型就是Object.prototype.
