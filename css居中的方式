@@ -1,0 +1,106 @@
+一.水平居中
+1.内联元素水平居中
+text-align: center
+
+2.块级元素水平居中
+margin: 0 auto
+
+3.1 多块级元素水平居中
+.container {
+    text-align: center;
+}
+.inline-block {
+    display: inline-block;
+}
+
+3.2 display: flex
+.flex-center {
+    display: flex;
+    justify-content: center;
+}
+
+二.垂直居中
+1.单行内联(inline-)元素垂直居中
+通过设置内联元素的高度(height)和行高(line-height)相等，从而使元素垂直居中
+
+2.多行元素垂直居中
+2.1利用表布局的vertical-align: middle可以实现子元素的垂直居中
+.center-table {
+    display: table;
+}
+.v-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+2.2 利用flex布局实现垂直居中，其中flex-direction: column定义主轴方向为纵向
+.center-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+3.块级元素垂直居中
+3.1 固定高度的块级元素
+.parent {
+  position: relative;
+}
+.child {
+  position: absolute;
+  top: 50%;
+  height: 100px;
+  margin-top: -50px; 
+}
+
+3.2 未知高度的块级元素
+.parent {
+    position: relative;
+}
+.child {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+三. 水平垂直居中
+1.固定宽高元素水平垂直居中
+通过margin平移元素整体宽度的一半，使元素水平垂直居中
+.parent {
+    position: relative;
+}
+.child {
+    width: 300px;
+    height: 100px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -70px 0 0 -170px;
+}
+
+2.未知宽高元素水平垂直居中
+.parent {
+    position: relative;
+}
+.child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+3.利用flex布局
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+4.利用grid布局
+.parent {
+  height: 140px;
+  display: grid;
+}
+.child { 
+  margin: auto;
+}
