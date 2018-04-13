@@ -1,0 +1,58 @@
+<!--pages/previewSpot/previewSpot.wxml-->
+<view>
+    <view class="banner-cont">
+        <image src="{{details.bcontentImage ? details.bcontentImage : '../../dist/images/line_bg.png'}}" class="spotImg"></image>
+        <!-- 文字部分 -->
+    </view>
+    <view class="nav-cont">
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>景点</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>玩法</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>锦囊</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>美食</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>购物</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>住宿</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>休闲</view>
+      </view>
+      <view class='nav-item'>
+        <image class='nav-icon'></image>
+        <view>综合</view>
+      </view>
+    </view>
+    <view class='list-cont'>
+      <view class='cont-head'>热门</view>
+      <!-- 列表数据 -->
+      <scroll-view scroll-y='true' style="height: {{listHeight}}px;" bindscrolltolower="searchScrollLower">
+        <view class='list-item' wx:for="{{finalList}}" wx:key="{{index}}">
+        <image class='list-img' src="{{item.bcontentImage ? item.bcontentImage : '../../dist/images/line_bg.png'}}"></image>
+        <view class='list-info'>
+          <view class='list-title'>{{item.title}}</view>
+          <view class='list-intros'>
+            <view>{{item.footerOne}}</view>
+            <view>kkk</view>
+          </view>
+        </view>
+      </view>
+      </scroll-view>
+    </view>
+
+</view>

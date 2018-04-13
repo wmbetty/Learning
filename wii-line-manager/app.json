@@ -67,7 +67,8 @@
     "pages/xchQrcode/xchQrcode",
     "pages/recomXchDetail/recomXchDetail",
     "pages/recomXchCopy/recomXchCopy",
-    "pages/findSpot/findSpot"
+    "pages/findSpot/findSpot",
+    "pages/previewSpot/previewSpot"
   ],
   "window": {
     "navigationBarBackgroundColor": "#191919",

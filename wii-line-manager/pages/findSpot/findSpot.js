@@ -11,7 +11,6 @@ Page({
     sid:'',
     searchSpot:'',
     spotListData:[],
-    areaList: [], //列表数据
     lastAreaList: [],
     listHeight: '', //列表高度
     pageId:1,
@@ -29,15 +28,15 @@ Page({
     wxJs.showLoading('加载中')
     wxJs.postRequest(url, postData, (res) => {
       let resData = res.data //接口返回数据
-      if (that.data.pageId <= 1 && resData.result && resData.result['Area.list'].length > 0) {
+      if (resData) {
         wx.hideLoading();
+      }
+      if (that.data.pageId <= 1 && resData.result && resData.result['Area.list'].length > 0) {
         that.setData({
-          areaList: resData.result['Area.list'],
           lastAreaList: resData.result['Area.list']
         })
       }
       if (that.data.pageId > 1 && resData.result && resData.result['Area.list'].length > 0) {
-        wx.hideLoading();
         tempAreaList = resData.result['Area.list']
         let list = that.data.lastAreaList
         that.setData({
@@ -45,7 +44,6 @@ Page({
         })
       }
       if ((!resData.result || resData.result['Area.list'].length === 0) && that.data.pageId > 1) {
-        wx.hideLoading();
         that.setData({
           hasMore: false
         })
@@ -87,17 +85,13 @@ Page({
         
         that.getList(url, postData)
 
-      // 获取系统信息
-      wx.getSystemInfo({
-        success: function (res) {
-          console.log(res);
-          // 可使用窗口宽度、高度
-          let windowHeight = res.windowHeight
-          that.setData({
-            // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
-            listHeight: windowHeight - 316 / 750 * 300
-          })
-        }
+      wxJs.getSystemInfo((res) => {
+        // 可使用窗口宽度、高度
+        let windowHeight = res.windowHeight
+        that.setData({
+          // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+          listHeight: windowHeight - 316 / 750 * 300
+        })
       })
 
       }
@@ -161,5 +155,14 @@ Page({
     } else {
       wxJs.showToast('数据已全部加载')
     }
+  },
+
+  // 点击跳转
+  goDetails (e) {
+    let item = e.target.dataset.item
+    wx.navigateTo({
+      url: '/pages/previewSpot/previewSpot?item=' + JSON.stringify(item)
+    })
   }
+
 })
