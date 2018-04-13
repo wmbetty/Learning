@@ -22,7 +22,16 @@ function showToast(title) {
     })
   }
 
+// loading
+function showLoading (title) {
+    wx.showLoading({
+        title: title,
+        mask:true
+      })
+}
+
 module.exports = {
     postRequest: postRequest,
-    showToast: showToast
+    showToast: showToast,
+    showLoading: showLoading
 }
