@@ -1,0 +1,107 @@
+<block wx:if="{{projectData.xid?false:true}}">
+  <view class="emptyWrap" style="height:{{height}}px;">
+  <scroll-view scroll-y style="height:{{height}}px;" bindscrolltolower="loadMore1">
+    <image src="../../dist/images/noXch_bg.png" class="emptyBg" bindtap="goCertify"></image>
+    <view class="text">您还没有行程</view>
+    <view class="emBtnBox">
+      <view class="emBtn" bindtap="createXch">马上建团</view>
+      <view class="emBtn" bindtap="qrJoinXch">扫码入团</view>
+    </view>
+    <view class="recomXchList" wx:if="{{recomXchData.length!=0}}">
+      <view class="emTitle">推荐行程</view>
+      <view class="recomXchItem" wx:for="{{recomXchData}}" wx:for-index="index" wx:for-item="item" data-id="{{item.xid}}" bindtap="viewRecomXch">
+        <image src="{{item.bcontentImage==''?'../../dist/images/line_bg.png':item.bcontentImage}}"></image>
+        <view class="xchIntro">{{item.title}}</view>
+        <view class="xchInfo">
+          <view class="xchLine">{{item.startCity}}-{{item.destiCity}}</view>
+          <view class="xchDay">{{item.coDay}}天</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  </view>
+</block>
+
+<block wx:else>
+<scroll-view scroll-y style="height:{{height}}px;" bindscrolltolower="loadMore">
+  <view class="lineWrap">
+    <image src="../../dist/images/line_bg.png" class="bg"></image>
+    <view class="lineBox">
+      <view class="lineInfo">
+        <image src="{{projectData.authorFace}}" class="touristPic"></image>
+        <view class="nameAndXch">
+          <view class="name">{{projectData.authorName}}</view>
+          <view class="xch">{{projectData.xchSn}}</view>
+        </view>
+        <view class="lineState">{{tripStatus[projectData.tripStatus]}}</view>
+      </view>
+      <view class="lineFromTo">
+        <view class="from">{{projectData.startCity}}</view><view class="day">{{projectData.coDay}}天</view><view class="person">{{projectData.coTourist}}人</view><view class="to">{{projectData.destiCity}}</view>
+      </view>
+      <view class="startEndDate">
+        <view class="startDate">{{projectData.startDate}}</view><view class="endDate">{{projectData.finishDate}}</view>
+      </view>
+    </view>
+  </view>
+      <view class="itemListBox">
+        <view class="itemList">
+          <view class="item" wx:for="{{projectData.isManager==1?itemListData:itemListData1}}" wx:for-index="index" wx:for-item="item" data-id="{{item.name}}" bindtap="viewItem">
+            <view class="itembg" style="background-color:{{item.bgcolor}};">
+              <image class="itemicon" src="{{item.imgsrc}}"></image>
+            </view>
+            <view class="itemtext">{{item.text}}</view>
+          </view>
+        </view>
+      </view>
+  <block wx:if="{{isShowBtnBox&&projectData.isManager==1}}">
+  <view class="btnBox">
+    <view class="middleBorder"></view>
+    <block wx:if="{{isFinishProjectBtn}}">
+      <button plain="true" loading="" bindtap="finishProject" hover-class="" class="btn">结束行程</button>
+    </block>
+    <block wx:if="{{isStartProjectBtn}}">
+      <button plain="true" loading="" bindtap="startProject" hover-class="" class="btn">现在出发</button>
+    </block>
+    <block wx:if="{{isCloseProjectBtn}}">
+      <button plain="true" loading="" bindtap="closeProject" hover-class="" class="btn">关闭行程</button>
+    </block>
+    <block wx:if="{{isClosePositionBtn}}">
+      <button plain="true" loading="" bindtap="openPosition" hover-class="" class="btn">关闭位置共享</button>
+    </block>
+    <block wx:if="{{isOpenPositionBtn}}">
+      <button plain="true" loading="" bindtap="closePosition" hover-class="" class="btn">打开位置共享</button>
+    </block>
+  </view>
+  </block>
+<view class="lineDairyBox">
+    <view class="lineDairyListBox">
+        <view class="dayBox" wx:for="{{dairyListData}}" wx:for-index="index" wx:for-item="item" bindtap="viewDairyDetail" data-id="{{item.id}}" data-sourcetype="{{item.blogType}}" data-targetid="{{item.authorId}}">
+            <view class="authorInfoBox">
+                <image src="{{item.authorFace}}" class="authorFace"></image>
+                <view class="authorName">{{item.authorName}}</view>
+                <view class="date">{{item.uptime}}</view>
+            </view>
+            <view class="content">{{item.content}}</view>
+            <view class="picBox" wx:if="{{item.mcontentImage!=''}}">
+                <image src="{{item.mcontentImage}}" class="pic"></image>
+                <view class="keywords">{{item.keywords}}</view>
+            </view>
+            <view class="likereplyBox">
+                <view class="iconBox">
+                    <image src="../../dist/images/ic_feed_comment3.png" class="icon">
+                    </image>{{item.coComment!=0?item.coComment:'评论'}}
+                </view>
+                <view class="iconBox" wx:if="{{item.isLoved==0}}" data-id="{{item.id}}" data-sourcetype="{{item.blogType}}">
+                    <image src="../../dist/images/ic_xqy_shoucang3_normal.png" class="icon">
+                    </image>{{item.coLove!=0?item.coLove:'喜欢'}}
+                </view>
+                <view class="iconBox" wx:if="{{item.isLoved==1}}" data-id="{{item.id}}" data-sourcetype="{{item.blogType}}">
+                    <image src="../../dist/images/ic_feed_love_act@3x.png" class="icon">
+                    </image>{{item.coLove!=0?item.coLove:'喜欢'}}
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+</scroll-view>
+</block>
