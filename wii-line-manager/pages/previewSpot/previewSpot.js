@@ -1,5 +1,7 @@
 // pages/previewSpot/previewSpot.js
 import wxJs from '../../util/wxjs'
+import util from '../../util/util'
+
 var app = getApp();
 var appValue = app.globalData.app;
 var platform = app.globalData.platform;
@@ -19,7 +21,10 @@ Page({
     hasMore: true,
     listHeight: '', //列表高度
     listUrl: '',
-    path: null
+    path: null,
+    latitude: 0,
+    longitude: 0,
+    distance: 0
   },
 
   /**
@@ -56,6 +61,23 @@ Page({
 
       that.getList(url, postData);
 
+      // 获取当前经纬度
+      wx.getLocation({
+        type: 'wgs84',
+        success: function (res) {
+          console.log(res)
+          let dis = util.getDistance(res.latitude, res.longitude, item.latitude, item.longitude)
+          console.log(item.latitude, 'lat')
+          console.log(dis, 'sssssss')
+          var latitude = res.latitude
+          var longitude = res.longitude
+          that.setData({
+            latitude: latitude,
+            longitude: longitude,
+            distance: dis
+          })
+        }
+      })
     }
 
     wxJs.getSystemInfo((res) => {
@@ -73,7 +95,6 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
   },
 
   /**
@@ -173,5 +194,6 @@ Page({
     } else {
       wxJs.showToast('数据已全部加载')
     }
-  },
+  }
+
 })
