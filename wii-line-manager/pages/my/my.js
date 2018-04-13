@@ -92,6 +92,13 @@ Page({
       }
     })
   },
+
+  findSpot () {
+    wx.navigateTo({
+      url: "../findSpot/findSpot"
+    })
+  },
+
   viewCertify:function(e){
     wx.navigateTo({
       url: "../certify/certify"

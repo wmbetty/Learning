@@ -25,6 +25,10 @@
         <image src="../../dist/images/ic_wd_saoyisao.png" class="icon"></image>
         <view class="title">扫一扫</view>
     </view>
+    <view class="item" bindtap="findSpot">
+        <image src="../../dist/images/ic_wd_zhaoquchu.png" class="icon"></image>
+        <view class="title">找去处</view>
+    </view>
     <view class="item" bindtap="viewProject">
         <image src="../../dist/images/ic_xczs_xingchengguanli.png" class="icon"></image>
         <view class="title">行程管理</view>

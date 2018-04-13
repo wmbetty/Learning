@@ -1,7 +1,7 @@
 App({
   globalData: {
-    // url:'https://cx.wiicent.com',
-    url:'http://192.168.1.188:8001',
+    url:'https://cx.wiicent.com',
+    // url:'http://192.168.1.188:8001',
     app:'liexing',
     platform:'web',
     ver:'3'
