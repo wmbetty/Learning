@@ -20,6 +20,7 @@ Page({
     details: {},
     hasMore: true,
     listHeight: '', //列表高度
+    winHeight: '', //窗口高度
     listUrl: '',
     path: null,
     latitude: 0,
@@ -85,7 +86,8 @@ Page({
       let windowHeight = res.windowHeight
       that.setData({
         // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
-        listHeight: windowHeight
+        winHeight: windowHeight,
+        listHeight: windowHeight - 508 / 750 * 300      
       })
     })
 

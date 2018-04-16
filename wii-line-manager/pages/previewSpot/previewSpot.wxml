@@ -1,5 +1,5 @@
 <!--pages/previewSpot/previewSpot.wxml-->
-<view>
+<scroll-view scroll-y='true' style="height: {{winHeight}}px;">
     <view class="banner-cont">
         <image src="{{details.bcontentImage ? details.bcontentImage : '../../dist/images/line_bg.png'}}" class="spotImg"></image>
         <!-- 文字部分 -->
@@ -62,4 +62,4 @@
       </scroll-view>
     </view>
 
-</view>
+</scroll-view>

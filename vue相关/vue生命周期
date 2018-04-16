@@ -1,0 +1,7 @@
+1.首先需要创建一个实例，new Vue ( ) 
+2.执行了init（init是vue组件里面默认去执行的），在init的过程当中首先调用了beforeCreate
+3.然后在injections（注射）和reactivity（反应性）的时候，它会再去调用created
+4.当created完成之后，它会去判断instance（实例）里面是否含有“el”option（选项），
+如果没有的话，它会调用vm.$mount(el)这个方法，然后执行下一步；如果有的话，直接执行下一步。
+5.紧接着会判断是否含有“template”这个选项，如果有的话，它会把template解析成一个render function
+(render函数是发生在beforeMount和mounted之间的，这也从侧面说明了，在beforeMount的时候，$el还只是我们在HTML里面写的节点，然后到mounted的时候，它就把渲染出来的内容挂载到了DOM节点上)

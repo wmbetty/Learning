@@ -1,4 +1,8 @@
 /* pages/previewSpot/previewSpot.wxss */
+pages{
+  width: 100%;
+  overflow: hidden;
+}
 .banner-cont{
     width: 100%;
     height: 340rpx;
