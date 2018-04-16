@@ -23,8 +23,6 @@ Page({
     winHeight: '', //窗口高度
     listUrl: '',
     path: null,
-    latitude: 0,
-    longitude: 0,
     distance: 0
   },
 
@@ -33,7 +31,6 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    console.log(JSON.parse(options.item), 'oppp')
     let item = JSON.parse(options.item)
     that.setData({
       details: item
@@ -66,15 +63,8 @@ Page({
       wx.getLocation({
         type: 'wgs84',
         success: function (res) {
-          console.log(res)
           let dis = util.getDistance(res.latitude, res.longitude, item.latitude, item.longitude)
-          console.log(item.latitude, 'lat')
-          console.log(dis, 'sssssss')
-          var latitude = res.latitude
-          var longitude = res.longitude
           that.setData({
-            latitude: latitude,
-            longitude: longitude,
             distance: dis
           })
         }
@@ -145,26 +135,43 @@ Page({
   getList (url, postData) {
     wxJs.showLoading('加载中');
     let that = this
-    wxJs.postRequest(url, postData, (res) => {
-      let resData = res.data
-      if (resData) {
-        wx.hideLoading();
-      }
-      if (resData.result && resData.result['ShowList.list'].length > 0 && that.data.pageId <= 1) {
-        that.setData({
-          finalList: resData.result['ShowList.list']
-        })
-      }
-      if (that.data.pageId > 1 && resData.result && resData.result['ShowList.list'].length > 0) {
-        tempList = resData.result['ShowList.list']
-        let list = that.data.finalList
-        that.setData({
-          finalList: list.concat(tempList)
-        })
-      }
-      if ((!resData.result || resData.result['ShowList.list'].length === 0) && that.data.pageId > 1) {
-        that.setData({
-          hasMore: false
+    let lat =  ''
+    let lon =  ''
+    wx.getLocation({
+      type: 'wgs84',
+      success: function (res) {
+        lat = res.latitude
+        lon = res.longitude
+        wxJs.postRequest(url, postData, (res) => {
+          let resData = res.data
+          let lists = resData.result['ShowList.list'] || []
+          // 计算距离
+          if (lists.length > 0) {
+            for (let item of lists) {
+              let dis = util.getDistance(item.latitude, item.longitude, lat, lon)
+              item.sDis = dis
+            }
+          }
+          if (resData) {
+            wx.hideLoading();
+          }
+          if (resData.result && lists.length > 0 && that.data.pageId <= 1) {
+            that.setData({
+              finalList: lists
+            })
+          }
+          if (that.data.pageId > 1 && resData.result && lists.length > 0) {
+            tempList = resData.result['ShowList.list']
+            let list = that.data.finalList
+            that.setData({
+              finalList: list.concat(tempList)
+            })
+          }
+          if ((!resData.result || lists.length === 0) && that.data.pageId > 1) {
+            that.setData({
+              hasMore: false
+            })
+          }
         })
       }
     })
@@ -196,6 +203,14 @@ Page({
     } else {
       wxJs.showToast('数据已全部加载')
     }
+  },
+
+  // 詳情
+  gotoDetail(e) {
+    let item = e.currentTarget.dataset.item
+    wx.navigateTo({
+      url: '/pages/previewDetail/previewDetail?item=' + JSON.stringify(item)
+    })
   }
 
 })

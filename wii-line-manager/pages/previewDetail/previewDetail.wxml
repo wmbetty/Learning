@@ -1,0 +1,19 @@
+<!--pages/previewDetail/previewDetail.wxml-->
+<view class="spot-page">
+  <view class="banner-cont">
+    <image class='spotImg' src="{{spotDetail.bcontentImage ? spotDetail.bcontentImage : '../../dist/images/line_bg.png'}}"></image>
+    <!-- <view class='spotTitle'></view> -->
+    <image class='voiceBtn' src="../../dist/images/btn_yuyingbofang.png"></image>
+  </view>
+  <view class="spot-title-cont">
+    <view class='spot-name'>{{spotDetail.title}}</view>
+    <view class='spot-enname'>{{spotDetail.enName ? spotDetail.enName : ''}}</view>
+    <view class='spot-simple-intro'>
+      <view>{{spotDetail.destiCity + spotDetail.mtype}}</view>
+      <view>0km</view>
+      <view>{{spotDetail.coRead}}人气</view>
+    </view>
+  </view>
+  <view class="spot-intros">{{intros}}</view>
+  <view class="spot-foot"></view>
+</view>

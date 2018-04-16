@@ -66,9 +66,12 @@ pages{
   padding-left: 12rpx;
   border-left: 3px solid #fd8238;
 }
-.list-item{
+.list-item-container{
   padding: 20rpx 0;
-  display: flex;
+  
+}
+.list-item{
+display: flex;
 }
 .list-img{
   width: 160rpx;

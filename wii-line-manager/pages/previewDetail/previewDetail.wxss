@@ -1,0 +1,70 @@
+/* pages/previewDetail/previewDetail.wxss */
+.spot-page{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.banner-cont{
+  width: 100%;
+  height: 340rpx;
+  position: relative;
+}
+.spotImg{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.spotTitle{
+  position: absolute;
+  left: 0;
+  top:26rpx;
+  width: 100%;
+  text-align: center;
+  font-size:34rpx;
+  color:#fff;
+}
+.spot-foot{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 120rpx;
+  background: black;
+}
+.voiceBtn{
+  width:90rpx;
+	height:90rpx;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-top:-45rpx;
+	margin-left:-45rpx;
+}
+.spot-title-cont{
+  padding: 56rpx 0;
+  text-align: center;
+}
+.spot-name{
+  font-size: 36rpx;
+  color: #000;
+}
+.spot-enname{
+  padding: 26rpx 0;
+  color: #999;
+}
+.spot-simple-intro{
+  padding: 0 22%;
+  color: #999;
+  display: flex;
+  justify-content: space-between;
+}
+.spot-intros{
+  padding: 0 18rpx;
+}
+.spot-simple-intro view{
+  width: 30%;
+}
+.spot-simple-intro view:first-child, .spot-simple-intro view:last-child{
+  width: 34%;
+}
