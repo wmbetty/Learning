@@ -15,7 +15,10 @@ Page({
     size: 15,
     sourceId: '',
     commentList: [],
-    winHeight: ''
+    winHeight: '',
+    commentVal: '',
+    showComment: false,
+    textFocus: false
   },
 
   /**
@@ -23,7 +26,7 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    
+
     wxJs.getSystemInfo((res) => {
       // 可使用窗口宽度、高度
       let windowHeight = res.windowHeight
@@ -113,5 +116,56 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+
+  // input输入
+  inputListener: function (e) {
+    var value = e.detail.value;
+    this.setData({
+      commentVal: value
+    })
+  },
+
+  // 点击评论
+  goComment () {
+    let that = this
+    that.setData({
+      showComment: true,
+      textFocus: true
+    })
+  },
+  // 取消
+  cancelComment () {
+    this.setData({
+      showComment: false
+    })
+  },
+  // 提交评论
+  submitComment () {
+    let that = this
+    let comment = that.data.commentVal
+    if (comment === '') {
+      wxJs.showToast('请填写评论内容')
+    } else {
+      that.setData({
+        showComment: true
+      })
+      // let url = 
+      let postData = {
+        'content': comment,
+        'subId': '', //myId
+        'sourceId': '', //id
+        'targetId': '', //myId
+        'targetType': 'Customer',
+        'sourceType': 'Baike',
+        'app': appValue,
+        'platform': platform,
+        'ver': ver
+      }
+      // wxJs.postRequest()
+    }
+    // that.setData({
+    //   showComment: true
+    // })
   }
 })

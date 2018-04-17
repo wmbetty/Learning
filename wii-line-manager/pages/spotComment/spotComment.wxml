@@ -6,4 +6,18 @@
       <view class='ucontent'>{{item.content || '未知内容'}}</view>
     </view>
   </scroll-view>
+  <view class='comment-foot' wx:if='{{!showComment}}' catchtap='goComment'>
+    <view class='comment-input'>说点什么吧~~</view>
+  </view>
+  <view class='comment-mask' wx:else>
+    <view class='comment-container'>
+      <view class='comment-head'>
+        <text catchtap='cancelComment'>取消</text>
+        <text catchtap='submitComment'>发表</text>
+      </view>
+      <view class='text-cont'>
+        <textarea focus="{{textFocus}}" value='{{commentVal}}' auto-height='true' bindinput='inputListener'/>
+      </view>
+    </view>
+  </view>
 </view>
