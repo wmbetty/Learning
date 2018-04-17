@@ -1,6 +1,6 @@
 <!--pages/previewDetail/previewDetail.wxml-->
 <view class="spot-page">
-  <scroll-view scroll-y='true' style='height:{{winHeight}}px'>
+  <scroll-view scroll-y='true' style='height:{{winHeight}}px;padding-bottom:40rpx;'>
       <view class="banner-cont">
         <image class='spotImg' src="{{spotDetail.bcontentImage ? spotDetail.bcontentImage : '../../dist/images/line_bg.png'}}"></image>
         <image class='voiceBtn' src="../../dist/images/btn_yuyingbofang.png"></image>
@@ -28,7 +28,7 @@
       <text class='foot-icon {{bklove && coLove * 1 > 0 ? "like-icon-active" : "like-icon"}}'></text>
       <text>{{coLove * 1 > 0 ? coLove : '喜欢'}}</text>
     </view>
-    <view class='foot-item'>
+    <view class='foot-item' data-id='{{spotDetail.id}}' catchtap='goComment'>
       <text class='foot-icon'></text>
       <text>{{spotDetail.coComment * 1 > 0 ? spotDetail.coComment : '评论' }}</text>
     </view>

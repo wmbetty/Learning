@@ -75,6 +75,15 @@ Page({
     }
   },
 
+  // 点击评论
+  goComment (e) {
+    console.log(e, 'eee')
+    let id = e.target.dataset.id
+    wx.navigateTo({
+      url: '/pages/spotComment/spotComment?id=' + id,
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -157,11 +166,22 @@ Page({
       let data = res.data.result.Delete
       let bklove = that.data.bklove
       let coLove = that.data.coLove * 1
+      if (coLove > 0) {
+        coLove = coLove
+      }
       if (bklove && data) {
-        that.setData({
-          coLove: 0,
-          bklove: false
-        })
+        if (coLove > 0) {
+          that.setData({
+            coLove: coLove--,
+            bklove: false
+          })
+        } else {
+          that.setData({
+            coLove: coLove,
+            bklove: false
+          })
+        }
+        
         wx.setStorage({
           key: "beloved",
           data: false
@@ -170,7 +190,7 @@ Page({
 
       if (!bklove && data) {
         that.setData({
-          coLove: 1,
+          coLove: coLove++,
           bklove: true
         })
         wx.setStorage({

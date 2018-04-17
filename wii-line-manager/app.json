@@ -69,7 +69,8 @@
     "pages/recomXchCopy/recomXchCopy",
     "pages/findSpot/findSpot",
     "pages/previewSpot/previewSpot",
-    "pages/previewDetail/previewDetail"
+    "pages/previewDetail/previewDetail",
+    "pages/spotComment/spotComment"
   ],
   "window": {
     "navigationBarBackgroundColor": "#191919",

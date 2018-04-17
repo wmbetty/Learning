@@ -1,0 +1,117 @@
+// pages/spotComment/spotComment.js
+import wxJs from '../../util/wxjs'
+var app = getApp();
+var appValue = app.globalData.app;
+var platform = app.globalData.platform;
+var ver = app.globalData.ver;
+
+Page({
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    pageId: 1,
+    size: 15,
+    sourceId: '',
+    commentList: [],
+    winHeight: ''
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    let that = this
+    
+    wxJs.getSystemInfo((res) => {
+      // 可使用窗口宽度、高度
+      let windowHeight = res.windowHeight
+      that.setData({
+        // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
+        winHeight: windowHeight
+      })
+    })
+
+    let id = options.id
+    that.setData({
+      sourceId: id
+    })
+    let sid = wx.getStorageSync('sid')
+    if (sid === '') {
+      wx.reLaunch({
+        url: "/pages/login/login"
+      })
+    } else {
+      let url = app.globalData.url + '/bkComment/bkCommentList?sid=' + sid
+      let postData = {
+        'sourceType': 'Baike',
+        'sourceId': that.data.sourceId,
+        'size': that.data.size,
+        'pageId': that.data.pageId,
+        'app': appValue,
+        'platform': platform,
+        'ver': ver
+      }
+      wxJs.postRequest(url, postData, (res) => {
+        console.log(res.data, 'data')
+        let data = res.data.result
+        if (data && data['BkComment.list'].length > 0) {
+          that.setData({
+            commentList: data['BkComment.list']
+          })
+          console.log(that.data.commentList, 'list')
+        }
+      })
+    }
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+  
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+  
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+  
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+  
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+  
+  }
+})
