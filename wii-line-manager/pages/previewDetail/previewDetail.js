@@ -77,10 +77,9 @@ Page({
 
   // 点击评论
   goComment (e) {
-    console.log(e, 'eee')
-    let id = e.target.dataset.id
+    let spot = e.currentTarget.dataset.spot
     wx.navigateTo({
-      url: '/pages/spotComment/spotComment?id=' + id,
+      url: '/pages/spotComment/spotComment?spot=' + JSON.stringify(spot),
     })
   },
 

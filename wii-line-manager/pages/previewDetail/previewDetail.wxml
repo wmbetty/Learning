@@ -28,7 +28,7 @@
       <text class='foot-icon {{bklove && coLove * 1 > 0 ? "like-icon-active" : "like-icon"}}'></text>
       <text>{{coLove * 1 > 0 ? coLove : '喜欢'}}</text>
     </view>
-    <view class='foot-item' data-id='{{spotDetail.id}}' catchtap='goComment'>
+    <view class='foot-item' data-spot='{{spotDetail}}' catchtap='goComment'>
       <text class='foot-icon'></text>
       <text>{{spotDetail.coComment * 1 > 0 ? spotDetail.coComment : '评论' }}</text>
     </view>

@@ -18,7 +18,11 @@ Page({
     winHeight: '',
     commentVal: '',
     showComment: false,
-    textFocus: false
+    textFocus: false,
+    spotInfos: {},
+    sid: '',
+    listUrl: '',
+    listPost: {}
   },
 
   /**
@@ -35,10 +39,10 @@ Page({
         winHeight: windowHeight
       })
     })
-
-    let id = options.id
+    let spotInfos = JSON.parse(options.spot)
     that.setData({
-      sourceId: id
+      sourceId: spotInfos.id,
+      spotInfos: spotInfos
     })
     let sid = wx.getStorageSync('sid')
     if (sid === '') {
@@ -46,6 +50,9 @@ Page({
         url: "/pages/login/login"
       })
     } else {
+      that.setData({
+        sid: sid
+      })
       let url = app.globalData.url + '/bkComment/bkCommentList?sid=' + sid
       let postData = {
         'sourceType': 'Baike',
@@ -56,14 +63,16 @@ Page({
         'platform': platform,
         'ver': ver
       }
+      that.setData({
+        listUrl: url,
+        listPost: postData
+      })
       wxJs.postRequest(url, postData, (res) => {
-        console.log(res.data, 'data')
         let data = res.data.result
         if (data && data['BkComment.list'].length > 0) {
           that.setData({
             commentList: data['BkComment.list']
           })
-          console.log(that.data.commentList, 'list')
         }
       })
     }
@@ -150,22 +159,28 @@ Page({
       that.setData({
         showComment: true
       })
-      // let url = 
+      let url = app.globalData.url + '/bkComment/bkCommentCreate?sid=' + that.data.sid
       let postData = {
         'content': comment,
-        'subId': '', //myId
-        'sourceId': '', //id
-        'targetId': '', //myId
+        'subId': that.data.spotInfos.myId, 
+        'sourceId': that.data.spotInfos.id,
+        'targetId': that.data.spotInfos.myId, 
         'targetType': 'Customer',
         'sourceType': 'Baike',
         'app': appValue,
         'platform': platform,
         'ver': ver
       }
-      // wxJs.postRequest()
+      wxJs.postRequest(url, postData, (res) => {
+        if (data.message === 'Create comment ok') {
+          that.setData({
+            showComment: true
+          })
+          setTimeout(() => {
+            that.onLoad();
+          }, 1000)
+        }
+      })
     }
-    // that.setData({
-    //   showComment: true
-    // })
   }
 })
