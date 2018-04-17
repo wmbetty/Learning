@@ -17,8 +17,8 @@ Page({
     winHeight: '',
     sid: '',
     detailData: {},
-    coLove: 0, //点赞数
-    bklove: false //点赞
+    coLove: 0,
+    bklove: ''
   },
 
   /**
@@ -26,6 +26,7 @@ Page({
    */
   onLoad: function (options) {
     let that = this
+    
     wxJs.getSystemInfo((res) => {
       // 可使用窗口宽度、高度
       let windowHeight = res.windowHeight
@@ -33,6 +34,22 @@ Page({
         // second部分高度 = 利用窗口可使用高度 - first部分高度（这里的高度单位为px，所有利用比例将300rpx转换为px）
         winHeight: windowHeight
       })
+    })
+
+    // 获取点赞状态
+    wx.getStorage({
+      key: 'beloved',
+      success: (res) => {
+        if (res.data) {
+          that.setData({
+            bklove: true
+          })
+        } else{
+          that.setData({
+            bklove: false
+          })
+        }
+      }
     })
     let item = JSON.parse(options.item)
     let id = (item.id).substring(5)
@@ -69,7 +86,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
   },
 
   /**
@@ -127,7 +143,6 @@ Page({
     let sourceId = that.data.spotDetail.id
     let targetId = that.data.spotDetail.myId
     let url = app.globalData.url + '/bkLove/bkLove?sid=' + that.data.sid
-    let bklove = that.data.bklove
     let postData = {
       'sourceType': 'Baike',
       'sourceId': sourceId * 1,
@@ -138,28 +153,32 @@ Page({
       'platform': platform,
       'ver': ver
     }
-    if (bklove) {
+    wxJs.postRequest(url, postData, (res) => {
+      let data = res.data.result.Delete
+      let bklove = that.data.bklove
+      let coLove = that.data.coLove * 1
+      if (bklove && data) {
+        that.setData({
+          coLove: 0,
+          bklove: false
+        })
+        wx.setStorage({
+          key: "beloved",
+          data: false
+        })
+      }
 
-    } else{
-      wxJs.postRequest(url, postData, (res) => {
-        let data = res.data.result.Delete
-        let url = that.data.detailUrl
-        if (data) {
-          that.setData({
-            coLove: that.data.coLove * 1 + 1,
-            bklove: !bklove
-          })
-        }
-        // let details = res.data.result.Baike
-        // let intros = details.content.replace(/(^\s*)|(\s*$)/g, "")
-        // that.setData({
-        //   spotDetail: details,
-        //   intros: intros,
-        //   sid: sid,
-        //   lastUrl: url
-        // })
-      })
-    }
+      if (!bklove && data) {
+        that.setData({
+          coLove: 1,
+          bklove: true
+        })
+        wx.setStorage({
+          key: "beloved",
+          data: true
+        })
+      }
+    })
   }
 
 })

@@ -37,6 +37,12 @@
 					"pathName": "pages/my/my",
 					"query": "",
 					"scene": "1001"
+				},
+				{
+					"id": -1,
+					"name": "详情",
+					"pathName": "pages/previewDetail/previewDetail",
+					"query": ""
 				}
 			]
 		}

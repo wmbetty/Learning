@@ -24,13 +24,13 @@
       </view>
   </scroll-view>
   <view class="spot-foot">
-    <view class='foot-item' bindtap='bkLove'>
-      <text class='foot-icon {{bklove ? "like-icon-active" : "like-icon"}}'></text>
+    <view class='foot-item' catchtap='bkLove'>
+      <text class='foot-icon {{bklove && coLove * 1 > 0 ? "like-icon-active" : "like-icon"}}'></text>
       <text>{{coLove * 1 > 0 ? coLove : '喜欢'}}</text>
     </view>
     <view class='foot-item'>
       <text class='foot-icon'></text>
-      <text>22</text>
+      <text>{{spotDetail.coComment * 1 > 0 ? spotDetail.coComment : '评论' }}</text>
     </view>
   </view>
 </view>
