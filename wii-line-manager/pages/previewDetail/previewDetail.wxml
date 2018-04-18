@@ -3,7 +3,8 @@
   <scroll-view scroll-y='true' style='height:{{winHeight}}px;padding-bottom:40rpx;'>
       <view class="banner-cont">
         <image class='spotImg' src="{{spotDetail.bcontentImage ? spotDetail.bcontentImage : '../../dist/images/line_bg.png'}}"></image>
-        <image class='voiceBtn' src="../../dist/images/btn_yuyingbofang.png"></image>
+        <image class='voiceBtn' bindtap="startVoice" src="../../dist/images/btn_yuyingbofang.png" wx:if="{{!canPlay}}"></image>
+        <image class='voiceBtn' bindtap="stopVoice" src="../../dist/images/btn_yuyingbofang_act.png" wx:if="{{canPlay}}"></image>
       </view>
       <view class="spot-title-cont">
         <view class='spot-name'>{{spotDetail.title || ''}}</view>
@@ -11,7 +12,7 @@
         <view class='spot-simple-intro'>
           <view>{{(spotDetail.destiCity + spotDetail.mtype) || ''}}</view>
           <view>0km</view>
-          <view>{{spotDetail.coRead || 0}}人气</view>
+          <view>{{spotDetail.coRead || 0}}人气</view> 
         </view>
       </view>
       <view class="spot-intros">{{intros || ''}}</view>

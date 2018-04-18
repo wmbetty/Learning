@@ -5,6 +5,7 @@ var appValue = app.globalData.app;
 var platform = app.globalData.platform;
 var ver = app.globalData.ver;
 var loveTap = 0;
+var innerAudioContext = wx.createInnerAudioContext();
 
 Page({
 
@@ -19,7 +20,8 @@ Page({
     sid: '',
     detailData: {},
     coLove: 0,
-    bklove: ''
+    bklove: '',
+    canPlay: false
   },
 
   /**
@@ -101,7 +103,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+    innerAudioContext.pause();
   },
 
   /**
@@ -143,6 +145,43 @@ Page({
         intros: intros,
         coLove: coLove
       })
+
+      let voiceData = [];
+      let voicePathData = [];
+      let voiceContent = details.content;
+      for (let i = 0; i < Math.ceil(voiceContent.length/400); i++) {
+        let a = voiceContent.substring(400*i,400*(i+1));
+        voiceData.push(a);
+      }
+
+      wx.request({
+        url: 'https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=d6cmh8XMfoNbdXIjz3jezuNNBFqoZYaV&client_secret=TuzFujQG7ZqHKlXYGsob5CFlCyhaz1B5',
+        method:'GET',
+        success: function(res) {
+          let token = res.data.access_token;
+          try{
+            playAudios(voiceData,token,{
+              success:reses=>{
+                let index = 0;
+                innerAudioContext.src = reses[index];
+                console.log(innerAudioContext.src, 'srcccc')
+                innerAudioContext.onPlay(()=>{
+                  console.log(reses[index]);
+                });
+                innerAudioContext.autoplay = false;
+                innerAudioContext.onEnded(() => {
+                  if (index >= (reses.length-1)) {
+                    that.setData({
+                      canPlay: false
+                    })
+                  }
+                });
+              }
+            })
+          }catch(e){console.log(e);}
+        }
+      })
+
     })
   },
 
@@ -190,6 +229,53 @@ Page({
         }
       }, 500)
     })
-  }
+  },
 
+  // 播放语音
+  startVoice () {
+    if (!this.data.canPlay) {
+      this.setData({
+        canPlay:true
+      })
+      innerAudioContext.play();
+    }
+  },
+
+  // 停止语音播放
+  stopVoice:function(e){
+    innerAudioContext.pause();
+    this.setData({
+      canPlay:false
+    })
+  }
 })
+
+// 语音播放
+function playAudio (audio,token) {
+  return new Promise((resolve, reject) => {
+    wx.downloadFile({
+      url: 'https://tsn.baidu.com/text2audio?lan=zh&ctp=1&cuid=356982065156001&tok='+token+'&tex='+audio,
+      success: (res) => {
+        if (res.statusCode === 200) {
+          resolve(res.tempFilePath);
+        }
+      },
+      fail:(res) => {
+        console.log('downloadFile fail');
+      }
+    }).onProgressUpdate((res) => {
+      if (res.progress === 100) {
+        console.log('progress'+Date.parse(new Date()));
+      }
+    })
+  })
+}
+
+function playAudios(audioData = [], token = '', opts = {}) {
+  let promises = []
+  audioData.forEach(audio => {
+    promises.push(playAudio(audio,token))
+  })
+  function noop() {}
+  Promise.all(promises).then(opts.success || noop).catch(opts.fail || noop)
+}
