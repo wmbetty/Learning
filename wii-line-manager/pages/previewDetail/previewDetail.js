@@ -21,10 +21,23 @@ Page({
     winHeight: '',
     sid: '',
     detailData: {},
+    remdData: {},
+    remdUrl: '',
+    mType: '景点',
     coLove: 0,
     bklove: '',
     canPlay: false,
-    distance: 0
+    distance: 0,
+    markers: [{
+      iconPath: "../../dist/images/marker_red_1.png",
+      id: 0,
+      latitude: '',
+      longitude: '',
+      width: 20,
+      height: 20
+    }],
+    tabIndex: 0,
+    remdList: []
   },
 
   /**
@@ -77,7 +90,7 @@ Page({
         detailUrl: url,
         detailData: postData
       })
-      that.getDetails(url, postData)
+      that.getDetails(url, postData);
     }
   },
 
@@ -138,15 +151,19 @@ Page({
   },
 
   getDetails (url, postData) {
-    let that = this
+    let that = this;
+    let markers = that.data.markers;
     wxJs.postRequest(url, postData, (res) => {
       let details = res.data.result.Baike
       let intros = details.content.replace(/(^\s*)|(\s*$)/g, "")
       let coLove = details.coLove
+      markers[0].latitude = details.latitude;
+      markers[0].longitude = details.longitude;
       that.setData({
         spotDetail: details,
         intros: intros,
-        coLove: coLove
+        coLove: coLove,
+        markers: markers
       })
 
       // 获取当前经纬度
@@ -199,6 +216,26 @@ Page({
           }catch(e){console.log(e);}
         }
       })
+
+      // 推荐
+      let remdUrl = app.globalData.url + '/baike/baikeRecommend?sid=' + that.data.sid
+      setTimeout(() => {
+        let remdData = {
+          'pageId': 1,
+          'destiPath': details.destiPath,
+          'size': 3,
+          'showType': 'ShowList',
+          'mtype': that.data.mType,
+          'app': appValue,
+          'platform': platform,
+          'ver': ver
+        }
+        that.setData({
+          remdData: remdData,
+          remdUrl: remdUrl
+        })
+        that.getRemmdList(remdUrl, remdData);
+      }, 500)
 
     })
   },
@@ -265,7 +302,52 @@ Page({
     this.setData({
       canPlay:false
     })
+  },
+
+  // tab切换
+  tabChange (e) {
+    let that = this
+    let index = e.currentTarget.dataset.index * 1
+    let remdData = that.data.remdData
+    let mType = ''
+    if (index === 0) {
+      mType = '景点'
+      remdData.mtype = '景点'
+    }
+    if (index === 1) {
+      mType = '美食'
+      remdData.mtype = '美食'
+    }
+    if (index === 2) {
+      mType = '购物'
+      remdData.mtype = '购物'
+    }
+
+    that.setData({
+      tabIndex: index,
+      mType: mType,
+      remdData: remdData
+    })
+    that.getRemmdList(that.data.remdUrl, that.data.remdData);
+  },
+
+  // 获取推荐列表
+  getRemmdList (url, remdData) {
+    let that = this
+    wxJs.postRequest(url, remdData, (res) => {
+      if (res.data.result === '') {
+        that.setData({
+          remdList: []
+        })
+      } else {
+        let rList = res.data.result['ShowList.list']
+        that.setData({
+          remdList: rList
+        })
+      }
+    })
   }
+
 })
 
 // 语音播放

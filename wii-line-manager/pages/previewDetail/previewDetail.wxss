@@ -67,6 +67,7 @@
 .addr-infos{
   padding: 0 18rpx;
   margin: 40rpx 0 30rpx 0;
+  background: #fff;
 }
 .voiceBtn{
   width:90rpx;
@@ -78,8 +79,9 @@
 	margin-left:-45rpx;
 }
 .spot-title-cont{
-  padding: 56rpx 0;
+  padding: 50rpx 0;
   text-align: center;
+  background: #fff;
 }
 .spot-name{
   font-size: 36rpx;
@@ -96,7 +98,7 @@
   justify-content: space-between;
 }
 .spot-intros{
-  padding: 0 18rpx;
+  padding: 0 18rpx;background: #fff;
 }
 .spot-simple-intro view{
   width: 30%;
@@ -104,4 +106,92 @@
 }
 .spot-simple-intro view:first-child, .spot-simple-intro view:last-child{
   width: 34%;
+}
+.author-info-container{
+  padding: 20rpx 0;background: #fff;
+}
+.author-avatar{
+  display: block;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: #eee;
+}
+.author-name{
+  margin: 18rpx 0;
+  text-align: center;
+  color: #ff6600;
+}
+.spot-business-info{
+  padding: 28rpx 0 0 28rpx;
+}
+.spot-business-info view{
+  margin-bottom: 22rpx;
+}
+.recommend-container{
+  margin-top: 18rpx;
+  background: #fff;
+}
+.recommend-head{
+  color: #000;
+  font-size: 34rpx;
+  font-weight: bold;
+  text-align: center;
+  padding: 34rpx;
+}
+.tab-container{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+.tab-item{
+  width: 33%;
+  text-align: center;
+  font-size: 34rpx;
+  color: #000;
+}
+.tab-active{
+  border-bottom: 3px solid #ff6600;
+}
+.tab-text{
+  display: block;
+  width: 36%;
+  margin: 0 auto;
+  padding-bottom: 20rpx;
+}
+.remd-list-view{
+  padding-left: 22rpx;
+}
+.r-nodata{
+  padding: 40rpx 0;
+  text-align: center;
+  font-size: 34rpx;
+  color: #999;
+  background: #fff;
+}
+.remd-list-item{
+  padding: 22rpx 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+}
+.remd-list-item:last-child{
+  border: none;
+}
+.remd-spot-img{
+  width: 160rpx;
+  height: 160rpx;
+}
+.remd-spot-info{
+  flex: auto;
+  position: relative;
+  padding-left: 20rpx;
+}
+.r-spot-name{font-size: 32rpx;}
+.r-spot-foot{
+  position: absolute;
+  bottom: 18rpx;
+  left: 20rpx;
+  color: #999;
+  font-size: 28rpx;
 }
