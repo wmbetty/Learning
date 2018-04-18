@@ -65,8 +65,8 @@
   background-size: 100% 100%;
 }
 .addr-infos{
-  padding: 0 18rpx;
-  margin: 40rpx 0 30rpx 0;
+  padding: 40rpx 18rpx 30rpx;
+  /* margin: 40rpx 0 30rpx 0; */
   background: #fff;
 }
 .voiceBtn{

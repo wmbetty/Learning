@@ -49,4 +49,36 @@ margin-left:20rpx;
   font-size:24rpx;
   margin-top:3rpx;
   margin-right:20rpx;
+  visibility: hidden;
+}
+.clear-icon-show{visibility: visible;}
+.remd-list-item{
+  padding: 22rpx 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+}
+.remd-list-item:last-child{
+  border: none;
+}
+.remd-spot-img{
+  width: 160rpx;
+  height: 160rpx;
+}
+.remd-spot-info{
+  flex: auto;
+  position: relative;
+  padding-left: 20rpx;
+}
+.r-spot-name{font-size: 32rpx;}
+.r-spot-foot{
+  position: absolute;
+  bottom: 18rpx;
+  left: 20rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+.s-middle{
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  color: #999;
 }

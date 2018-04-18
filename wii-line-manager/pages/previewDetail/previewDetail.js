@@ -171,7 +171,6 @@ Page({
         type: 'wgs84',
         success: function (res) {
           let dis = util.getDistance(res.latitude, res.longitude, details.latitude, details.longitude)
-          console.log(dis, 'dis')
           if (isNaN(dis)) {
             dis = 0
           }
@@ -199,9 +198,8 @@ Page({
               success:reses=>{
                 let index = 0;
                 innerAudioContext.src = reses[index];
-                console.log(innerAudioContext.src, 'srcccc')
                 innerAudioContext.onPlay(()=>{
-                  console.log(reses[index]);
+                  // console.log(reses[index]);
                 });
                 innerAudioContext.autoplay = false;
                 innerAudioContext.onEnded(() => {
