@@ -1,5 +1,7 @@
 // pages/previewDetail/previewDetail.js
 import wxJs from '../../util/wxjs'
+import util from '../../util/util'
+
 var app = getApp();
 var appValue = app.globalData.app;
 var platform = app.globalData.platform;
@@ -21,7 +23,8 @@ Page({
     detailData: {},
     coLove: 0,
     bklove: '',
-    canPlay: false
+    canPlay: false,
+    distance: 0
   },
 
   /**
@@ -144,6 +147,21 @@ Page({
         spotDetail: details,
         intros: intros,
         coLove: coLove
+      })
+
+      // 获取当前经纬度
+      wx.getLocation({
+        type: 'wgs84',
+        success: function (res) {
+          let dis = util.getDistance(res.latitude, res.longitude, details.latitude, details.longitude)
+          console.log(dis, 'dis')
+          if (isNaN(dis)) {
+            dis = 0
+          }
+          that.setData({
+            distance: dis
+          })
+        }
       })
 
       let voiceData = [];

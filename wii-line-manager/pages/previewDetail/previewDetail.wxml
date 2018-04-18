@@ -11,7 +11,7 @@
         <view class='spot-enname'>{{spotDetail.enName ? spotDetail.enName : ''}}</view>
         <view class='spot-simple-intro'>
           <view>{{(spotDetail.destiCity + spotDetail.mtype) || ''}}</view>
-          <view>0km</view>
+          <view>{{distance || 0}}km</view>
           <view>{{spotDetail.coRead || 0}}人气</view> 
         </view>
       </view>

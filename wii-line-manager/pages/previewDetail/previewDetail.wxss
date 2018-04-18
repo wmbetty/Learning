@@ -100,6 +100,7 @@
 }
 .spot-simple-intro view{
   width: 30%;
+  word-wrap:break-word;
 }
 .spot-simple-intro view:first-child, .spot-simple-intro view:last-child{
   width: 34%;
