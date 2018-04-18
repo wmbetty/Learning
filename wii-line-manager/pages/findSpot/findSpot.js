@@ -163,6 +163,13 @@ Page({
     wx.navigateTo({
       url: '/pages/previewSpot/previewSpot?item=' + JSON.stringify(item)
     })
+  },
+
+  // 点击搜索
+  gotoSearch () {
+    wx.navigateTo({
+      url: '/pages/findSpotSearch/findSpotSearch',
+    })
   }
 
 })

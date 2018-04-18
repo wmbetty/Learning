@@ -1,7 +1,7 @@
 <view class="searchSpotBox">
     <view class="back-banner">
         <image src="../../dist/images/500435576.png"></image>
-        <view class="fake-input">搜索目的地、景点等</view>
+        <view class="fake-input" bindtap='gotoSearch'>搜索目的地、景点等</view>
     </view>
     <view class="spotListBox">
         <view class="tabBox">

@@ -70,7 +70,8 @@
     "pages/findSpot/findSpot",
     "pages/previewSpot/previewSpot",
     "pages/previewDetail/previewDetail",
-    "pages/spotComment/spotComment"
+    "pages/spotComment/spotComment",
+    "pages/findSpotSearch/findSpotSearch"
   ],
   "window": {
     "navigationBarBackgroundColor": "#191919",

@@ -1,0 +1,11 @@
+<!--pages/findSpotSearch/findSpotSearch.wxml-->
+<view>
+  <view class='search-head'>
+    <view class='s-main'>
+      <view class='search-icon'></view>
+      <input class='search-input' placeholder-style="color:#999;" placeholder='搜索目的地，景点等'/>
+      <view class='clear-text-icon'>x</view>
+    </view>
+    <view class='s-head-right'>取消</view>
+  </view>
+</view>
