@@ -4,6 +4,7 @@ var app = getApp();
 var appValue = app.globalData.app;
 var platform = app.globalData.platform;
 var ver = app.globalData.ver;
+var loveTap = 0;
 
 Page({
 
@@ -40,7 +41,7 @@ Page({
     wx.getStorage({
       key: 'beloved',
       success: (res) => {
-        if (res.data) {
+        if (res.data === true) {
           that.setData({
             bklove: true
           })
@@ -147,6 +148,7 @@ Page({
 
   // 点赞
   bkLove() {
+    loveTap++
     let that = this
     let sourceId = that.data.spotDetail.id
     let targetId = that.data.spotDetail.myId
@@ -165,38 +167,28 @@ Page({
       let data = res.data.result.Delete
       let bklove = that.data.bklove
       let coLove = that.data.coLove * 1
-      if (coLove > 0) {
-        coLove = coLove
-      }
-      if (bklove && data) {
-        if (coLove > 0) {
+      setTimeout(() => {
+        if (loveTap % 2 === 0 && coLove > 0 && data) {
           that.setData({
-            coLove: coLove--,
+            coLove: coLove - 1,
             bklove: false
           })
-        } else {
-          that.setData({
-            coLove: coLove,
-            bklove: false
+          wx.setStorage({
+            key: "beloved",
+            data: false
           })
         }
-        
-        wx.setStorage({
-          key: "beloved",
-          data: false
-        })
-      }
-
-      if (!bklove && data) {
-        that.setData({
-          coLove: coLove++,
-          bklove: true
-        })
-        wx.setStorage({
-          key: "beloved",
-          data: true
-        })
-      }
+        if (loveTap % 2 !== 0 && data) {
+          that.setData({
+            coLove: coLove + 1,
+            bklove: true
+          })
+          wx.setStorage({
+            key: "beloved",
+            data: true
+          })
+        }
+      }, 500)
     })
   }
 
