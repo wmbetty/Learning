@@ -156,9 +156,6 @@ Page({
     if (comment === '') {
       wxJs.showToast('请填写评论内容')
     } else {
-      that.setData({
-        showComment: true
-      })
       let url = app.globalData.url + '/bkComment/bkCommentCreate?sid=' + that.data.sid
       let postData = {
         'content': comment,
@@ -172,12 +169,19 @@ Page({
         'ver': ver
       }
       wxJs.postRequest(url, postData, (res) => {
-        if (data.message === 'Create comment ok') {
-          that.setData({
-            showComment: true
-          })
+        if (res.data.message === 'Create comment ok') {
           setTimeout(() => {
-            that.onLoad();
+            that.setData({
+              showComment: false
+            })
+            wxJs.postRequest(that.data.listUrl, that.data.listPost, (res) => {
+              let data = res.data.result
+              if (data && data['BkComment.list'].length > 0) {
+                that.setData({
+                  commentList: data['BkComment.list']
+                })
+              }
+            })
           }, 1000)
         }
       })

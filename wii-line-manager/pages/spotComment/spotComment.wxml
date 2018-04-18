@@ -9,7 +9,7 @@
   <view class='comment-foot' wx:if='{{!showComment}}' catchtap='goComment'>
     <view class='comment-input'>说点什么吧~~</view>
   </view>
-  <view class='comment-mask' wx:else>
+  <view class='comment-mask' wx:if='{{showComment}}'>
     <view class='comment-container'>
       <view class='comment-head'>
         <text catchtap='cancelComment'>取消</text>
