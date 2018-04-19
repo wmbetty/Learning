@@ -19,7 +19,8 @@ Page({
     pname: '',
     postData: {},
     listUrl: '',
-    tabIndex: 0
+    tabIndex: 0,
+    timeStamp: 0
   },
 
   // 获取列表数据
@@ -128,8 +129,8 @@ Page({
   //滚动到底部触发事件
   searchScrollLower (e) {
     let that = this;
-    if (e.timeStamp-this.data.timeStamp<3000) {return}
-    this.setData({
+    if (e.timeStamp-that.data.timeStamp<3000) {return}
+    that.setData({
       timeStamp:e.timeStamp
     });  
     if(that.data.hasMore){

@@ -9,14 +9,16 @@
     <view class='s-head-right' bindtap='goBack'>取消</view>
   </view>
   <view wx:if='{{searchText && searchList.length > 0}}'>
-    <view class='remd-list-item' wx:for='{{searchList}}' wx:key='{{index}}'>
-      <image class='remd-spot-img' src='{{item.bcontentImage || "../../dist/images/71817.png"}}'></image>
-      <view class='remd-spot-info'>
+    <scroll-view scroll-y style="height: {{listHeight}}px;" bindscrolltolower="searchScrollLower">
+      <view class='remd-list-item' wx:for='{{searchList}}' data-item='{{item}}' wx:key='{{index}}' bindtap='gotoDetail'>
+        <image class='remd-spot-img' src='{{item.bcontentImage || "../../dist/images/71817.png"}}'></image>
+        <view class='remd-spot-info'>
          <view class='r-spot-name'>{{item.title || ''}}</view>
          <view class='s-middle'>{{item.middleTwo || ''}}</view>
         <view class='r-spot-foot'>{{item.footerOne || '景点'}}</view> 
       </view>     
     </view>
-    <view class='r-nodata' wx:if='{{searchList.length === 0}}'>暂无数据</view>
+    </scroll-view>
   </view>
+   <view class='r-nodata' wx:if='{{noList}}'>暂无数据</view> 
 </view>
