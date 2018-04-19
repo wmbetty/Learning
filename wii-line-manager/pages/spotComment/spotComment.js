@@ -4,6 +4,7 @@ var app = getApp();
 var appValue = app.globalData.app;
 var platform = app.globalData.platform;
 var ver = app.globalData.ver;
+var tempList = []
 
 Page({
 
@@ -12,9 +13,10 @@ Page({
    */
   data: {
     pageId: 1,
-    size: 15,
+    size: 10,
     sourceId: '',
     commentList: [],
+    lastList: [],
     winHeight: '',
     commentVal: '',
     showComment: false,
@@ -22,7 +24,10 @@ Page({
     spotInfos: {},
     sid: '',
     listUrl: '',
-    listPost: {}
+    listPost: {},
+    hasMore: true,
+    noList: false,
+    timeStamp: 0
   },
 
   /**
@@ -67,14 +72,7 @@ Page({
         listUrl: url,
         listPost: postData
       })
-      wxJs.postRequest(url, postData, (res) => {
-        let data = res.data.result
-        if (data && data['BkComment.list'].length > 0) {
-          that.setData({
-            commentList: data['BkComment.list']
-          })
-        }
-      })
+      that.getCommList(url, postData)
     }
   },
 
@@ -125,6 +123,58 @@ Page({
    */
   onShareAppMessage: function () {
   
+  },
+
+  getCommList(url, postData) {
+    let that = this
+    wxJs.showLoading('加载中');
+    wxJs.postRequest(url, postData, (res) => {
+      if (res) {
+        wx.hideLoading();
+      }
+      let resData = res.data.result
+      if (that.data.pageId <= 1 && resData && resData['BkComment.list'].length > 0) {
+        that.setData({
+          lastList: resData['BkComment.list']
+        })
+      }
+      if (that.data.pageId > 1 && resData && resData['BkComment.list'].length > 0) {
+        tempList = resData['BkComment.list']
+        let list = that.data.lastList
+        that.setData({
+          lastList: list.concat(tempList)
+        })
+        console.log(that.data.lastList, 'last')
+      }
+      
+      if ((!resData || resData['BkComment.list'].length === 0) && that.data.pageId >= 1) {
+        that.setData({
+          hasMore: false,
+          noList: true
+        })
+      }
+    })
+  },
+
+  searchScrollLower(e) {
+    let that = this;
+    if (e.timeStamp - that.data.timeStamp < 3000) { return }
+    that.setData({
+      timeStamp: e.timeStamp
+    });
+    if (that.data.hasMore) {
+      let pageId = that.data.pageId + 1
+      let postData = that.data.listPost
+      postData.pageId = pageId
+      that.setData({
+        pageId: pageId,
+        listPost: postData
+      })
+      let url = that.data.listUrl
+      that.getCommList(url, postData)
+    } else {
+      wxJs.showToast('数据已全部加载')
+    }
   },
 
   // input输入

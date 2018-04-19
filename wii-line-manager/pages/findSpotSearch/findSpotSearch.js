@@ -19,6 +19,7 @@ Page({
     searchUrl: '',
     searchData: {},
     searchList: [],
+    lastList: [],
     listHeight: '',
     timeStamp: 0,
     hasMore: true,
@@ -115,12 +116,15 @@ Page({
     let that = this
     let postData = that.data.searchData
     let url = that.data.searchUrl
-    postData.title = val
-    that.setData({
-      searchText: val,
-      searchData: postData
-    })
-    that.getSearchList(url, that.data.searchData)
+    if (val) {
+      postData.title = val
+      that.setData({
+        searchText: val,
+        searchData: postData,
+        pageId: 1
+      })
+      that.getSearchList(url, that.data.searchData)
+    }
   },
 
   // 获取搜索列表
@@ -128,20 +132,20 @@ Page({
     wxJs.showLoading('加载中');
     let that = this;
     wxJs.postRequest(url, data, (res) => {
-      let resData = res.data.result
-      if (resData) {
+      if (res) {
         wx.hideLoading();
       }
+      let resData = res.data.result
       if (that.data.pageId <= 1 && resData && resData['ShowList.list'].length > 0) {
         that.setData({
-          searchList: resData['ShowList.list']
+          lastList: resData['ShowList.list']
         })
       }
       if (that.data.pageId > 1 && resData && resData['ShowList.list'].length > 0) {
         tempList = resData['ShowList.list']
-        let list = that.data.searchList
+        let list = that.data.lastList
         that.setData({
-          searchList: list.concat(tempList)
+          lastList: list.concat(tempList)
         })
       }
       if ((!resData || resData['ShowList.list'].length === 0) && that.data.pageId >= 1) {
@@ -174,12 +178,15 @@ Page({
       timeStamp: e.timeStamp
     });
     if (that.data.hasMore && that.data.searchText) {
-      let pageId = that.data.pageId + 1
+      let pageId = that.data.pageId
+      pageId = pageId + 1
+      let postData = that.data.searchData
+      postData.pageId = pageId
       that.setData({
-        pageId: pageId
+        pageId: pageId,
+        searchData: postData
       })
       let url = that.data.searchUrl
-      let postData = that.data.searchData
       that.getSearchList(url, postData)
     } else {
       wxJs.showToast('数据已全部加载')
