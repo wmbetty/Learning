@@ -71,7 +71,8 @@
     "pages/previewSpot/previewSpot",
     "pages/previewDetail/previewDetail",
     "pages/spotComment/spotComment",
-    "pages/findSpotSearch/findSpotSearch"
+    "pages/findSpotSearch/findSpotSearch",
+    "pages/findSpotByArea/findSpotByArea"
   ],
   "window": {
     "navigationBarBackgroundColor": "#191919",

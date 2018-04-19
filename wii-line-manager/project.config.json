@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 3,
 			"list": [
 				{
 					"id": -1,
@@ -49,6 +49,11 @@
 					"name": "搜索",
 					"pathName": "pages/findSpotSearch/findSpotSearch",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "找去处",
+					"pathName": "pages/findSpot/findSpot"
 				}
 			]
 		}

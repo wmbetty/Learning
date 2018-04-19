@@ -45,7 +45,7 @@ Page({
    */
   onLoad: function (options) {
     let that = this
-    
+    innerAudioContext.src = ''
     wxJs.getSystemInfo((res) => {
       // 可使用窗口宽度、高度
       let windowHeight = res.windowHeight
@@ -119,14 +119,14 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    innerAudioContext.pause();
+    
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+    innerAudioContext.pause();
   },
 
   /**

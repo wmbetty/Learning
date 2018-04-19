@@ -23,7 +23,17 @@ Page({
     winHeight: '', //窗口高度
     listUrl: '',
     path: null,
-    distance: 0
+    distance: 0,
+    navLists: [
+      { 'text': '景点', 'img':'../../dist/images/ic_jingdian.png'},
+      { 'text': '玩法', 'img': '../../dist/images/ic_wanfa.png'},
+      { 'text': '锦囊', 'img': '../../dist/images/ic_jinnang.png'},
+      { 'text': '美食', 'img': '../../dist/images/ic_meishi.png'},
+      { 'text': '购物', 'img': '../../dist/images/ic_gouwu.png' },
+      { 'text': '住宿', 'img': '../../dist/images/ic_zhusu.png' },
+      { 'text': '休闲', 'img': '../../dist/images/ic_xiuxian.png' },
+      { 'text': '综合', 'img': '../../dist/images/ic_zonghe.png' }
+    ]
   },
 
   /**
@@ -144,6 +154,9 @@ Page({
         lon = res.longitude
         wxJs.postRequest(url, postData, (res) => {
           let resData = res.data
+          if (resData) {
+            wx.hideLoading();
+          }
           let lists = resData.result['ShowList.list'] || []
           // 计算距离
           if (lists.length > 0) {
@@ -151,9 +164,6 @@ Page({
               let dis = util.getDistance(item.latitude, item.longitude, lat, lon)
               item.sDis = dis
             }
-          }
-          if (resData) {
-            wx.hideLoading();
           }
           if (resData.result && lists.length > 0 && that.data.pageId <= 1) {
             that.setData({
@@ -210,6 +220,15 @@ Page({
     let item = e.currentTarget.dataset.item
     wx.navigateTo({
       url: '/pages/previewDetail/previewDetail?item=' + JSON.stringify(item)
+    })
+  },
+  // 八个图标点击
+  goSpot (e) {
+    console.log(e, 'navitem')
+    let index = e.target.dataset.index
+    let spotDetail = e.target.dataset.detail
+    wx.navigateTo({
+      url: '/pages/findSpotByArea/findSpotByArea?detail=' + JSON.stringify(spotDetail) + '&index=' + index
     })
   }
 

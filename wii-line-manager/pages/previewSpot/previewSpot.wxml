@@ -12,37 +12,9 @@
         </view>
     </view>
     <view class="nav-cont">
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_jingdian.png"></image>
-        <view>景点</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_wanfa.png"></image>
-        <view>玩法</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_jinnang.png"></image>
-        <view>锦囊</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_meishi.png"></image>
-        <view>美食</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_gouwu.png"></image>
-        <view>购物</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_zhusu.png"></image>
-        <view>住宿</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_xiuxian.png"></image>
-        <view>休闲</view>
-      </view>
-      <view class='nav-item'>
-        <image class='nav-icon' src="../../dist/images/ic_zonghe.png"></image>
-        <view>综合</view>
+      <view class='nav-item' wx:for='{{navLists}}' wx:key='{{index}}'>
+        <image class='nav-icon' src="{{item.img}}" data-index='{{index}}' data-detail='{{details}}' bindtap='goSpot'></image>
+        <view>{{item.text}}</view>
       </view>
     </view>
     <view class='list-cont'>

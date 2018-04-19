@@ -150,8 +150,7 @@ Page({
       }
       if ((!resData || resData['ShowList.list'].length === 0) && that.data.pageId >= 1) {
         that.setData({
-          hasMore: false,
-          noList: true
+          hasMore: false
         })
       }
     })
