@@ -1,0 +1,43 @@
+<!--pages/main/main.wxml-->
+<view class="main-page">
+    <swiper indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-30}}px;">
+
+        <block wx:if="chooseData.length > 0" wx:for="{{chooseData}}" wx:key="index">
+            <swiper-item>
+                <view class="main-container">
+                    <view class="main-cont">
+                        <view class="main-head">
+                            <view class="left-item">
+                                <view class="avatar-box" catchtap="gotoOthers"></view>
+                                <view class="user-infos">
+                                    <view class="infos-head">哈哈哈</view>
+                                    <view>呵呵</view>
+                                </view>
+                            </view>
+                            <view class="right-item">分享图标</view>
+                        </view>
+                        <view class="main-body">
+                            <view class="body-title">你好吗{{index}}</view>
+                            <view class="main-totals">参与 100</view>
+                        </view>
+                        <view class="content-box">
+                            <view class="left-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
+                                <view>sdfkjhsjf{{index}}</view>
+                                <view class="cont-mask" wx:if="{{showMask}}">
+                                    <view>{{item.choosedLeft ? choosed_persent : noChoosed_persent}}%</view>
+                                </view>
+                            </view>
+                            <view class="right-box" catchtap="goVote" data-item="{{item}}" data-direct="right">
+                                <view class="cont-mask" wx:if="{{showMask}}">
+                                    <view>{{item.choosedLeft ? noChoosed_persent : choosed_persent}}%</view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </swiper-item>
+        </block>
+
+    </swiper>
+</view>

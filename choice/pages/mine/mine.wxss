@@ -1,0 +1,30 @@
+/* pages/mine/mine.wxss */
+.mine-banner{
+    height: 250rpx;width: 100%;position: relative;
+    background: #ccc;
+}
+.nums-box{
+    position: absolute;right: 18rpx;bottom: 10px;
+    display: flex;font-size: 26rpx;
+}
+.msg-box{margin-left: 30rpx;}
+.my-avatar{
+    position: absolute;left: 18rpx;bottom: -76rpx;
+    width: 170rpx;height: 170rpx;border-radius: 50%;
+    background: #ddd;
+}
+.mine-infos{
+    display: flex;padding: 100rpx 20rpx 70rpx;
+    background: #eee;
+}
+.my-name{
+    font-size: 40rpx;color: #000;font-weight: 600;margin-right: 40rpx;
+}
+.my-gender{font-size: 28rpx;margin-top: 13rpx;}
+.tab-head{
+    display: flex;font-size: 30rpx;
+}
+.mine-send-head{
+    width: 220rpx;text-align: center;padding: 14rpx 0;
+    background: #999;
+}

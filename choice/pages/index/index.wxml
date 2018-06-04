@@ -1,0 +1,9 @@
+<!--index.wxml-->
+<swiper indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-30}}px;">
+    <block wx:for="{{imgUrls}}" wx:key="index">
+        <swiper-item>
+            <view style="width: 100%;height:100%;">哈哈哈哈{{index}}</view>
+        </swiper-item>
+    </block>
+</swiper>
