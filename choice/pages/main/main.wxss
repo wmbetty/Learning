@@ -1,40 +1,131 @@
 /* pages/main/main.wxss */
 .main-page{
-    background: #fff;
+    background: #F4F4F8;
+    position: relative;
 }
 .main-container{
-    border:1px solid #ccc;padding:0 8rpx 18rpx;margin:70rpx 8rpx 8rpx;border-radius:6px;
+    box-shadow: 0 0 5px #ccc;padding:0 8rpx 40rpx;margin:60rpx 30rpx 0;background: #fff;
 }
 .main-head{
-    display: flex;justify-content: space-between;padding: 26rpx 12rpx;font-size: 24rpx;
+    display: flex;justify-content: space-between;padding: 60rpx 40rpx 0;
 }
 .left-item{width: 80%;display: flex;}
 .avatar-box{
-    width: 100rpx;height: 100rpx;border-radius: 50%;margin-right: 30rpx;
+    width: 72rpx;height: 72rpx;border-radius: 50%;margin-right: 20rpx;
     background: #777;
 }
 .user-infos{
     padding-top: 12rpx;
+    display: flex;
 }
-.infos-head{margin-bottom: 14rpx;}
+.infos-head{font-size: 36rpx;}
+.r-share-btn{
+    width: 38rpx;height: 38rpx;margin-top: 12rpx;
+    background: #ccc;
+}
+.gender-box{
+    width: 30rpx;height: 30rpx;margin: 8rpx 0 0 20rpx;
+    background: red;
+}
 .main-body{
-    padding: 140rpx 0 38rpx;text-align: center;
-    background: #eee;
+    padding: 162rpx 0 38rpx;text-align: center;
 }
 .body-title{
-    font-size: 40rpx;color: #000;font-weight: 600;margin-bottom: 120rpx;
+    font-size: 48rpx;color: #343434;font-weight: 600;margin-bottom: 130rpx;
 }
 .main-totals{
-    width: 180rpx;border-radius: 30rpx;margin: 0 auto;font-size: 26rpx;padding: 8rpx 10rpx;
-    background: #999;
+    display: flex;margin-bottom: 42rpx;justify-content: center;align-items: center;
+    width: 190rpx;border-radius: 30rpx;margin: 0 auto;font-size: 28rpx;padding: 6rpx 0;background: #F4F4F4;color: #C7C7CC;
+}
+.hot-icon{
+    width: 22rpx;height: 30rpx;margin-right: 14rpx;
+    background: #333;
 }
 .content-box{
-    display: flex;justify-content: space-between;
+    display: flex;justify-content: space-between;padding: 0 20rpx;
+}
+.left-box{
+    width: 300rpx;height: 240rpx;position: relative;box-shadow: 0 0 5px #ccc;font-size: 40rpx;padding: 40rpx 20rpx;
+    margin-right: 10rpx;display: flex;justify-content: center;align-items: center;color: #576B95;
+    overflow: hidden;text-overflow:ellipsis;
+}
+.right-box{
+    display: flex;justify-content: center;align-items: center;color: #576B95;font-size: 40rpx;
+    width: 300rpx;height: 240rpx;position: relative;box-shadow: 0 0 5px #ccc;padding: 40rpx 20rpx;
+    overflow: hidden;text-overflow:ellipsis;
+}
+.up-text-box{
+    display: flex;justify-content: center;align-items: center;font-size: 24rpx;padding: 0 20rpx;
+    padding-top: 30rpx;color: #C7C7CC;
+}
+.up-icon{
+    width: 20rpx;height: 10rpx;margin-left: 12rpx;
     background: #ddd;
 }
-.left-box{width: 50%;height: 360rpx;background:#fff;position: relative;}
-.right-box{width: 49%;height: 360rpx;background: #888;position: relative;}
 .cont-mask{
     position: absolute;left: 0;top:0;width: 100%;height: 100%;background: rgba(0,0,0, 0.4);color: #fff;
     text-align: center;font-size: 80rpx;font-weight: bold;display: flex;justify-content: center;align-items: center;
+}
+.shareMask{
+    position: absolute;left: 0;top:0;width: 100%;height: 100%;
+    background: rgba(0,0,0, 0.4);z-index: 99;
+}
+.share-title{text-align: center;font-size: 26rpx;}
+.share-btn-box{
+    display: flex;justify-content: space-between;align-items: center;
+}
+.share-btn{
+    width: 50%;font-size: 26rpx;text-align: center;
+}
+.share-button{
+    width: 120rpx;height: 120rpx;margin: 0 auto;border-radius: 50%;
+    background: #eee;
+}
+.share-main{
+    position: absolute;left: 3%;bottom: 0;width: 94%;padding: 30rpx 0;
+}
+.share-main-cont{
+    background: #fff;padding: 20rpx 0;
+}
+.share-cancel-btn{
+    font-size: 30rpx;text-align: center;border: 1px solid #ccc;
+    padding: 20rpx 0;margin: 20rpx auto 0;background: #fff;
+}
+.imagePathBox{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+.shengcheng{
+    width: 80%;
+    height: 80%;
+    position: fixed;
+    top: 50rpx;
+    left: 50%;
+    margin-left: -40%;
+    z-index: 10;
+}
+.baocun{
+    display: block;
+    width: 80%;
+    height: 80rpx;
+    padding: 0;
+    line-height: 80rpx;
+    text-align: center;
+    position: fixed;
+    bottom: 50rpx;
+    left: 10%;
+    background: #ffe200;
+    color: #333;
+    font-size: 32rpx;
+    border-radius: 44rpx;
+}
+button[class="baocun"]::after{
+    border: 0;
 }

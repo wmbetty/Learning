@@ -1,4 +1,5 @@
 <!--index.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
 <swiper indicator-dots="{{indicatorDots}}"
         autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-30}}px;">
     <block wx:for="{{imgUrls}}" wx:key="index">
@@ -7,3 +8,4 @@
         </swiper-item>
     </block>
 </swiper>
+<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>

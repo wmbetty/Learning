@@ -1,7 +1,8 @@
 <!--pages/main/main.wxml-->
-<view class="main-page">
+<import src="../../components/tabBar/tabBar.wxml"/>
+<view class="main-page" style="height:{{viewHeight}}px;">
     <swiper indicator-dots="{{indicatorDots}}"
-            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-30}}px;">
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-10}}px;">
 
         <block wx:if="chooseData.length > 0" wx:for="{{chooseData}}" wx:key="index">
             <swiper-item>
@@ -12,23 +13,29 @@
                                 <view class="avatar-box" catchtap="gotoOthers"></view>
                                 <view class="user-infos">
                                     <view class="infos-head">哈哈哈</view>
-                                    <view>呵呵</view>
+                                    <view class="gender-box"></view>
                                 </view>
                             </view>
-                            <view class="right-item">分享图标</view>
+                            <view class="right-item">
+                                <view class="r-share-btn" bindtap="goShare"></view>
+                            </view>
                         </view>
                         <view class="main-body">
-                            <view class="body-title">你好吗{{index}}</view>
-                            <view class="main-totals">参与 100</view>
+                            <view class="body-title">星期5，健身还是聚餐呢？{{index}}</view>
+                            <view class="main-totals">
+                                <text class="hot-icon"></text>
+                                <text>130</text>
+                            </view>
                         </view>
                         <view class="content-box">
                             <view class="left-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
-                                <view>sdfkjhsjf{{index}}</view>
+                                <view>健身</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
                                     <view>{{item.choosedLeft ? choosed_persent : noChoosed_persent}}%</view>
                                 </view>
                             </view>
                             <view class="right-box" catchtap="goVote" data-item="{{item}}" data-direct="right">
+                                <view>聚餐k歌打机约会看电影哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
                                     <view>{{item.choosedLeft ? noChoosed_persent : choosed_persent}}%</view>
                                 </view>
@@ -36,8 +43,38 @@
                         </view>
                     </view>
                 </view>
+                <view class="up-text-box">
+                    <text>滑动切换</text>
+                    <text class="up-icon"></text>
+                </view>
             </swiper-item>
         </block>
 
     </swiper>
+
+    <view class="shareMask" wx:if="{{showShare}}">
+        <view class="share-main">
+            <view class="share-main-cont">
+                <view class="share-title">邀请好友来投票</view>
+                <view class="share-btn-box">
+                    <view class="share-btn">
+                        <view class="share-button" bindtap="formSubmit">朋友圈</view>
+                    </view>
+                    <view class="share-btn">
+                        <button class="share-button" open-type="share" bindtap="gotoShare">邀请好友</button>
+                    </view>
+                </view>
+            </view>
+            <view class="share-cancel-btn" catchtap="cancelShare">取消</view>
+        </view>
+    </view>
+    <view class='imagePathBox' wx:if="{{maskHidden}}">
+        <image src="{{imagePath}}" class='shengcheng'></image>
+        <button class='baocun' bindtap='baocun'>保存相册，分享到朋友圈</button>
+    </view>
+    <view wx:if="{{maskHidden}}" class="mask"></view>
+    <view class="canvas-box">
+        <canvas  style="width: 375px;height: 667px;position:fixed;top:9999px" canvas-id="mycanvas"/>
+    </view>
 </view>
+<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>

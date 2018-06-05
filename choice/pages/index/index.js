@@ -1,3 +1,4 @@
+const tabBar = require('../../components/tabBar/tabBar.js');
 const Api = require('../../wxapi/wxApi');
 
 Page({
@@ -14,6 +15,7 @@ Page({
     viewHeight: 0
   },
   onLoad: function(option) {
+    tabBar.tabbar("tabBar", 2, this);//0表示第一个tabbar
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {

@@ -1,0 +1,14 @@
+<!--components/tabBar/tabBar.wxml-->
+<template name="tabBar">
+    <view class="tabBar">
+    <block wx:for="{{tabBar}}" wx:for-item="item" wx:key="tabBar">
+        <view class="tabBar-item">
+        <navigator open-type="redirect" url="{{item.pagePath}}">
+            <view wx:if="{{index*1 !== 2}}"><image class="icon" src='{{item.iconPath}}'></image></view>
+            <image wx:if="{{index*1 === 2}}" class="icon" src='{{item.iconPath}}'></image>
+            <view wx:if="{{index*1 !== 2}}" class="{{item.current== 1 ? 'tabBartext' :''}}">{{item.text}}</view>
+        </navigator>  
+        </view>
+    </block>
+    </view>
+</template>
