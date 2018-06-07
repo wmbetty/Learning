@@ -15,4 +15,11 @@
     </view>
     <view class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" bindtap="goPublish">发布</view>
 </view>
+<view class="gc-toast" wx:if="{{showToast}}">
+    <view class="toast-cont">
+        <image src="" class="smile-icon" />
+        <image src="" class="score-icon" />
+    </view>
+    <view class="toast-info">发布成功</view>
+</view>
 <!-- <template is="tabBar" data="{{tabBar:bindData.tabBar}}"/> -->

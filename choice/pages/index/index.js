@@ -11,7 +11,8 @@ Page({
     isPublish: false,
     leftText: '',
     rightText: '',
-    titleText: ''
+    titleText: '',
+    showToast: false
   },
   onLoad: function(option) {
     tabBar.tabbar("tabBar", 2, this);//0表示第一个tabbar
@@ -97,6 +98,14 @@ Page({
       let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
       return false;
     }
-    console.log(11)
+    that.setData({
+      showToast: true
+    });
+    // 2s后消失
+    setTimeout(() => {
+      that.setData({
+        showToast: false
+      });
+    }, 2000)
   }
 });

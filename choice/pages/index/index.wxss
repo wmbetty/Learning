@@ -1,6 +1,6 @@
 /**index.wxss**/
 page{
-    background: #F4F4F8;
+    background: #F4F4F8;position: relative;
 }
 .title-box{
     border-bottom: 1px solid #f1f1f1;background: #fff;
@@ -36,4 +36,26 @@ page{
 }
 .publish-btn-active{
     background: #E74C49;color: #fff;
+}
+.gc-toast{
+    width: 240rpx;height: 240rpx;border-radius: 10rpx;
+    position: absolute;top: 50%;left: 50%;
+    margin: -120rpx 0 0 -120rpx;
+    background: rgba(0, 0, 0, 0.5);
+}
+.toast-cont{
+    padding: 60rpx 46rpx 32rpx;
+}
+.toast-info{
+    text-align: center;color: #fff;font-size: 26rpx;
+}
+.smile-icon{
+    display: inline-block;
+    width: 64rpx;height: 64rpx;margin-right: 24rpx;
+    background: red;
+}
+.score-icon{
+    display: inline-block;
+    width: 58rpx;height: 68rpx;
+    background: black;
 }
