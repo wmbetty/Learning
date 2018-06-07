@@ -2,17 +2,17 @@
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 <view>
     <view class="title-box">
-        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" bindinput="titlePut" bindfocus="textFocus" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" placeholder="点击输入标题" />
+        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" data-direct="title" bindinput="titlePut" bindfocus="textFocus" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" placeholder="点击输入标题" />
         <!-- <textarea wx:if="{{}}" focus="true" class="textarea-has-text"></textarea> -->
     </view>
     <view class="pub-cont">
         <view class="pub-cont-box">
-            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" data-direct="left" bindfocus="contFocus" value="{{leftHolder}}" cursor-spacing='210'/>
+            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" data-direct="left" bindinput="titlePut" bindfocus="contFocus" value="{{leftHolder}}" cursor-spacing='180'/>
         </view>
         <view class="pub-cont-box">
-            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" data-direct="right" bindfocus="contFocus" value="{{rightHolder}}" cursor-spacing='210'/>
+            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" data-direct="right" bindinput="titlePut" bindfocus="contFocus" value="{{rightHolder}}" cursor-spacing='180'/>
         </view>
     </view>
-    <view class="publish-btn">发布</view>
+    <view class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" bindtap="goPublish">发布</view>
 </view>
 <!-- <template is="tabBar" data="{{tabBar:bindData.tabBar}}"/> -->

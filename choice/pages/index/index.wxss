@@ -34,3 +34,6 @@ page{
     background:#E1E1E1;width:92%;margin:60rpx auto;height:92rpx;border-radius: 10rpx;
     text-align: center;line-height: 92rpx;color: #fff;
 }
+.publish-btn-active{
+    background: #E74C49;color: #fff;
+}
