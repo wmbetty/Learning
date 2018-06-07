@@ -10,10 +10,12 @@
                     <view class="main-cont">
                         <view class="main-head">
                             <view class="left-item">
-                                <view class="avatar-box" catchtap="gotoOthers"></view>
+                                <view class="avatar-box" catchtap="gotoOthers">
+                                    <image src="" class="m-avatar"></image>
+                                </view>
                                 <view class="user-infos">
                                     <view class="infos-head">哈哈哈</view>
-                                    <view class="gender-box"></view>
+                                    <view class="{{item.user.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
                                 </view>
                             </view>
                             <view class="right-item">
@@ -28,16 +30,16 @@
                             </view>
                         </view>
                         <view class="content-box">
-                            <view class="left-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
-                                <view>健身</view>
+                            <view class="vote-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
+                                <view class="vote-cont">健身</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
-                                    <view>{{item.choosedLeft ? choosed_persent : noChoosed_persent}}%</view>
+                                    <view class="{{item.choose_left?'vote-selected':''}}">{{item.choosedLeft ? choosed_persent : noChoosed_persent}}%</view>
                                 </view>
                             </view>
-                            <view class="right-box" catchtap="goVote" data-item="{{item}}" data-direct="right">
-                                <view>聚餐k歌打机约会看电影哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
+                            <view class="vote-box" catchtap="goVote" data-item="{{item}}" data-index="{{index}}" data-direct="right">
+                                <view class="vote-cont">聚餐k歌打机约会看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
-                                    <view>{{item.choosedLeft ? noChoosed_persent : choosed_persent}}%</view>
+                                    <view class="{{item.choose_right?'vote-selected':''}}">{{item.choosedLeft ? noChoosed_persent : choosed_persent}}%</view>
                                 </view>
                             </view>
                         </view>

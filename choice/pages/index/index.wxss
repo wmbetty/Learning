@@ -1,5 +1,36 @@
 /**index.wxss**/
 page{
-    /*background: red;*/
-    color: #000;
+    background: #F4F4F8;
+}
+.title-box{
+    border-bottom: 1px solid #f1f1f1;background: #fff;
+    width: 100%;height: 540rpx;overflow: hidden;
+}
+.title-textarea{
+    width: 300rpx;height: 60rpx;padding: 242rpx 0;text-align: center;font-size: 40rpx;margin: 0 auto;
+}
+.textarea-has-text{
+    width: 480rpx;height: 170rpx;padding: 185rpx 0;text-align: center;font-size: 40rpx;margin: 0 auto;
+}
+.text-holder{
+    color: #888;text-align: center;
+}
+.text-holder-white{color: #fff;text-align: center;}
+.pub-cont{
+    background: #fff;
+    display: flex;justify-content: space-between;
+}
+.pub-cont-box{
+    width: 49%;height: 300rpx;overflow: hidden;margin: 40rpx 0;
+}
+.pub-cont-box:first-child{border-right: 1px solid #f1f1f1;}
+.cont-holder{
+    width: 100%;height: 60rpx;font-size:40rpx;text-align: center;margin: 110rpx auto 0;color: #888;
+}
+.cont-textarea{
+    width: 280rpx;height: 170rpx;font-size:40rpx;text-align: center;margin: 70rpx auto 0;
+}
+.publish-btn{
+    background:#E1E1E1;width:92%;margin:60rpx auto;height:92rpx;border-radius: 10rpx;
+    text-align: center;line-height: 92rpx;color: #fff;
 }

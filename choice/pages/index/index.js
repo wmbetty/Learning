@@ -3,16 +3,11 @@ const Api = require('../../wxapi/wxApi');
 
 Page({
   data: {
-    imgUrls: [
-      'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
-      'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg'
-    ],
-    indicatorDots: false,
-    autoplay: false,
-    interval: 2500,
-    duration: 500,
-    viewHeight: 0
+    showTextarea: false,
+    showLeft: false,
+    showRight: false,
+    leftHolder: '点击输入左选项',
+    rightHolder: '点击输入右选项'
   },
   onLoad: function(option) {
     tabBar.tabbar("tabBar", 2, this);//0表示第一个tabbar
@@ -22,5 +17,33 @@ Page({
         this.setData({viewHeight: res.windowHeight});
       }
     })
+  },
+  textFocus () {
+    this.setData({
+      showTextarea: true
+    })
+  },
+  contFocus (e) {
+    let that = this;
+    let direct = e.target.dataset.direct;
+    if (direct === 'left') {
+      that.setData({
+        showLeft: true,
+        leftHolder: ''
+      })
+    } else {
+      this.setData({
+        showRight: true,
+        rightHolder: ''
+      })
+    }
+  },
+  titlePut (e) {
+    let that = this;
+    let val = e.detail.value;
+    let chineseReg = /[\u4E00-\u9FA5]/g;
+    if (val.trim().length > 30) {
+      console.log('超出了')
+    }
   }
 });

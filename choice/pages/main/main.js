@@ -17,26 +17,35 @@ Page({
     choosed_persent: 0,
     noChoosed_persent: 0,
     showMask: false,
-    choosedLeft: false,
     chooseData:[
-      {id: 0, choosed: 0.33},
-      {id: 1, choosed: 0.60},
-      {id: 2, choosed: 1}
+      {id: 0, choosed: 0.33,user:{gender: 1}},
+      {id: 1, choosed: 0.60,user:{gender: 2}},
+      {id: 2, choosed: 1,user:{gender: 1}}
     ],
     showShare: false,
     touxiang:"../../images/bg.png",
+    choose_left: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    tabBar.tabbar("tabBar", 0, this);
+    let that = this;
+    let chooseData = that.data.chooseData;
+    tabBar.tabbar("tabBar", 0, that);
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
         this.setData({viewHeight: res.windowHeight});
       }
+    })
+    for (let item of chooseData) {
+      item.choose_left = false;
+      item.choose_right = false;
+    }
+    that.setData({
+      chooseData: chooseData
     })
   },
   onReady: function () {},
@@ -46,6 +55,11 @@ Page({
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function () {},
+  onPageScroll () {
+    wx.setNavigationBarTitle({
+      title: '选象'
+    });
+  },
   // 到他人中心
   gotoOthers () {
     wx.navigateTo({
@@ -54,14 +68,32 @@ Page({
   },
   goVote (e) {
     let that = this;
+    let chooseData = that.data.chooseData;
     let direct = e.currentTarget.dataset.direct;
     let choosedItem = e.currentTarget.dataset.item.choosed * 100;
     let data_index = e.currentTarget.dataset.index;
     // console.log(data_index, 'index')
     let noChoosedItem = 100 - choosedItem;
     if (direct === 'left') {
+      for (let i = 0;i<chooseData.length;i++) {
+        if (i === data_index) {
+          chooseData[i].choose_left = true;
+        }
+      }
       that.setData({
-        choosedLeft: true
+        choosedLeft: true,
+        chooseData: chooseData
+      })
+    }
+    if (direct === 'right') {
+      for (let i = 0;i<chooseData.length;i++) {
+        if (i === data_index) {
+          chooseData[i].choose_right = true;
+        }
+      }
+      that.setData({
+        choosedLeft: true,
+        chooseData: chooseData
       })
     }
     countUp(that, choosedItem, noChoosedItem);

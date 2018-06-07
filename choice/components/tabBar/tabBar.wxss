@@ -1,7 +1,7 @@
 /* components/tabBar/tabBar.wxss */
 .icon{
-    width:50rpx;
-    height: 50rpx;
+    width:42rpx;
+    height: 42rpx;
   }
   .tabBar{
     width:100%;
@@ -25,8 +25,7 @@
       display: flex;justify-content: center;align-items: center;
   }
   .tabBar-item:nth-child(3) image{
-      width: 100rpx;height: 60rpx;margin-top: 16rpx;
-      background: red;
+      width: 112rpx;height: 60rpx;margin-top: 12rpx;
   }
   /*当前字体颜色*/
   .tabBartext{
