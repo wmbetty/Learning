@@ -2,8 +2,7 @@
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 <view>
     <view class="title-box">
-        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" data-direct="title" bindinput="titlePut" bindfocus="textFocus" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" placeholder="点击输入标题" />
-        <!-- <textarea wx:if="{{}}" focus="true" class="textarea-has-text"></textarea> -->
+        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" data-direct="title" bindinput="titlePut" value="{{titleText}}" bindfocus="textFocus" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" />
     </view>
     <view class="pub-cont">
         <view class="pub-cont-box">
@@ -15,6 +14,7 @@
     </view>
     <view class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" bindtap="goPublish">发布</view>
 </view>
+<!-- 加积分提示 -->
 <view class="gc-toast" wx:if="{{showToast}}">
     <view class="toast-cont">
         <image src="" class="smile-icon" />
@@ -22,4 +22,22 @@
     </view>
     <view class="toast-info">发布成功</view>
 </view>
-<!-- <template is="tabBar" data="{{tabBar:bindData.tabBar}}"/> -->
+
+<!-- 分享弹窗 -->
+<view class="share-mask" style="height: {{winHeight}}px;}}" wx:if="{{isShare}}">
+    <view class="share-toast">
+        <view class="share-toast-head">
+            <image class="share-close" src="../../images/close.png" bindtap="cancelShare"/>
+        </view>
+        <view class="share-infos">好友助攻 迎刃而解</view>
+        <view class="share-content">
+            <view>你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？</view>
+            <view class="triangle-down"></view>
+        </view>
+        <view class="share-btn-box">
+            <image src="../../images/moment_icon.png" class="share-btn"/>
+            <view class="btn-splie-line"></view>
+            <image src="../../images/wechat_icon.png" class="share-btn"/>
+        </view>
+    </view>
+</view>

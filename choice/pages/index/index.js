@@ -11,22 +11,27 @@ Page({
     isPublish: false,
     leftText: '',
     rightText: '',
-    titleText: '',
-    showToast: false
+    titleText: '点击输入标题',
+    showToast: false,
+    winHeight: 0,
+    isShare: false
   },
   onLoad: function(option) {
     tabBar.tabbar("tabBar", 2, this);//0表示第一个tabbar
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
-        this.setData({viewHeight: res.windowHeight});
+        this.setData({winHeight: res.windowHeight});
       }
     })
   },
   textFocus () {
-    this.setData({
-      showTextarea: true
-    })
+    if (this.data.titleText === '点击输入标题') {
+      this.setData({
+        showTextarea: true,
+        titleText: ''
+      })
+    }
   },
   contFocus (e) {
     let that = this;
@@ -125,8 +130,18 @@ Page({
     // 2s后消失
     setTimeout(() => {
       that.setData({
-        showToast: false
+        showToast: false,
+        isShare: true,
+        leftHolder: '',
+        rightHolder: '',
+        titleText: ''
       });
     }, 2000)
+  },
+  // 取消分享
+  cancelShare () {
+    this.setData({
+      isShare: false
+    });
   }
 });
