@@ -4,7 +4,8 @@
     "pages/mine/mine",
     "pages/main/main",
     "pages/others/others",
-    "pages/test/test"
+    "pages/messages/messages",
+    "pages/votemsg/votemsg"
   ],
   "window": {
     "backgroundTextStyle": "light",

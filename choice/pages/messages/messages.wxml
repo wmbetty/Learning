@@ -1,0 +1,44 @@
+<!--pages/messages/messages.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
+<view class="page-head">消息中心</view>
+<view class="msg-list-group">
+    <view class="msg-list-item" bindtap="gotoVotemsg">
+        <view class="list-item-side">
+            <view>
+                <image src="../../images/feedback_icon.png" class="feedback-icon"/>
+            </view>
+            <view class="info-text">投票</view>
+        </view>
+        <view class="list-item-side had-pad">
+            <view class="{{msgNum*1 >= 10?'msg-num msg-num-wide':'msg-num'}}">{{msgNum}}</view>
+            <view class="msg-rt-arrow"></view>
+        </view>
+    </view>
+    <view class="msg-list-item">
+        <view class="list-item-side">
+            <view>
+                <image src="../../images/notice_icon.png" class="info-icon"/>
+            </view>
+            <view>通知</view>
+        </view>
+        <view class="list-item-side had-pad">
+            <view class="{{msgNum*1 >= 10?'msg-num msg-num-wide':'msg-num'}}">{{msgNum}}</view>
+            <view class="msg-rt-arrow"></view>
+        </view>
+    </view>
+</view>
+<view class="feed-box">
+    <view class="msg-list-item">
+        <view class="list-item-side">
+            <view>
+                <image src="../../images/vote_msg.png" class="suggest-icon"/>
+            </view>
+            <view class="suggest-title">建议反馈</view>
+        </view>
+        <view class="list-item-side had-pad">
+            <view class="welcome-infos">欢迎提建议</view>
+            <view class="msg-rt-arrow"></view>
+        </view>
+    </view>
+</view>
+<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>

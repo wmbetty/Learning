@@ -91,22 +91,6 @@ function wxRemoveStorage(key, callback) {
 }
 
 /**
- * 保留当前页面，跳转到应用内的某个页面
- * url:'../index/index'
- * params:{key:value1}
- */
-function wxNavigateTo(url, params) {
-  var wxNavigateTo = wxPromisify(wx.navigateTo)
-  const serializedParams = this.paramSerializer(params)
-  if (serializedParams.length > 0) {
-    url += ((url.indexOf('?') == -1) ? '?' : '&') + serializedParams
-  }
-  return wxNavigateTo({
-    url: url
-  })
-}
-
-/**
  * 发起请求
  */
 function wxRequest(url, method, data={}, callback) {

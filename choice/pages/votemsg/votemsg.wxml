@@ -1,0 +1,25 @@
+<!--pages/votemsg/votemsg.wxml-->
+<view class="page-head">投票</view>
+<view class="vote-list-group">
+    <view class="{{isDelete?'vote-list-item delete-bg':'vote-list-item'}}">
+        <view class="list-head">
+            <image src="" class="voter-avatar" />
+            <view>
+                <view>你啃你西瓜</view>
+                <view class="time-text">15分钟前</view>
+            </view>
+        </view>
+        <view class="flex-space voted-title">
+            <view>星期五，健身还是聚餐呢？</view>
+            <view class="s-circle"></view>
+        </view>
+        <view class="flex-space">
+            <view class="{{voteLeft?'green-font':'dark-red-font'}}">投了【{{voteLeft?'左':'右'}}边】一票</view>
+            <view class="vote-hot-box">
+                <image src="../../images/hot_icon.png" class="hot-icon" />
+                <view>32</view>
+            </view>
+        </view>
+        <image wx:if="{{isDelete}}" src="" class="delete-icon"/>
+    </view>
+</view>

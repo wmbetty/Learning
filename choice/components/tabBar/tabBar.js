@@ -10,7 +10,7 @@ function tabbarinit() {
        },
        {
          "current": 0,
-         "pagePath": "/pages/news/news",
+         "pagePath": "/pages/messages/messages",
          "iconPath": "/images/msg.png",
          "selectedIconPath": "/images/msg_act.png",
          "text": "消息"
