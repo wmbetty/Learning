@@ -49,24 +49,45 @@ Page({
     let val = e.detail.value;
     let direct = e.target.dataset.direct;
     let chineseReg = /[\u4E00-\u9FA5]/g;
-    // 标题字数限制
-    if (val.trim().length > 30) {
-      console.log('超出了')
-    }
+    
     if (direct === 'title') {
-      that.setData({
-        titleText: val
-      })
+      if (val) {
+        that.setData({
+          titleText: val
+        })
+        if (chineseReg.test(val)) {
+          if (val.match(chineseReg).length >= 30) {  //返回中文的个数  
+            let wxShowToast = Api.wxShowToast('标题字数超出限制', 'none', 2000);  
+            return false;  
+          }  
+        }
+      }
     }
     if (direct === 'left') {
-      that.setData({
-        leftText: val
-      })
+      if (val) {
+        that.setData({
+          leftText: val
+        })
+        if (chineseReg.test(val)) {
+          if (val.match(chineseReg).length >= 36) {  //返回中文的个数  
+            let wxShowToast = Api.wxShowToast('左选项字数超出限制', 'none', 2000);  
+            return false;  
+          }  
+        }
+      }
     }
     if (direct === 'right') {
-      that.setData({
-        rightText: val
-      })
+      if (val) {
+        that.setData({
+          rightText: val
+        })
+      }
+      if (chineseReg.test(val)) {
+        if (val.match(chineseReg).length >= 36) {  //返回中文的个数  
+          let wxShowToast = Api.wxShowToast('左选项字数超出限制', 'none', 2000);  
+          return false;  
+        }  
+      }
     }
     // 发布按钮样式
     if (that.data.titleText !== '' && that.data.leftText !== '' && that.data.rightText !== '') {
