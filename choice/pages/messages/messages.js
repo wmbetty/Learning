@@ -33,5 +33,10 @@ Page({
     wx.navigateTo({
       url: '/pages/votemsg/votemsg'
     })
+  },
+  gotoNotice () {
+    wx.navigateTo({
+      url: '/pages/sysnotice/sysnotice'
+    })
   }
 })

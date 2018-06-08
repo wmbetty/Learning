@@ -1,30 +1,56 @@
 /* pages/mine/mine.wxss */
+page{background: #F4F4F8;}
 .mine-banner{
-    height: 250rpx;width: 100%;position: relative;
-    background: #ccc;
+    height: 400rpx;width: 100%;position: relative;
+    background: linear-gradient(#E64340, #F3347B);
 }
 .nums-box{
-    position: absolute;right: 18rpx;bottom: 10px;
+    position: absolute;right: 30rpx;bottom: 10px;
     display: flex;font-size: 26rpx;
 }
-.msg-box{margin-left: 30rpx;}
+.gold-coin{
+    width: 52rpx;height: 52rpx;margin-top: 10rpx;
+}
+.msg-box{margin-left: 20rpx;font-size: 52rpx;color: #fff;}
 .my-avatar{
-    position: absolute;left: 18rpx;bottom: -76rpx;
-    width: 170rpx;height: 170rpx;border-radius: 50%;
-    background: #ddd;
+    position: absolute;left: 30rpx;bottom: -76rpx;
+    width: 172rpx;height: 172rpx;border-radius: 50%;
+    background: #000;
 }
 .mine-infos{
-    display: flex;padding: 100rpx 20rpx 70rpx;
-    background: #eee;
+    display: flex;padding: 100rpx 46rpx 40rpx;
+    background: #f4f4f8;
 }
 .my-name{
-    font-size: 40rpx;color: #000;font-weight: 600;margin-right: 40rpx;
+    font-size: 52rpx;color: #343434;font-weight: 600;margin-right: 20rpx;
 }
-.my-gender{font-size: 28rpx;margin-top: 13rpx;}
+.my-gender{width: 30rpx;height: 30rpx;margin-left: 20rpx;margin-top: 24rpx;}
 .tab-head{
-    display: flex;font-size: 30rpx;
+    display: flex;font-size: 36rpx;background: #F4F4F8;
+    padding: 0 0 0 36rpx;color: #343434;
 }
-.mine-send-head{
-    width: 220rpx;text-align: center;padding: 14rpx 0;
-    background: #999;
+.blue-font{
+    color: #576B95;
+}
+.bottom-line{
+    width: 80rpx;height: 10rpx;background: #343434;margin: 12rpx 23rpx;
+}
+.blue-line{background: #576B95;}
+.my-publish-item{margin-right: 60rpx;}
+.tab-list-item{background: #fff;padding: 20rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;}
+.item-title{color: #343434;font-size: 32rpx;margin-bottom: 18rpx;}
+.item-datas{
+    display: flex;justify-content: space-between;font-size: 28rpx;
+}
+.percent-cont-box{display: flex;}
+.percent-box{
+    display: flex;width: 200rpx;height: 8rpx;border-radius: 4rpx;margin: 15rpx 14rpx;
+}
+.right-progress{height: 100%;background: #11B591;}
+.left-progress{height: 100%;background: #62559D;}
+.left-pg-text{color: #11B591;}
+.right-pg-text{color: #62559D;}
+.hot-cont-box{display: flex;color: #C7C7CC;}
+.hot-icon{
+    width: 26rpx;height: 28rpx;margin-right: 12rpx;margin-top: 4rpx;
 }

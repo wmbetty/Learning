@@ -1,0 +1,26 @@
+/* pages/sysnotice/sysnotice.wxss */
+page{
+    background: #F5F6F8;
+}
+.page-head{
+    padding: 20rpx 30rpx 40rpx;color: #343434;font-size: 60rpx;background: #F5F6F8;
+}
+.empty-img{
+    width: 224rpx;height: 224rpx;margin: 110rpx auto 40rpx;display: block;
+}
+.empty-text{text-align: center;font-size: 28rpx;color: #888;}
+.notice-list-group{background: #fff;}
+.notice-list-item{
+    padding: 40rpx 30rpx;display: flex;justify-content: space-between;
+}
+.sys-avatar{
+    width: 92rpx;height: 92rpx;border-radius: 50%;margin-right: 20rpx;
+    background: red;
+}
+.sys-name-box{
+    display: flex;justify-content: space-between;margin-bottom: 10rpx;
+}
+.sys-name{color: #343434;font-size: 32rpx;}
+.sys-time{font-size: 24rpx;color: #888;}
+.sys-cont-text{font-size: 28rpx;color: #888;width: 100%;height: 44rpx;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.sys-rt-box{width: 84%;}

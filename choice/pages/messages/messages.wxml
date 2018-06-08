@@ -14,7 +14,7 @@
             <view class="msg-rt-arrow"></view>
         </view>
     </view>
-    <view class="msg-list-item">
+    <view class="msg-list-item" bindtap="gotoNotice">
         <view class="list-item-side">
             <view>
                 <image src="../../images/notice_icon.png" class="info-icon"/>

@@ -17,8 +17,8 @@
 <!-- 加积分提示 -->
 <view class="gc-toast" wx:if="{{showToast}}">
     <view class="toast-cont">
-        <image src="" class="smile-icon" />
-        <image src="" class="score-icon" />
+        <image src="../../images/gold_coin.png" class="smile-icon" />
+        <image src="../../images/score.png" class="score-icon" />
     </view>
     <view class="toast-info">发布成功</view>
 </view>

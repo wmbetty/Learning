@@ -1,0 +1,30 @@
+<!--pages/sysnotice/sysnotice.wxml-->
+<view class="page-head">通知</view>
+<view wx:if="{{noData}}">
+    <image src="../../images/empty_img.png" class="empty-img" />
+    <view class="empty-text">还没有收到通知哦</view>
+</view>
+<view wx:if="{{!noData}}">
+    <view class="notice-list-group">
+        <view class="notice-list-item">
+            <image src="" class="sys-avatar" />
+            <view class="sys-rt-box">
+                <view class="sys-name-box">
+                    <view class="sys-name">选小象</view>
+                    <view class="sys-time">15分钟前</view>
+                </view>
+                <view class="sys-cont-text">您的投票涉及违规，已被系统删除已被系统删除已被系统删除已被系统删除已被系统删除</view>
+            </view>
+        </view>
+        <view class="notice-list-item">
+            <image src="" class="sys-avatar" />
+            <view class="sys-rt-box">
+                <view class="sys-name-box">
+                    <view class="sys-name">选小象</view>
+                    <view class="sys-time">15分钟前</view>
+                </view>
+                <view class="sys-cont-text">您的投票涉及违规，已被系统删除</view>
+            </view>
+        </view>
+    </view>
+</view>

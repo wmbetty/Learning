@@ -1,25 +1,72 @@
 <!--pages/mine/mine.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
 <view>
     <view class="mine-head">
         <view class="mine-banner">
             <view class="nums-box">
-                <view>票数</view>
-                <view class="msg-box">消息</view>
+                <image src="../../images/gold_coin.png" class="gold-coin" />
+                <view class="msg-box">5</view>
             </view>
             <view class="my-avatar"></view>
         </view>
     </view>
     <view class="mine-infos">
         <view class="my-name">你好</view>
-        <view class="my-gender">男</view>
+        <image src="{{isBoy?'../../images/boy_icon.png':'../../images/girl_icon.png'}}" class="my-gender"/>
     </view>
     <view class="tab-container">
         <view class="tab-head">
-            <view class="mine-send-head">发起（0）</view>
-            <view class="mine-in-head">参与（0）</view>
+            <view class="tab-head-item my-publish-item" data-type="mine"  bindtap="voteOthers">
+                <view>发起(22)</view>
+                <view class="bottom-line" wx:if="{{isMine}}"></view>
+            </view>
+            <view class="tab-head-item blue-font" data-type="others"  bindtap="voteOthers">
+                <view>参与(22)</view>
+                <view class="bottom-line" wx:if="{{!isMine}}"></view>
+            </view>
         </view>
         <view class="tab-content">
+            <view wx:if="{{isMine}}">
+                <view class="tab-list-item">
+                    <view class="item-title">星期五，健身还是聚餐呢？</view>
+                    <view class="item-datas">
+                        <view class="percent-cont-box">
+                            <text class="left-pg-text">{{leftPercent*100}}%</text>
+                            <view class="percent-box">
+                                <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
+                                <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+                            </view>
+                            <text class="right-pg-text">{{100-leftPercent*100}}%</text>
+                        </view>
+                        <view class="hot-cont-box">
+                            <image src="../../images/hot_icon.png" class="hot-icon" />
+                            <view>32</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+
+            <view wx:if="{{!isMine}}">
+                <view class="tab-list-item">
+                    <view class="item-title">星期五，健身还是聚餐呢？(参与的)</view>
+                    <view class="item-datas">
+                        <view class="percent-cont-box">
+                            <text class="left-pg-text">{{leftPercent*100}}%</text>
+                            <view class="percent-box">
+                                <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
+                                <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+                            </view>
+                            <text class="right-pg-text">{{100-leftPercent*100}}%</text>
+                        </view>
+                        <view class="hot-cont-box">
+                            <image src="../../images/hot_icon.png" class="hot-icon" />
+                            <view>32</view>
+                        </view>
+                    </view>
+                </view>
+            </view>
 
         </view>
     </view>
 </view>
+<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>

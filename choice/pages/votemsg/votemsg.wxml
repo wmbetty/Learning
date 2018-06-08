@@ -20,6 +20,6 @@
                 <view>32</view>
             </view>
         </view>
-        <image wx:if="{{isDelete}}" src="" class="delete-icon"/>
+        <image wx:if="{{isDelete}}" src="../../images/dele_tag.png" class="delete-icon"/>
     </view>
 </view>

@@ -5,7 +5,8 @@
     "pages/main/main",
     "pages/others/others",
     "pages/messages/messages",
-    "pages/votemsg/votemsg"
+    "pages/votemsg/votemsg",
+    "pages/sysnotice/sysnotice"
   ],
   "window": {
     "backgroundTextStyle": "light",

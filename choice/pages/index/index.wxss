@@ -95,10 +95,9 @@ page{
 .smile-icon{
     display: inline-block;
     width: 64rpx;height: 64rpx;margin-right: 24rpx;
-    background: red;
+    /* transform: rotateX(180deg); */
 }
 .score-icon{
     display: inline-block;
-    width: 58rpx;height: 68rpx;
-    background: black;
+    width: 64rpx;height: 68rpx;
 }

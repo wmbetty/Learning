@@ -1,8 +1,7 @@
 // pages/votemsg/votemsg.js
 Page({
   data: {
-    voteLeft: true,
-    isDelete: true
+    noData: false
   },
   onLoad: function (options) {},
   onReady: function () {},
@@ -14,7 +13,7 @@ Page({
   onShareAppMessage: function () {},
   onPageScroll () {
     wx.setNavigationBarTitle({
-      title: "消息"
+      title: "通知"
     })
     wx.setNavigationBarColor({
       frontColor:'#ffffff',

@@ -36,5 +36,4 @@ page{
 .delete-icon{
     position: absolute;right: 0;top: 0;
     width: 68rpx;height: 68rpx;
-    background: #000;
 }
