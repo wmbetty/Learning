@@ -5,10 +5,7 @@ page{
 .page-head{
     padding: 20rpx 30rpx 40rpx;color: #343434;font-size: 60rpx;background: #F5F6F8;
 }
-.empty-img{
-    width: 224rpx;height: 224rpx;margin: 110rpx auto 40rpx;display: block;
-}
-.empty-text{text-align: center;font-size: 28rpx;color: #888;}
+.empty-container{padding: 110rpx 0 40rpx;}
 .notice-list-group{background: #fff;}
 .notice-list-item{
     padding: 40rpx 30rpx;display: flex;justify-content: space-between;

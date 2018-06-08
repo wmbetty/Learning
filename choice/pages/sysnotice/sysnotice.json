@@ -1,4 +1,7 @@
 {
     "navigationBarBackgroundColor": "#F5F6F8",
-    "navigationBarTitleText": ""
+    "navigationBarTitleText": "",
+    "usingComponents": {
+        "empty-wxml": "../../components/empty/empty"
+    }
 }

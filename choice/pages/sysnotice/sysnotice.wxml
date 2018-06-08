@@ -1,8 +1,7 @@
 <!--pages/sysnotice/sysnotice.wxml-->
 <view class="page-head">通知</view>
-<view wx:if="{{noData}}">
-    <image src="../../images/empty_img.png" class="empty-img" />
-    <view class="empty-text">还没有收到通知哦</view>
+<view wx:if="{{noData}}" class="empty-container">
+    <empty-wxml show-blue="{{showBlue}}"></empty-wxml>
 </view>
 <view wx:if="{{!noData}}">
     <view class="notice-list-group">

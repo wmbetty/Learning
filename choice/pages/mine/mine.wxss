@@ -54,3 +54,6 @@ page{background: #F4F4F8;}
 .hot-icon{
     width: 26rpx;height: 28rpx;margin-right: 12rpx;margin-top: 4rpx;
 }
+.tab-content-empty{
+    padding-top: 80rpx;margin-bottom: 140rpx;
+}

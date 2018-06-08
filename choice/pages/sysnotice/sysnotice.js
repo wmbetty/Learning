@@ -1,7 +1,8 @@
 // pages/votemsg/votemsg.js
 Page({
   data: {
-    noData: false
+    noData: false,
+    showBlue: false
   },
   onLoad: function (options) {},
   onReady: function () {},

@@ -26,44 +26,54 @@
             </view>
         </view>
         <view class="tab-content">
-            <view wx:if="{{isMine}}">
-                <view class="tab-list-item">
-                    <view class="item-title">星期五，健身还是聚餐呢？</view>
-                    <view class="item-datas">
-                        <view class="percent-cont-box">
-                            <text class="left-pg-text">{{leftPercent*100}}%</text>
-                            <view class="percent-box">
-                                <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
-                                <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+            <view wx:if="{{!noPublish}}">
+                <view wx:if="{{isMine}}">
+                    <view class="tab-list-item">
+                        <view class="item-title">星期五，健身还是聚餐呢？</view>
+                        <view class="item-datas">
+                            <view class="percent-cont-box">
+                                <text class="left-pg-text">{{leftPercent*100}}%</text>
+                                <view class="percent-box">
+                                    <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
+                                    <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+                                </view>
+                                <text class="right-pg-text">{{100-leftPercent*100}}%</text>
                             </view>
-                            <text class="right-pg-text">{{100-leftPercent*100}}%</text>
+                            <view class="hot-cont-box">
+                                <image src="../../images/hot_icon.png" class="hot-icon" />
+                                <view>32</view>
+                            </view>
                         </view>
-                        <view class="hot-cont-box">
-                            <image src="../../images/hot_icon.png" class="hot-icon" />
-                            <view>32</view>
+                    </view>
+                </view>
+            </view>
+            <view wx:if="{{!noOthers}}">
+                <view wx:if="{{!isMine}}">
+                    <view class="tab-list-item">
+                        <view class="item-title">星期五，健身还是聚餐呢？(参与的)</view>
+                        <view class="item-datas">
+                            <view class="percent-cont-box">
+                                <text class="left-pg-text">{{leftPercent*100}}%</text>
+                                <view class="percent-box">
+                                    <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
+                                    <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+                                </view>
+                                <text class="right-pg-text">{{100-leftPercent*100}}%</text>
+                            </view>
+                            <view class="hot-cont-box">
+                                <image src="../../images/hot_icon.png" class="hot-icon" />
+                                <view>32</view>
+                            </view>
                         </view>
                     </view>
                 </view>
             </view>
 
-            <view wx:if="{{!isMine}}">
-                <view class="tab-list-item">
-                    <view class="item-title">星期五，健身还是聚餐呢？(参与的)</view>
-                    <view class="item-datas">
-                        <view class="percent-cont-box">
-                            <text class="left-pg-text">{{leftPercent*100}}%</text>
-                            <view class="percent-box">
-                                <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
-                                <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
-                            </view>
-                            <text class="right-pg-text">{{100-leftPercent*100}}%</text>
-                        </view>
-                        <view class="hot-cont-box">
-                            <image src="../../images/hot_icon.png" class="hot-icon" />
-                            <view>32</view>
-                        </view>
-                    </view>
-                </view>
+            <view wx:if="{{noPublish && isMine}}" class="tab-content-empty">
+                <empty-wxml empty-info="{{mineEmptyInfo}}" show-blue="{{showBlue}}"></empty-wxml>
+            </view>
+            <view wx:if="{{noOthers && !isMine}}" class="tab-content-empty">
+                <empty-wxml blue-text="{{othersBlueText}}" empty-info="{{othersEmptyInfo}}" show-blue="{{showBlue}}"></empty-wxml>
             </view>
 
         </view>
