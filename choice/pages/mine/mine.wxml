@@ -4,10 +4,11 @@
     <view class="mine-head">
         <view class="mine-banner">
             <view class="nums-box">
-                <image src="../../images/gold_coin.png" class="gold-coin" />
+                <image src="../../images/grey_gold.png" class="gold-coin" />
                 <view class="msg-box">5</view>
             </view>
             <view class="my-avatar"></view>
+            <image src="../../images/my_bg.png" class="my-bg"/>
         </view>
     </view>
     <view class="mine-infos">
@@ -28,7 +29,7 @@
         <view class="tab-content">
             <view wx:if="{{!noPublish}}">
                 <view wx:if="{{isMine}}">
-                    <view class="tab-list-item">
+                    <view class="tab-list-item" bindtap="gotoDetail">
                         <view class="item-title">星期五，健身还是聚餐呢？</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">
@@ -49,7 +50,7 @@
             </view>
             <view wx:if="{{!noOthers}}">
                 <view wx:if="{{!isMine}}">
-                    <view class="tab-list-item">
+                    <view class="tab-list-item" bindtap="gotoDetail">
                         <view class="item-title">星期五，健身还是聚餐呢？(参与的)</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">

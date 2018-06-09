@@ -18,18 +18,25 @@ Page({
     noChoosed_persent: 0,
     showMask: false,
     chooseData:[
-      {id: 0, choosed: 0.33,user:{gender: 1}},
-      {id: 1, choosed: 0.60,user:{gender: 2}},
-      {id: 2, choosed: 1,user:{gender: 1}}
+      {id: 0, choosed: 0.33,user:{gender: 1},leftText: '健身',rightText:'聚餐k歌打机约会看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'},
+      {id: 1, choosed: 0.60,user:{gender: 2},leftText: '健身',rightText:'看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈'},
+      {id: 2, choosed: 1,user:{gender: 1},leftText: '健身',rightText:'聚餐k歌打哈哈'}
     ],
     showShare: false,
     touxiang:"../../images/bg.png",
     choose_left: false
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
+  textNumTest (text) {
+    let chineseReg = /[\u4E00-\u9FA5]/g;
+    if (chineseReg.test(text)) {
+      if (text.match(chineseReg).length >= 30) {  //返回中文的个数  
+        text = text.substring(0, 29) + "...";
+        return text; 
+      } else{
+        return text
+      }  
+    }
+  },
   onLoad: function (options) {
     let that = this;
     let chooseData = that.data.chooseData;
@@ -43,6 +50,8 @@ Page({
     for (let item of chooseData) {
       item.choose_left = false;
       item.choose_right = false;
+      item.leftText = that.textNumTest(item.leftText);
+      item.rightText = that.textNumTest(item.rightText);
     }
     that.setData({
       chooseData: chooseData
@@ -54,7 +63,15 @@ Page({
   onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
-  onShareAppMessage: function () {},
+  onShareAppMessage () {
+    let that = this;
+    return {
+      title: '自定义转发标题',
+      success() {},
+      fail() {},
+      complete() { }
+    }
+  },
   onPageScroll () {
     wx.setNavigationBarTitle({
       title: '选象'
@@ -106,23 +123,20 @@ Page({
       showShare: true
     })
   },
+  // 取消分享
   cancelShare () {
     this.setData({
       showShare: false
     })
   },
-  onShareAppMessage (res) {
-    let that = this;
-    return {
-      title: '自定义转发标题',
-      success() {
-        that.setData({
-          showShare: false
-        })
-      },
-      fail() {},
-      complete() { }
-    }
+  shareToFriends () {
+    this.setData({
+      showShare: false
+    })
+    this.onShareAppMessage();
+  },
+  shareToMoment () {
+    console.log("moment")
   },
   shareMoment () {
     var that = this;
@@ -221,9 +235,7 @@ Page({
                 maskHidden: false
               })
             }
-          },fail:function(res){
-            console.log(11111)
-          }
+          },fail:function(res){}
         })
       }
     })

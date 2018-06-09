@@ -38,5 +38,10 @@ Page({
     wx.navigateTo({
       url: '/pages/sysnotice/sysnotice'
     })
+  },
+  gotoFeed () {
+    wx.navigateTo({
+      url: '/pages/feedback/feedback'
+    })
   }
 })

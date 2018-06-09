@@ -28,7 +28,7 @@
     </view>
 </view>
 <view class="feed-box">
-    <view class="msg-list-item">
+    <view class="msg-list-item" bindtap="gotoFeed">
         <view class="list-item-side">
             <view>
                 <image src="../../images/vote_msg.png" class="suggest-icon"/>

@@ -53,5 +53,11 @@ Page({
         isMine: false
       })
     }
+  },
+  // 详情
+  gotoDetail () {
+    wx.navigateTo({
+      url: '/pages/details/details'
+    })
   }
 })

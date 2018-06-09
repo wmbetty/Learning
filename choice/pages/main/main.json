@@ -1,4 +1,7 @@
 {
     "navigationBarBackgroundColor": "#E64340",
-    "navigationBarTitleText": "选象"
+    "navigationBarTitleText": "选象",
+    "usingComponents": {
+        "share-wxml": "../../components/share/share"
+    }
 }

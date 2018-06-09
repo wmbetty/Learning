@@ -6,7 +6,7 @@ Component({
   properties: {
     showBlue: {
       type: Boolean,
-      value: false,
+      value: false
     },
     emptyInfo: {
       type: String,

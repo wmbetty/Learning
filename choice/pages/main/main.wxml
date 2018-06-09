@@ -31,13 +31,13 @@
                         </view>
                         <view class="content-box">
                             <view class="vote-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
-                                <view class="vote-cont">健身</view>
+                                <view class="vote-cont">{{item.leftText}}</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
                                     <view class="{{item.choose_left?'vote-selected':''}}">{{item.choosedLeft ? choosed_persent : noChoosed_persent}}%</view>
                                 </view>
                             </view>
                             <view class="vote-box" catchtap="goVote" data-item="{{item}}" data-index="{{index}}" data-direct="right">
-                                <view class="vote-cont">聚餐k歌打机约会看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</view>
+                                <view class="vote-cont">{{item.rightText}}</view>
                                 <view class="cont-mask" wx:if="{{showMask}}">
                                     <view class="{{item.choose_right?'vote-selected':''}}">{{item.choosedLeft ? noChoosed_persent : choosed_persent}}%</view>
                                 </view>
@@ -54,7 +54,7 @@
 
     </swiper>
 
-    <view class="shareMask" wx:if="{{showShare}}">
+    <!-- <view class="shareMask" wx:if="{{showShare}}">
         <view class="share-main">
             <view class="share-main-cont">
                 <view class="share-title">邀请好友来投票</view>
@@ -69,7 +69,8 @@
             </view>
             <view class="share-cancel-btn" catchtap="cancelShare">取消</view>
         </view>
-    </view>
+    </view> -->
+    <share-wxml mask="{{showShare}}" share="{{showShare}}" bind:cancelShare="cancelShare" bind:shareToFriends="shareToFriends" bind:shareToMoment="shareToMoment"></share-wxml>
     <view class='imagePathBox' wx:if="{{maskHidden}}">
         <image src="{{imagePath}}" class='shengcheng'></image>
         <button class='baocun' bindtap='baocun'>保存相册，分享到朋友圈</button>

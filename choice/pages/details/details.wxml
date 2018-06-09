@@ -1,0 +1,76 @@
+<!--pages/details/details.wxml-->
+<view class="page-head">详情</view>
+<view class="main-container">
+    <view class="main-head">
+        <view class="left-item">
+            <view class="avatar-box" catchtap="gotoOthers">
+                <image src="" class="m-avatar"></image>
+            </view>
+            <view class="user-infos">
+                <view class="infos-head">哈哈哈</view>
+                <view class="{{item.user.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
+            </view>
+        </view>
+        <view class="right-item">
+            <view class="r-share-btn" bindtap="gotoShare"></view>
+            <view class="ellipse-icon" bindtap="gotoDelete"></view>
+        </view>
+    </view>
+    <view class="main-body">
+        <view class="body-title">星期5，健身还是聚餐呢？{{index}}</view>
+        <view class="total-container">
+            <view class="percent-text green-font">{{leftPercent*100}}%</view>
+            <view class="main-totals">
+                <text class="hot-icon"></text>
+                <text>130</text>
+            </view>
+            <view class="percent-text dark-red-font">{{100-leftPercent*100}}%</view>
+        </view>
+        <view class="choice-box">
+            <view class="choice-item-container">
+                <view class="choice-item left-choice-item">
+                    <view class="choice-item-cont">
+                        {{leftChoiceText}}
+                    </view>
+                </view>
+                <view class="my-vote-tips">
+                    <view wx:if="{{isLeft}}">
+                        <text class="red-dot"></text>
+                        <text>我的选择</text>
+                    </view>
+                </view>
+            </view>
+            <view class="choice-item-container">
+                <view class="choice-item right-choice-item">
+                    <view class="choice-item-cont">
+                        {{rightChoiceText}}
+                    </view>
+                </view>
+                <view class="my-vote-tips">
+                    <view wx:if="{{!isLeft}}">
+                        <text class="red-dot"></text>
+                        <text>我的选择</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
+
+<!-- 分享弹窗 -->
+<view class="share-mask" style="height: {{winHeight}}px;}}" wx:if="{{showMask}}">
+    <view class="share-btn-container">
+        <view class="wechat-container" wx:if="{{isShare}}">
+            <view class="wechat-item-box" catchtap="shareToFriends">
+                <image src="../../images/wechat_icon.png" class="wechat-icon"/>
+                <view class="wechat-text">微信好友分享</view>
+            </view>
+            <view class="wechat-item-box" catchtap="shareToMoment">
+                <image src="../../images/moment_icon.png" class="wechat-icon"/>
+                <view class="wechat-text">生成朋友圈海报</view>
+            </view>
+        </view>
+        <view class="delete-btn" wx:if="{{isDelete}}" bindtap="deleteChoice">删除</view>
+        <view class="cancel-btn" catchtap="cancelShare">取消</view>
+    </view>
+</view>
