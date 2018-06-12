@@ -14,6 +14,19 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const login = "https://choosen.79643.com/v1/member/login"
+const ques = "https://choosen.79643.com/v1/questions/top?access-token="
+const my_quest = "https://choosen.79643.com/v1/questions/my-question?access-token="
+const join_quest = "https://choosen.79643.com/v1/questions/join-question?access-token="
+const choose_answer = "https://choosen.79643.com/v1/watch?access-token="
+const publish = "https://choosen.79643.com/v1/questions?access-token="
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  loginApi: login,
+  questions: ques,
+  my_question: my_quest,
+  my_join: join_quest,
+  u_answer: choose_answer,
+  publishApi: publish 
 }

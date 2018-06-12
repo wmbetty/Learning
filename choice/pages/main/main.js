@@ -1,6 +1,9 @@
 // pages/main/main.js
 const tabBar = require('../../components/tabBar/tabBar.js');
+const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
+const app = getApp();
+let token = '';
 
 Page({
 
@@ -13,18 +16,18 @@ Page({
     interval: 2500,
     duration: 800,
     viewHeight: 0,
+    currentIndex: 0,
     numActive: false,
-    choosed_persent: 0,
-    noChoosed_persent: 0,
+    choose1_orgin: 0,
+    choose2_orgin: 0,
     showMask: false,
-    chooseData:[
-      {id: 0, choosed: 0.33,user:{gender: 1},leftText: '健身',rightText:'聚餐k歌打机约会看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'},
-      {id: 1, choosed: 0.60,user:{gender: 2},leftText: '健身',rightText:'看电影啦啦啦啦啦啦来来来哈哈哈哈哈哈哈哈哈'},
-      {id: 2, choosed: 1,user:{gender: 1},leftText: '健身',rightText:'聚餐k歌打哈哈'}
-    ],
+    chooseData:[],
     showShare: false,
     touxiang:"../../images/bg.png",
-    choose_left: false
+    path2:"../../images/my_bg.png",
+    choose_left: false,
+    imagePath: '',
+    showDialog: false
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -39,23 +42,31 @@ Page({
   },
   onLoad: function (options) {
     let that = this;
-    let chooseData = that.data.chooseData;
     tabBar.tabbar("tabBar", 0, that);
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
-        this.setData({viewHeight: res.windowHeight});
+        that.setData({viewHeight: res.windowHeight});
       }
     })
-    for (let item of chooseData) {
-      item.choose_left = false;
-      item.choose_right = false;
-      item.leftText = that.textNumTest(item.leftText);
-      item.rightText = that.textNumTest(item.rightText);
-    }
-    that.setData({
-      chooseData: chooseData
-    })
+
+    wx.showLoading({
+      title: '加载中',
+    });
+
+    // app.js onLunch为异步事件
+    setTimeout(()=>{
+      token = app.globalData.access_token;
+      console.log(token)
+      Api.wxRequest(backApi.questions+token, 'GET', {}, (res)=>{
+        // console.log(res, 'rssss')
+        let datas = res.data.data;
+        if (datas.length >= 0) {
+          wx.hideLoading();
+          that.setData({chooseData: datas});
+        }
+      })
+    },1500)
   },
   onReady: function () {},
   onShow: function () {},
@@ -83,40 +94,114 @@ Page({
       url: '/pages/others/others'
     })
   },
+  cancelDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    })
+  },
+  confirmDialog (e) {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.getUserInfo({
+      success: (res)=>{
+        let userInfo = res.userInfo;
+        if (userInfo.nickName) {
+          // app.globalData.userInfo = userInfo;
+          wx.setStorageSync('getUserInfo', true);
+          wx.setStorageSync('userInfo', userInfo);
+        }
+      }
+    })
+  },
   goVote (e) {
     let that = this;
-    let chooseData = that.data.chooseData;
-    let direct = e.currentTarget.dataset.direct;
-    let choosedItem = e.currentTarget.dataset.item.choosed * 100;
-    let data_index = e.currentTarget.dataset.index;
-    // console.log(data_index, 'index')
-    let noChoosedItem = 100 - choosedItem;
-    if (direct === 'left') {
+    let getUserInfo = wx.getStorageSync('getUserInfo');
+    if (!getUserInfo) {
+      that.setData({
+        showDialog: true
+      })
+    } else {
+      let chooseData = that.data.chooseData;
+      let choose1_orgin = that.data.choose1_orgin;
+      let choose2_orgin = that.data.choose2_orgin;
+      let direct = e.currentTarget.dataset.direct;
+      let choose1 = e.currentTarget.dataset.item.choose1;
+      let choose2 = e.currentTarget.dataset.item.choose2;
+      let data_index = e.currentTarget.dataset.index;
+      let qid = e.currentTarget.dataset.item.id;
+      let answerApi = backApi.u_answer;
+      let answerData = {
+        qid: qid
+      }
+
+      // 1.判断是否投过票了
       for (let i = 0;i<chooseData.length;i++) {
-        if (i === data_index) {
-          chooseData[i].choose_left = true;
+        if (chooseData[i].showMask && data_index === i) {
+          Api.wxShowToast('这个问题已经投过票了，下一题吧', 'none', 2000);
+          that.setData({currentIndex: data_index+1});
+          return false;
         }
       }
-      that.setData({
-        choosedLeft: true,
-        chooseData: chooseData
-      })
-    }
-    if (direct === 'right') {
-      for (let i = 0;i<chooseData.length;i++) {
-        if (i === data_index) {
-          chooseData[i].choose_right = true;
+      //2.
+      if (direct === 'left') {
+        for (let i = 0;i<chooseData.length;i++) {
+          if (data_index === i) {
+            chooseData[i].choose_left = true;
+            chooseData[i].showMask = true;
+            let timer1 = setInterval(()=>{
+              choose1_orgin++;
+              chooseData[i].choose1 = choose1_orgin;
+              that.setData({
+                chooseData: chooseData
+              })
+              if(choose1_orgin >= choose1){
+                clearInterval(timer1);
+                chooseData[i].choose1 = choose1;
+                that.setData({
+                  chooseData: chooseData
+                })
+              }
+            }, 160);
+          }
         }
       }
-      that.setData({
-        choosedLeft: true,
-        chooseData: chooseData
-      })
+      // 3.
+      if (direct === 'right') {
+        for (let i = 0;i<chooseData.length;i++) {
+          if (data_index === i) {
+            chooseData[i].choose_right = true;
+            chooseData[i].showMask = true;
+            let timer2 = setInterval(()=>{
+              choose2_orgin++;
+              chooseData[i].choose2 = choose2_orgin;
+              that.setData({
+                chooseData: chooseData
+              })
+              if(choose2_orgin >= choose2){
+                clearInterval(timer2);
+                chooseData[i].choose2 = choose2;
+                that.setData({
+                  chooseData: chooseData
+                })
+              }
+            }, 160);
+          }
+        }
+      }
+
+      // 4.投票请求
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        if (status === 201) {
+          setTimeout(() => {
+            that.setData({currentIndex: data_index+1});
+          },2000)
+        }
+      });
     }
-    countUp(that, choosedItem, noChoosedItem);
-    that.setData({
-      showMask: true
-    })
   },
   goShare () {
     this.setData({
@@ -133,72 +218,61 @@ Page({
     this.setData({
       showShare: false
     })
-    this.onShareAppMessage();
+  },
+  // 绘制圆角矩形
+  drawRoundRect(cxt, x, y, width, height, radius){   
+      cxt.beginPath();   
+      cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);   
+      cxt.lineTo(width - radius + x, y);   
+      cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);   
+      cxt.lineTo(width + x, height + y - radius);   
+      cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);   
+      cxt.lineTo(radius + x, height +y);   
+      cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);   
+      cxt.closePath();   
+      cxt.setFillStyle('#ffffff');
+      cxt.fill();
+
   },
   shareToMoment () {
-    console.log("moment")
-  },
-  shareMoment () {
     var that = this;
+    that.setData({
+      showShare: false,
+      maskHidden: true
+    })
     var context = wx.createCanvasContext('mycanvas');
-    context.setFillStyle("#fff")
-    context.fillRect(0, 0, 375, 667)
-    var path = "../../images/bg.png";
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    //不知道是什么原因，手机环境能正常显示
-    // context.drawImage(path, 0, 0, 375, 183);
+    context.fillStyle = 'rgba(255, 255, 255, 0)';
+    context.fillRect(0, 0, 375, 600)
+    that.drawRoundRect(context, 0, 0, 375, 600, 8);
     var path1 = that.data.touxiang;
     //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    // var path2 = "../../images/img2.png";
-    // var path3 = "../../images/img3.png";
-    // context.drawImage(path2, 126, 186, 120, 120);
-
-    // var name = that.data.name;
-    // //绘制名字
-    // context.setFontSize(24);
-    // context.setFillStyle('#333333');
-    // context.setTextAlign('center');
-    // context.fillText(name, 185, 340);
-    // context.stroke();
-    //绘制一起吃面标语
+    var path2 = that.data.path2;
     context.setFontSize(20);
-    context.setFillStyle('#000');
+    context.setFillStyle('#62559D');
     context.setTextAlign('center');
-    context.fillText("很纠结，啦啦啦", 185, 370);
+    context.fillText("很纠结，啦啦啦", 185, 280);
     context.stroke();
-    //绘制验证码背景
-    // context.drawImage(path3, 48, 390, 280, 84);
-    //绘制code码
-    // context.setFontSize(40);
-    // context.setFillStyle('#ffe200');
-    // context.setTextAlign('center');
-    // context.fillText(that.data.code, 185, 435);
-    // context.stroke();
-    // //绘制左下角文字背景图
-    // context.drawImage(path4, 25, 520, 184, 82);
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("进入小程序输入朋友的邀请", 35, 540);
-    // context.stroke();
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("码，朋友和你各自获得通用", 35, 560);
-    // context.stroke();
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("优惠券1张哦~", 35, 580);
-    // context.stroke();
+
+    context.setFontSize(18);
+    context.setFillStyle('#888');
+    context.setTextAlign('left');
+    context.fillText("有选象，不纠结", 40, 360);
+    context.stroke();
+    context.setFontSize(18);
+    context.setFillStyle('#888');
+    context.setTextAlign('left');
+    context.fillText("扫码给ta你的建议～", 40, 400);
+    context.stroke();
+
     // //绘制右下角扫码提示语
-    // context.drawImage(path5, 248, 578, 90, 25);
-    //绘制头像
-    context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
+    context.drawImage(path2, 248, 340, 66, 66);
+
+    context.arc(186, 200, 50, 0, 2 * Math.PI) //画出圆
     context.strokeStyle = "#ffe200";
     context.clip(); //裁剪上面的圆形
-    context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
+    context.drawImage(path1, 136, 110, 100, 100); // 在刚刚裁剪的园上画图
     context.draw();
+
     //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
     setTimeout(function () {
       wx.canvasToTempFilePath({
@@ -216,30 +290,31 @@ Page({
       });
     }, 200);
   },
-  //点击保存到相册
-  baocun:function(){
-    var that = this
+  //保存至相册
+  saveImageToPhotosAlbum:function(){
+    if (!this.data.imagePath){
+      wx.showModal({
+        title: '提示',
+        content: '图片绘制中，请稍后重试',
+        showCancel:false
+      })
+    }
     wx.saveImageToPhotosAlbum({
-      filePath: that.data.imagePath,
-      success(res) {
-        wx.showModal({
-          content: '图片已保存到相册，赶紧晒一下吧~',
-          showCancel: false,
-          confirmText: '好的',
-          confirmColor: '#333',
-          success: function (res) {
-            if (res.confirm) {
-              console.log('用户点击确定');
-              /* 该隐藏的隐藏 */
-              that.setData({
-                maskHidden: false
-              })
-            }
-          },fail:function(res){}
+      filePath: this.data.imagePath,
+      success:(res)=>{
+        Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+        this.setData({
+          maskHidden: false
         })
+      },
+      fail:(err)=>{
+        if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+          Api.wxShowToast('您之前点击了不允许保存图片到相册', 'none', 2000); 
+        }
       }
     })
   },
+  
   //点击生成
   formSubmit: function (e) {
     var that = this;
@@ -254,40 +329,34 @@ Page({
     });
     setTimeout(function () {
       wx.hideToast()
-      that.shareMoment();
+      that.shareToMoment();
       that.setData({
         maskHidden: true
       });
     }, 1000)
+  },
+  // 点击头像跳转
+  gotoOthers () {
+    wx.navigateTo({
+      url: '/pages/mine/mine?&profile=other'
+    })
   }
 });
 
 // 投票选择结果处理
-function countUp(that, choosedEndVal, noChoosedEndVal) {
-  let choosedTimer = setInterval(() => {
-    let choosed_persent = that.data.choosed_persent * 1;
-    choosed_persent = choosed_persent + 3;
-    that.setData({
-      choosed_persent: choosed_persent
-    });
-    if (choosed_persent >= choosedEndVal) {
-      clearInterval(choosedTimer);
-      that.setData({
-        choosed_persent: choosedEndVal
-      });
-    }
-  }, 100);
-  let noChooseTimer = setInterval(() => {
-    let noChoosed_persent = that.data.noChoosed_persent * 1;
-    noChoosed_persent = noChoosed_persent + 3;
-    that.setData({
-      noChoosed_persent: noChoosed_persent
-    });
-    if (noChoosed_persent >= noChoosedEndVal) {
-      clearInterval(noChooseTimer);
-      that.setData({
-        noChoosed_persent: noChoosedEndVal
-      });
-    }
-  }, 100);
-}
+// function countUp(that, chooseData, choosed, choose_orgin, choose) {
+//   let timer = setInterval(()=>{
+//     choose_orgin++;
+//     choosed = choose_orgin;
+//     that.setData({
+//       chooseData: chooseData
+//     })
+//     if(choose_orgin >= choose){
+//       clearInterval(timer);
+//       choosed = choose;
+//       that.setData({
+//         chooseData: chooseData
+//       })
+//     }
+//   }, 160);
+// }

@@ -1,5 +1,8 @@
 const tabBar = require('../../components/tabBar/tabBar.js');
+const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
+const app = getApp();
+let token = '';
 
 Page({
   data: {
@@ -24,6 +27,9 @@ Page({
         this.setData({winHeight: res.windowHeight});
       }
     })
+    setTimeout(()=>{
+      token = app.globalData.access_token;
+    }, 1200)
   },
   textFocus () {
     if (this.data.titleText === '点击输入标题') {
@@ -107,8 +113,9 @@ Page({
   },
   // 点击发布
   goPublish () {
+    let publishApi = backApi.publishApi;
     let that = this;
-    if (that.data.titleText === '' && that.data.leftText === '' && that.data.rightText === '') {
+    if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
       let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
       return false;
     }
@@ -124,19 +131,29 @@ Page({
       let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
       return false;
     }
-    that.setData({
-      showToast: true
-    });
-    // 2s后消失
-    setTimeout(() => {
-      that.setData({
-        showToast: false,
-        isShare: true,
-        leftHolder: '',
-        rightHolder: '',
-        titleText: ''
-      });
-    }, 2000)
+    let postData = {
+      question: that.data.titleText,
+      option1: that.data.leftText,
+      option2: that.data.rightText
+    }
+    Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+      let status = res.data.status*1;
+      if (status === 201) {
+        that.setData({
+          showToast: true
+        });
+        // 2s后消失
+        setTimeout(() => {
+          that.setData({
+            showToast: false,
+            // isShare: true,
+            leftHolder: '',
+            rightHolder: '',
+            titleText: ''
+          });
+        }, 2000)
+      }
+    })
   },
   // 取消分享
   cancelShare () {

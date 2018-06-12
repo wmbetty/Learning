@@ -2,6 +2,7 @@
     "navigationBarBackgroundColor": "#E64340",
     "navigationBarTitleText": "选象",
     "usingComponents": {
-        "share-wxml": "../../components/share/share"
+        "share-wxml": "../../components/share/share",
+        "dialog-wxml": "../../components/dialog/dialog"
     }
 }

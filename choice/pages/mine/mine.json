@@ -1,6 +1,7 @@
 {
     "navigationBarTitleText": "我",
     "usingComponents": {
-        "empty-wxml": "../../components/empty/empty"
+        "empty-wxml": "../../components/empty/empty",
+        "dialog-wxml": "../../components/dialog/dialog"
     }
 }

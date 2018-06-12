@@ -1,10 +1,10 @@
 {
   "pages": [
+    "pages/main/main",
+    "pages/messages/messages",
     "pages/index/index",
     "pages/mine/mine",
-    "pages/main/main",
     "pages/others/others",
-    "pages/messages/messages",
     "pages/votemsg/votemsg",
     "pages/sysnotice/sysnotice",
     "pages/details/details",

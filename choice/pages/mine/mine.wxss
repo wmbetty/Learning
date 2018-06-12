@@ -24,7 +24,7 @@ page{background: #F4F4F8;}
 .my-name{
     font-size: 52rpx;color: #343434;font-weight: 600;margin-right: 20rpx;
 }
-.my-gender{width: 30rpx;height: 30rpx;margin-left: 20rpx;margin-top: 24rpx;}
+.my-gender{width: 30rpx;height: 30rpx;margin-left: 20rpx;margin-top: 26rpx;}
 .tab-head{
     display: flex;font-size: 36rpx;background: #F4F4F8;
     padding: 0 0 0 36rpx;color: #343434;

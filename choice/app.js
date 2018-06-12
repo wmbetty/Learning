@@ -1,24 +1,46 @@
 //app.js
 const Api = require('wxapi/wxApi');
+const backApi = require('utils/util');
 
 App({
+  globalData: {
+    userInfo: null,
+    access_token: '',
+    getUserInfo: null
+  },
   onLaunch: function () {
     // 展示本地存储能力
-    var logs = wx.getStorageSync('logs') || [];
-    logs.unshift(Date.now());
-    wx.setStorageSync('logs', logs);
+    // var logs = wx.getStorageSync('logs') || [];
+    // logs.unshift(Date.now());
+    // wx.setStorageSync('logs', logs);
+    let that = this;
 
     // 登录
-    //   let wxLogin = Api.wxLogin();
-    //   wxLogin().then(res => {
-    //       console.log(res, 'res');
-    //       // 发送 res.code 到后台换取 openId, sessionKey, unionId
-    //
-    //       let wxGetUserInfo = Api.wxGetUserInfo();
-    //       return wxGetUserInfo()
-    //   }).then(res => {
-    //       console.log(res.userInfo,'info')
-    //   });
+    wx.login({
+      success: function(res) {
+        let reqData = {};
+        let code = res.code;
+        if (code) {
+          reqData.code = code;
+          Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
+            let acc_token = res.data.data.data.access_token;
+            if (acc_token) {
+              that.globalData.access_token = acc_token;
+            };
+            // console.log(res, 'dd')
+            // for (let item of datas) {
+            //   item.choose_left = false;
+            //   item.choose_right = false;
+            //   item.choose1 = that.textNumTest(item.choose1);
+            //   item.choose2 = that.textNumTest(item.choose2);
+            // }
+            // that.setData({
+            //   chooseData: datas
+            // })
+          })
+        }
+      }
+    });
 
     // 获取用户信息
     // let wxGetSetting = Api.wxGetSetting()
@@ -45,8 +67,5 @@ App({
       // }
     // })
     //        "iconPath": "images/home.png",
-  },
-  globalData: {
-    userInfo: null
   }
 })

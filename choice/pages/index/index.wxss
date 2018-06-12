@@ -87,7 +87,7 @@ page{
     background: rgba(0, 0, 0, 0.5);
 }
 .toast-cont{
-    padding: 60rpx 46rpx 32rpx;
+    padding: 60rpx 46rpx 32rpx;display: flex;
 }
 .toast-info{
     text-align: center;color: #fff;font-size: 26rpx;

@@ -3,11 +3,7 @@
     <view class="tabBar">
     <block wx:for="{{tabBar}}" wx:for-item="item" wx:key="tabBar">
         <view class="tabBar-item">
-            <navigator open-type="redirect" url="{{item.pagePath}}" wx:if="{{index*1 === 0 || index*1 === 3}}">
-                <view><image class="icon" src='{{item.iconPath}}'></image></view>
-                <view class="{{item.current== 1 ? 'tabBartext' :''}}">{{item.text}}</view>
-            </navigator>
-            <navigator open-type="navigate" url="{{item.pagePath}}" wx:if="{{index*1 === 1}}">
+            <navigator open-type="redirect" url="{{item.pagePath}}" wx:if="{{index*1 !== 2}}">
                 <view><image class="icon" src='{{item.iconPath}}'></image></view>
                 <view class="{{item.current== 1 ? 'tabBartext' :''}}">{{item.text}}</view>
             </navigator>
