@@ -17,19 +17,51 @@ Page({
     titleText: '点击输入标题',
     showToast: false,
     winHeight: 0,
-    isShare: false
+    isShare: false,
+    showDialog: false
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    })
+  },
+  confirmDialog (e) {
+    let that = this;
+    let userInfoApi = backApi.userInfo+token;
+    that.setData({
+      showDialog: false
+    });
+    wx.getUserInfo({
+      success: (res)=>{
+        let userInfo = res.userInfo;
+        if (userInfo.nickName) {
+          wx.setStorageSync('userInfo', userInfo);
+          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+            console.log(res.data.status, 'sssssssss')
+          })
+        }
+      }
+    })
   },
   onLoad: function(option) {
-    tabBar.tabbar("tabBar", 2, this);//0表示第一个tabbar
+    let that = this;
+    tabBar.tabbar("tabBar", 2, that);//0表示第一个tabbar
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
         this.setData({winHeight: res.windowHeight});
       }
     })
-    setTimeout(()=>{
+    setTimeout(()=> {
       token = app.globalData.access_token;
-    }, 1200)
+      let userInfo = wx.getStorageSync('userInfo');
+      if (!userInfo.nickName) {
+        that.setData({
+          showDialog: true
+        })
+      }
+    }, 1000)
   },
   textFocus () {
     if (this.data.titleText === '点击输入标题') {
@@ -131,27 +163,38 @@ Page({
       let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
       return false;
     }
+    console.log(1122)
     let postData = {
       question: that.data.titleText,
       option1: that.data.leftText,
       option2: that.data.rightText
     }
     Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+      // console.log(res, 'rse')
       let status = res.data.status*1;
       if (status === 201) {
-        that.setData({
-          showToast: true
-        });
+        setTimeout(()=> {
+          that.setData({
+            showToast: true,
+            leftHolder: '点击输入左选项',
+            rightHolder: '点击输入右选项',
+            titleText: '点击输入标题',
+            leftText: '',
+            rightText: '',
+            isPublish: false,
+            showTextarea: false,
+            showLeft: false,
+            showRight: false
+          });
+        }, 1200)
         // 2s后消失
         setTimeout(() => {
           that.setData({
             showToast: false,
             // isShare: true,
-            leftHolder: '',
-            rightHolder: '',
-            titleText: ''
+            
           });
-        }, 2000)
+        }, 1500)
       }
     })
   },

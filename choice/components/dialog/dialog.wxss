@@ -18,4 +18,4 @@
     background: #fff;line-height: 1;text-align: center;
 }
 .user-dialog-btn::after{border: none;}
-.user-dialog-confirm{color: #E74C49;border-left: 1px solid #f1f1f1;}
+.user-dialog-confirm{color: #0D89FF;border-left: 1px solid #f1f1f1;}

@@ -4,11 +4,11 @@
     <view class="main-head">
         <view class="left-item">
             <view class="avatar-box" catchtap="gotoOthers">
-                <image src="" class="m-avatar"></image>
+                <image src="{{userInfo.avatar?userInfo.avatar:'../../images/avatarDefault.png'}}" class="m-avatar"></image>
             </view>
             <view class="user-infos">
-                <view class="infos-head">哈哈哈</view>
-                <view class="{{item.user.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
+                <view class="infos-head">{{userInfo.member.nickname || '选小象'}}</view>
+                <view wx:if="{{userInfo.member.gender}}" class="{{item.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
             </view>
         </view>
         <view class="right-item">
@@ -17,20 +17,20 @@
         </view>
     </view>
     <view class="main-body">
-        <view class="body-title">星期5，健身还是聚餐呢？{{index}}</view>
+        <view class="body-title">{{details.question}}</view>
         <view class="total-container">
-            <view class="percent-text green-font">{{leftPercent*100}}%</view>
+            <view class="percent-text green-font">{{details.choose1_per || 0}}%</view>
             <view class="main-totals">
                 <text class="hot-icon"></text>
-                <text>130</text>
+                <text>{{details.hots}}</text>
             </view>
-            <view class="percent-text dark-red-font">{{100-leftPercent*100}}%</view>
+            <view class="percent-text dark-red-font">{{details.choose2_per || 0}}%</view>
         </view>
         <view class="choice-box">
             <view class="choice-item-container">
                 <view class="choice-item left-choice-item">
                     <view class="choice-item-cont">
-                        {{leftChoiceText}}
+                        {{details.option1 || ''}}
                     </view>
                 </view>
                 <view class="my-vote-tips">
@@ -43,11 +43,11 @@
             <view class="choice-item-container">
                 <view class="choice-item right-choice-item">
                     <view class="choice-item-cont">
-                        {{rightChoiceText}}
+                        {{details.option2 || ''}}
                     </view>
                 </view>
                 <view class="my-vote-tips">
-                    <view wx:if="{{!isLeft}}">
+                    <view wx:if="{{isRight}}">
                         <text class="red-dot"></text>
                         <text>我的选择</text>
                     </view>
@@ -61,10 +61,10 @@
 <view class="share-mask" style="height: {{winHeight}}px;}}" wx:if="{{showMask}}">
     <view class="share-btn-container">
         <view class="wechat-container" wx:if="{{isShare}}">
-            <view class="wechat-item-box" catchtap="shareToFriends">
+            <button open-type="share" class="wechat-item-box" catchtap="shareToFriends">
                 <image src="../../images/wechat_icon.png" class="wechat-icon"/>
-                <view class="wechat-text">微信好友分享</view>
-            </view>
+                <view class="">微信好友分享</view>
+            </button>
             <view class="wechat-item-box" catchtap="shareToMoment">
                 <image src="../../images/moment_icon.png" class="wechat-icon"/>
                 <view class="wechat-text">生成朋友圈海报</view>
@@ -74,3 +74,13 @@
         <view class="cancel-btn" catchtap="cancelShare">取消</view>
     </view>
 </view>
+<view class='imagePathBox' wx:if="{{maskHidden}}">
+        <image src="{{imagePath}}" class='shengcheng'></image>
+        <button class='baocun' catchtap='saveImageToPhotosAlbum'>图片保存至本地</button>
+        <image src="../../images/close.png" class="poster-close-icon" catchtap="cancelPoster"></image>
+    </view>
+    <view wx:if="{{maskHidden}}" class="mask"></view>
+    <view class="canvas-box">
+        <canvas  style="width: 375px;height: 667px;position:fixed;top:999px" canvas-id="mycanvas"/>
+        <!-- <image src='{{path}}'></image> -->
+    </view>

@@ -1,10 +1,14 @@
 /* pages/main/main.wxss */
+page{
+    position: relative;overflow: hidden;
+}
 .main-page{
     background: #F4F4F8;
     position: relative;
 }
 .main-container{
-    box-shadow: 0 0 5px #ccc;padding:0 8rpx 40rpx;margin:60rpx 30rpx 0;background: #fff;
+    border-radius: 20rpx;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);padding:0 8rpx 40rpx;margin:60rpx 30rpx 0;background: #fff;
 }
 .main-head{
     display: flex;justify-content: space-between;padding: 60rpx 40rpx 0;
@@ -15,7 +19,7 @@
 }
 .m-avatar{
     display: block;width: 100%;height: 100%;border-radius: 50%;
-    background: red;
+    background: #F4F4F8;border: 4rpx solid #efefef;
 }
 .user-infos{
     padding-top: 12rpx;
@@ -58,7 +62,7 @@
     display: flex;justify-content: space-between;padding: 0 20rpx;
 }
 .vote-box{
-    width: 320rpx;height: 320rpx;position: relative;box-shadow: 0 0 5px #ccc;font-size: 40rpx;
+    width: 320rpx;height: 320rpx;position: relative;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);font-size: 40rpx;
     color: #576B95;overflow: hidden;
 }
 .vote-box:first-child{margin-right: 10rpx;}
@@ -136,9 +140,12 @@
 button[class="baocun"]::after{
     border: 0;
 }
+.poster-close-icon{
+    position: absolute;width: 60rpx;height: 60rpx;z-index: 100;top: 140rpx;right: 100rpx;
+}
 
 .share-mask{
-    position: absolute;left: 0;top: 0;width: 100%;
+    position: fixed;left: 0;top: 0;width: 100%;
     background: rgba(0, 0, 0, 0.5);z-index: 99;
 }
 .share-btn-container{
@@ -163,11 +170,12 @@ button[class="baocun"]::after{
 }
 button.wechat-item-box{
     margin-left: 40rpx;padding: 10rpx 0;display: flex;font-size: 36rpx;color: #343434;
-    line-height: 2;background: none;position: static;
+    line-height: 2;background: none;
 }
+button::after{border: none;}
 view.wechat-item-box{
     margin-left: 40rpx;padding: 12rpx 0;display: flex;font-size: 36rpx;color: #343434;
-    line-height: none;background: none;position: static;
+    line-height: none;background: none;
 }
 .wechat-item-box:first-child{
     border-bottom: 1px solid #f1f1f1;

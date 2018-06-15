@@ -6,10 +6,11 @@
     </view>
     <view class="pub-cont">
         <view class="pub-cont-box">
-            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" data-direct="left" bindinput="titlePut" bindfocus="contFocus" value="{{leftHolder}}" cursor-spacing='180'/>
+            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" data-direct="left" bindinput="titlePut" bindfocus="contFocus" value="{{leftHolder}}" />
         </view>
         <view class="pub-cont-box">
-            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" data-direct="right" bindinput="titlePut" bindfocus="contFocus" value="{{rightHolder}}" cursor-spacing='180'/>
+            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" data-direct="right" bindinput="titlePut" bindfocus="contFocus" value="{{rightHolder}}" />
+            <!-- textarea -->
         </view>
     </view>
     <view class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" bindtap="goPublish">发布</view>
@@ -41,3 +42,6 @@
         </view>
     </view>
 </view>
+
+<!-- 授权弹窗 -->
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

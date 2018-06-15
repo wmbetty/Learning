@@ -4,7 +4,10 @@
     <block wx:for="{{tabBar}}" wx:for-item="item" wx:key="tabBar">
         <view class="tabBar-item">
             <navigator open-type="redirect" url="{{item.pagePath}}" wx:if="{{index*1 !== 2}}">
-                <view><image class="icon" src='{{item.iconPath}}'></image></view>
+                <view class="{{index*1===1?'msg-box':''}}">
+                    <image class="icon" src='{{item.iconPath}}' />
+                    <view wx:if="{{index*1===1 && msgCount}}" class="msg-red-dot"></view>
+                </view>
                 <view class="{{item.current== 1 ? 'tabBartext' :''}}">{{item.text}}</view>
             </navigator>
             <navigator open-type="navigate" url="{{item.pagePath}}" wx:if="{{index*1 === 2}}">

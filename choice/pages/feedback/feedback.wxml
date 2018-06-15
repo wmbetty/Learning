@@ -8,6 +8,6 @@
     </view>
 </view>
 <view class="mobile-box">
-    <input class="mobile-put" type="number"  maxlength="11" placeholder="留下手机号码，方便小象联系你哟～" placeholder-class="placeholder" />
+    <input class="mobile-put" type="number" bindinput="putMobile"  maxlength="11" placeholder="留下手机号码，方便小象联系你哟～" placeholder-class="placeholder" />
 </view>
 <view class="{{isSubmit?'submit-btn submit-btn-act':'submit-btn'}}" bindtap="submitAdvice">提交</view>

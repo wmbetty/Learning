@@ -37,3 +37,4 @@ page{
     position: absolute;right: 0;top: 0;
     width: 68rpx;height: 68rpx;
 }
+.empty-container{padding-top: 70rpx;}

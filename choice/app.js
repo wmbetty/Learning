@@ -23,49 +23,71 @@ App({
         if (code) {
           reqData.code = code;
           Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
-            let acc_token = res.data.data.data.access_token;
+            // console.log(res, 'token')
+            let acc_token = res.data.data.access_token;
             if (acc_token) {
               that.globalData.access_token = acc_token;
-            };
-            // console.log(res, 'dd')
-            // for (let item of datas) {
-            //   item.choose_left = false;
-            //   item.choose_right = false;
-            //   item.choose1 = that.textNumTest(item.choose1);
-            //   item.choose2 = that.textNumTest(item.choose2);
-            // }
-            // that.setData({
-            //   chooseData: datas
-            // })
+              let userInfo = wx.getStorageSync('userInfo', userInfo);
+              // console.log(token, 'oooo')
+              let userInfoApi = backApi.userInfo+acc_token
+              if (userInfo) {
+                let userData = {
+                  avatarUrl: userInfo.avatarUrl,
+                  nickName: userInfo.nickName,
+                  country: userInfo.country,
+                  city: userInfo.city,
+                  language: userInfo.language,
+                  province: userInfo.province,
+                  gender: userInfo.gender
+                }
+                Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+                  console.log(res.data.status, 'sssssssss')
+                })
+              }
+              let msgTotalApi = backApi.msgUnreadTotal+acc_token;
+              Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+                // console.log(res, 'sssssssss')
+                if (res.data.status*1===200) {
+                  let msgTotal = res.data.data.total;
+                  wx.setStorageSync('msgTotal', msgTotal);
+                  if (msgTotal) {
+                    setInterval(()=> {
+                      Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+                        wx.setStorageSync('msgTotal', msgTotal);
+                      })
+                    }, 60000)
+                  }
+                } else {
+                  // Api.wxShowToast('网络出错了', 'none', 2000);
+                }
+              })
+            }
           })
         }
       }
     });
-
-    // 获取用户信息
-    // let wxGetSetting = Api.wxGetSetting()
-    // wxGetSetting().then(res => {
-    //   console.log(res, 'ress')
+  },
+  onShow (options) {
+    // console.log(options, 'opp123')
+    let scene = options.scene*1;
+    
+    if (scene === 1007 || scene === 1008) {
+      let quesid = options.query.qid;
+      wx.setStorageSync('quesid', quesid);
+    } else {
+      wx.setStorageSync('quesid', '');
+    }
+    let that = this;
+    setTimeout(()=> {
+      let token = that.globalData.access_token;
+      
+    },1000)
+    // 判断是否是iPhone手机
+    // let wxGetSystemInfo = Api.wxGetSystemInfo();
+    // wxGetSystemInfo().then(res => {
+    //   if (res.windowHeight) {
+    //     this.setData({viewHeight: res.windowHeight});
+    //   }
     // })
-    // wx.getSetting({
-      // success: res => {
-        // if (res.authSetting['scope.userInfo']) {
-        //   // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-        //   wx.getUserInfo({
-        //     success: res => {
-        //       // 可以将 res 发送给后台解码出 unionId
-        //       this.globalData.userInfo = res.userInfo
-        //
-        //       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-        //       // 所以此处加入 callback 以防止这种情况
-        //       if (this.userInfoReadyCallback) {
-        //         this.userInfoReadyCallback(res)
-        //       }
-        //     }
-        //   })
-        // }
-      // }
-    // })
-    //        "iconPath": "images/home.png",
   }
-})
+ })

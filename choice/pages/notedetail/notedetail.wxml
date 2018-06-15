@@ -1,0 +1,5 @@
+<!--pages/notedetail/notedetail.wxml-->
+<view class="page-head">通知</view>
+<view class="page-main">
+
+</view>

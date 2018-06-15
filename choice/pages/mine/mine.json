@@ -1,5 +1,6 @@
 {
-    "navigationBarTitleText": "我",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#d7d7d9",
     "usingComponents": {
         "empty-wxml": "../../components/empty/empty",
         "dialog-wxml": "../../components/dialog/dialog"

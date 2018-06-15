@@ -1,0 +1,10 @@
+/* pages/notedetail/notedetail.wxss */
+page{
+    background: #F5F6F8;
+}
+.page-head{
+    padding: 20rpx 30rpx 40rpx;color: #343434;font-size: 60rpx;background: #F5F6F8;
+}
+.page-main{
+    padding: 40rpx 30rpx 0 30rpx;
+}

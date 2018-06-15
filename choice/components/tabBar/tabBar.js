@@ -1,4 +1,15 @@
 // components/tabBar/tabBar.js
+Component({
+  /**
+   * 组件的属性列表
+   */
+  properties: {
+    msgCount: {
+      type: Number,
+      value: 0
+    }
+  }
+})
 //初始化数据
 function tabbarinit() {
   return [

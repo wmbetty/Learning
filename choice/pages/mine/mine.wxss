@@ -1,5 +1,5 @@
 /* pages/mine/mine.wxss */
-page{background: #F4F4F8;}
+page{background: #F4F4F8;position: relative;}
 .mine-banner{
     height: 400rpx;width: 100%;position: relative;
     /* background: linear-gradient(#E64340, #F3347B); */
@@ -15,18 +15,18 @@ page{background: #F4F4F8;}
 .my-avatar{
     position: absolute;left: 30rpx;bottom: -76rpx;z-index: 999;
     width: 172rpx;height: 172rpx;border-radius: 50%;
-    background: #000;
+    background: #000;border: 4rpx solid #efefef;
 }
 .mine-infos{
     display: flex;padding: 100rpx 46rpx 40rpx;
-    background: #f4f4f8;
+    background: #fff;
 }
 .my-name{
     font-size: 52rpx;color: #343434;font-weight: 600;margin-right: 20rpx;
 }
 .my-gender{width: 30rpx;height: 30rpx;margin-left: 20rpx;margin-top: 26rpx;}
 .tab-head{
-    display: flex;font-size: 36rpx;background: #F4F4F8;
+    display: flex;font-size: 36rpx;background: #fff;
     padding: 0 0 0 36rpx;color: #343434;
 }
 .blue-font{
@@ -37,6 +37,8 @@ page{background: #F4F4F8;}
 }
 .blue-line{background: #576B95;}
 .my-publish-item{margin-right: 60rpx;}
+/* .tab-container{} */
+.tab-content{margin-bottom: 120rpx;}
 .tab-list-item{background: #fff;padding: 20rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;}
 .item-title{color: #343434;font-size: 32rpx;margin-bottom: 18rpx;}
 .item-datas{

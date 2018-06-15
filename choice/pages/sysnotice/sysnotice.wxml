@@ -1,28 +1,18 @@
 <!--pages/sysnotice/sysnotice.wxml-->
 <view class="page-head">通知</view>
-<view wx:if="{{noData}}" class="empty-container">
-    <empty-wxml show-blue="{{showBlue}}"></empty-wxml>
+<view wx:if="{{noticeLists.length===0}}" class="empty-container">
+    <empty-wxml></empty-wxml>
 </view>
-<view wx:if="{{!noData}}">
+<view wx:if="{{noticeLists.length>0}}">
     <view class="notice-list-group">
-        <view class="notice-list-item">
-            <image src="" class="sys-avatar" />
+        <view class="notice-list-item" wx:for="{{noticeLists}}" wx:key="index">
+            <image src="../../images/logo.png" class="sys-avatar" />
             <view class="sys-rt-box">
                 <view class="sys-name-box">
                     <view class="sys-name">选小象</view>
-                    <view class="sys-time">15分钟前</view>
+                    <view class="sys-time">{{ite.template.updated_time}}</view>
                 </view>
-                <view class="sys-cont-text">您的投票涉及违规，已被系统删除已被系统删除已被系统删除已被系统删除已被系统删除</view>
-            </view>
-        </view>
-        <view class="notice-list-item">
-            <image src="" class="sys-avatar" />
-            <view class="sys-rt-box">
-                <view class="sys-name-box">
-                    <view class="sys-name">选小象</view>
-                    <view class="sys-time">15分钟前</view>
-                </view>
-                <view class="sys-cont-text">您的投票涉及违规，已被系统删除</view>
+                <view class="sys-cont-text">{{item.template.content}}</view>
             </view>
         </view>
     </view>

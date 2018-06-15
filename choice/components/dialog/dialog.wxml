@@ -1,10 +1,10 @@
 <!--components/dialog/dialog.wxml-->
 <view class="user-dialog-mask" wx:if="{{dialogShow}}">
     <view class="user-dialog-content">
-        <view class="user-dialog-title">授权</view>
+        <view class="user-dialog-title">需要微信授权登录才能更多操作哦</view>
         <view class="user-dialog-foot">
             <view class="user-dialog-btn" catchtap="cancelDialog">取消</view>
-            <button class="user-dialog-btn user-dialog-confirm" open-type="getUserInfo" bindgetuserinfo="confirmDialog">确认</button>
+            <button class="user-dialog-btn user-dialog-confirm" open-type="getUserInfo" bindgetuserinfo="confirmDialog">查看</button>
         </view>
     </view>
 </view>

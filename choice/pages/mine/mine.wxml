@@ -5,7 +5,7 @@
         <view class="mine-banner">
             <view class="nums-box">
                 <image src="../../images/grey_gold.png" class="gold-coin" />
-                <view class="msg-box">5</view>
+                <view class="msg-box">{{points}}</view>
             </view>
             <image class="my-avatar" src="{{userInfo.avatarUrl}}" />
             <image src="../../images/my_bg.png" class="my-bg"/>
@@ -18,18 +18,18 @@
     <view class="tab-container">
         <view class="tab-head">
             <view class="tab-head-item my-publish-item" data-type="mine"  bindtap="voteOthers">
-                <view>发起({{myPublish.length}})</view>
+                <view>发起({{myTotalCount}})</view>
                 <view class="bottom-line" wx:if="{{isMine}}"></view>
             </view>
             <view class="tab-head-item blue-font" data-type="others"  bindtap="voteOthers">
-                <view>参与({{myJoin.length}})</view>
+                <view>参与({{joinTotalCount}})</view>
                 <view class="bottom-line blue-line" wx:if="{{!isMine}}"></view>
             </view>
         </view>
         <view class="tab-content">
             <view wx:if="{{myPublish.length}}">
                 <view wx:if="{{isMine}}">
-                    <view class="tab-list-item" bindtap="gotoDetail" wx:for="{{myPublish}}" wx:key="index">
+                    <view class="tab-list-item" bindtap="gotoDetail" wx:for="{{myPublish}}" data-id="{{item.id}}" wx:key="index">
                         <view class="item-title">{{item.question}}</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">
@@ -50,20 +50,20 @@
             </view>
             <view wx:if="{{myJoin.length}}">
                 <view wx:if="{{!isMine}}">
-                    <view class="tab-list-item" bindtap="gotoDetail">
-                        <view class="item-title">星期五，健身还是聚餐呢？(参与的)</view>
+                    <view class="tab-list-item" data-id="{{item.question.id}}" bindtap="gotoDetail" wx:for="{{myJoin}}" wx:key="index">
+                        <view class="item-title">{{item.question.question || '未知题目'}}</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">
-                                <text class="left-pg-text">{{leftPercent*100}}%</text>
+                                <text class="left-pg-text">{{item.question.choose1_per}}%</text>
                                 <view class="percent-box">
-                                    <view class="left-progress" style="width:{{leftPercent*100}}%;"></view>
-                                    <view class="right-progress" style="width:{{100-leftPercent*100}}%;"></view>
+                                    <view class="left-progress" style="width:{{item.question.choose1_per}}%;"></view>
+                                    <view class="right-progress" style="width:{{item.question.choose2_per}}%;"></view>
                                 </view>
-                                <text class="right-pg-text">{{100-leftPercent*100}}%</text>
+                                <text class="right-pg-text">{{item.question.choose2_per}}%</text>
                             </view>
                             <view class="hot-cont-box">
                                 <image src="../../images/hot_icon.png" class="hot-icon" />
-                                <view>32</view>
+                                <view>{{item.question.hots}}</view>
                             </view>
                         </view>
                     </view>
@@ -83,4 +83,4 @@
 
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 
-<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>
+<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount}}"/>

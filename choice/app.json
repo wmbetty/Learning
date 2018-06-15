@@ -8,7 +8,8 @@
     "pages/votemsg/votemsg",
     "pages/sysnotice/sysnotice",
     "pages/details/details",
-    "pages/feedback/feedback"
+    "pages/feedback/feedback",
+    "pages/notedetail/notedetail"
   ],
   "window": {
     "backgroundTextStyle": "light",

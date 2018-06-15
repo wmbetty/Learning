@@ -13,7 +13,7 @@ Page({
   data: {
     indicatorDots: false,
     autoplay: false,
-    interval: 2500,
+    interval: 3000,
     duration: 800,
     viewHeight: 0,
     currentIndex: 0,
@@ -24,10 +24,15 @@ Page({
     chooseData:[],
     showShare: false,
     touxiang:"../../images/bg.png",
-    path2:"../../images/my_bg.png",
+    path2:"../../images/my_bg.jpg",
     choose_left: false,
     imagePath: '',
-    showDialog: false
+    showDialog: false,
+    qid: '',
+    quesId: 0,
+    question: '',
+    msgCount: 0,
+    avatar: ''
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -43,12 +48,13 @@ Page({
   onLoad: function (options) {
     let that = this;
     tabBar.tabbar("tabBar", 0, that);
-    let wxGetSystemInfo = Api.wxGetSystemInfo();
-    wxGetSystemInfo().then(res => {
-      if (res.windowHeight) {
-        that.setData({viewHeight: res.windowHeight});
-      }
-    })
+    let questId = wx.getStorageSync('quesid');
+    if (questId) {
+      wx.navigateTo({
+        url: `/pages/details/details?id=${questId}`
+      })
+
+    }
 
     wx.showLoading({
       title: '加载中',
@@ -57,18 +63,64 @@ Page({
     // app.js onLunch为异步事件
     setTimeout(()=>{
       token = app.globalData.access_token;
-      console.log(token)
+      let msgCount = wx.getStorageSync('msgTotal');
+      let watchQuesApi = backApi.watchQuesApi+token;
+      that.setData({
+        msgCount: msgCount
+      })
+      // console.log(token)
       Api.wxRequest(backApi.questions+token, 'GET', {}, (res)=>{
-        // console.log(res, 'rssss')
+        // console.log(res, 'rssssleng')
         let datas = res.data.data;
-        if (datas.length >= 0) {
-          wx.hideLoading();
+        wx.hideLoading();
+        if (datas.length > 0) {
+          for (let item of datas) {
+            item.option1 = that.textNumTest(item.option1);
+            item.option2 = that.textNumTest(item.option2);
+          }
+          // console.log(datas, 'data')
+          Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+            // console.log(res, 'watch')
+            if (res.data.status*1===201) {
+              console.log('watched')
+            }
+          })
           that.setData({chooseData: datas});
+        } else if (datas.length===0) {
+          let noTopQuesApi = backApi.noTopQues+token;
+          Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+            let datas = res.data.data;
+            if (datas.length > 0) {
+              for (let item of datas) {
+                item.option1 = that.textNumTest(item.option1);
+                item.option2 = that.textNumTest(item.option2);
+              }
+              Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+                // console.log(res, 'watch')
+                if (res.data.status*1===201) {
+                  console.log('watched')
+                }
+              })
+              that.setData({chooseData: datas});
+            } else {
+              Api.wxShowToast('没有数据了，去发布吧', 'none', 2000);
+            }
+          })
+        }else {
+          Api.wxShowToast('数据出错了', 'none', 2000);
         }
       })
-    },1500)
+         
+    },1000)
   },
-  onReady: function () {},
+  onReady: function () {
+    let wxGetSystemInfo = Api.wxGetSystemInfo();
+    wxGetSystemInfo().then(res => {
+      if (res.windowHeight) {
+        this.setData({viewHeight: res.windowHeight});
+      }
+    })
+  },
   onShow: function () {},
   onHide: function () {},
   onUnload: function () {},
@@ -76,8 +128,10 @@ Page({
   onReachBottom: function () {},
   onShareAppMessage () {
     let that = this;
+    let questId = that.data.quesId;
     return {
-      title: '自定义转发标题',
+      title: '有选象 不纠结',
+      path: `/pages/main/main?qid=${questId}`,
       success() {},
       fail() {},
       complete() { }
@@ -88,10 +142,38 @@ Page({
       title: '选象'
     });
   },
+  // 轮播图切换事件
+  currentChange (e) {
+    let that = this;
+    let chooseDatas = that.data.chooseData;
+    let watchQuesApi = backApi.watchQuesApi+token;
+    // console.log(e,'22ee')
+    let current = e.detail.current;
+    for (let i=0;i<chooseDatas.length;i++) {
+      if (i===current*1) {
+        let watchQid = chooseDatas[i].id;
+        Api.wxRequest(watchQuesApi,'POST',{qid: watchQid}, (res)=> {
+          console.log(res, 'watch')
+          let resMsg = res.data.msg || '';
+          if (resMsg.indexOf('Qid and Mid has already been taken') && resMsg) {
+            let currt = that.data.currentIndex;
+            Api.wxShowToast('这个问题已经投过票了，下一题吧', 'none', 2000);
+            that.setData({currentIndex: currt+1});
+          }
+          if (res.data.status*1===201) {
+            console.log('watched')
+          }
+        }) 
+      }
+    }
+    
+  },
   // 到他人中心
-  gotoOthers () {
+  gotoOthers (e) {
+    console.log(e, 'otherss')
+    let mid = e.target.dataset.mid;
     wx.navigateTo({
-      url: '/pages/others/others'
+      url: `/pages/others/others?mid=${mid}`
     })
   },
   cancelDialog () {
@@ -102,6 +184,7 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let userInfoApi = backApi.userInfo+token
     that.setData({
       showDialog: false
     });
@@ -112,6 +195,9 @@ Page({
           // app.globalData.userInfo = userInfo;
           wx.setStorageSync('getUserInfo', true);
           wx.setStorageSync('userInfo', userInfo);
+          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+            console.log(res.data.status, 'sssssssss')
+          })
         }
       }
     })
@@ -119,6 +205,11 @@ Page({
   goVote (e) {
     let that = this;
     let getUserInfo = wx.getStorageSync('getUserInfo');
+    let answerData = {
+      qid: 0,
+      choose: ''
+    }
+    // 判断是否授权
     if (!getUserInfo) {
       that.setData({
         showDialog: true
@@ -128,14 +219,12 @@ Page({
       let choose1_orgin = that.data.choose1_orgin;
       let choose2_orgin = that.data.choose2_orgin;
       let direct = e.currentTarget.dataset.direct;
-      let choose1 = e.currentTarget.dataset.item.choose1;
-      let choose2 = e.currentTarget.dataset.item.choose2;
+      let choose1 = e.currentTarget.dataset.item.choose1_per;
+      let choose2 = e.currentTarget.dataset.item.choose2_per;
       let data_index = e.currentTarget.dataset.index;
       let qid = e.currentTarget.dataset.item.id;
       let answerApi = backApi.u_answer;
-      let answerData = {
-        qid: qid
-      }
+      answerData.qid = qid;
 
       // 1.判断是否投过票了
       for (let i = 0;i<chooseData.length;i++) {
@@ -149,63 +238,108 @@ Page({
       if (direct === 'left') {
         for (let i = 0;i<chooseData.length;i++) {
           if (data_index === i) {
+            answerData.choose = 1+'';
+            console.log(answerData)
             chooseData[i].choose_left = true;
             chooseData[i].showMask = true;
             let timer1 = setInterval(()=>{
-              choose1_orgin++;
-              chooseData[i].choose1 = choose1_orgin;
+              if (choose1 >= 20) {
+                choose1_orgin=choose1_orgin+2;
+              } else {
+                choose1_orgin=choose1_orgin+3;
+              }
+              chooseData[i].choose1_per = choose1_orgin;
               that.setData({
                 chooseData: chooseData
               })
               if(choose1_orgin >= choose1){
                 clearInterval(timer1);
-                chooseData[i].choose1 = choose1;
+                chooseData[i].choose1_per = choose1;
                 that.setData({
                   chooseData: chooseData
                 })
               }
-            }, 160);
+            }, 80);
           }
         }
+        // console.log(chooseData, 'aaa')
       }
+
       // 3.
+
       if (direct === 'right') {
         for (let i = 0;i<chooseData.length;i++) {
           if (data_index === i) {
+            answerData.choose = 2+'';
             chooseData[i].choose_right = true;
             chooseData[i].showMask = true;
             let timer2 = setInterval(()=>{
-              choose2_orgin++;
-              chooseData[i].choose2 = choose2_orgin;
+              if (choose2 >= 20) {
+                choose2_orgin=choose2_orgin+2;
+              } else {
+                choose2_orgin=choose2_orgin+3;
+              }
+              chooseData[i].choose2_per = choose2_orgin;
               that.setData({
                 chooseData: chooseData
               })
               if(choose2_orgin >= choose2){
                 clearInterval(timer2);
-                chooseData[i].choose2 = choose2;
+                chooseData[i].choose2_per = choose2;
                 that.setData({
                   chooseData: chooseData
                 })
               }
-            }, 160);
+            }, 80);
           }
         }
       }
 
       // 4.投票请求
+      // console.log(answerData, 'daaaa')
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
+        console.log(res.data, 'choose')
+        // 
         if (status === 201) {
           setTimeout(() => {
             that.setData({currentIndex: data_index+1});
-          },2000)
+          },4000)
+        }
+        if (status===444) {
+          let msg = res.data.msg;
+          if (msg.indexOf('has already been taken')) {
+            Api.wxShowToast('这个问题投过票了，下一题吧', 'none', 2000);
+          }
         }
       });
+      // 请求消息
+      let msgTotalApi = backApi.msgUnreadTotal+token
+      Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+        // console.log(res, 'sssssssss')
+        if (res.data.status*1===200) {
+          setTimeout(()=> {
+            let msgTotal = res.data.data.total;
+            wx.setStorageSync('msgTotal', msgTotal);
+            that.setData({msgCount: msgTotal})
+          }, 100)
+        } else {
+          Api.wxShowToast('网络出错了', 'none', 2000);
+        }
+      })
     }
   },
-  goShare () {
-    this.setData({
-      showShare: true
+  goShare (e) {
+    let that = this;
+    console.log(e, 'eeshare')
+    let quesId = e.target.dataset.question.id;
+    let question = e.target.dataset.question.question;
+    let avatar = e.target.dataset.question.member.avatar;
+    that.setData({
+      showShare: true,
+      quesId: quesId,
+      question: question,
+      avatar: avatar
     })
   },
   // 取消分享
@@ -234,24 +368,52 @@ Page({
       cxt.fill();
 
   },
+  cancelPoster () {
+    let that = this;
+    that.setData({
+      maskHidden: false
+    })
+  },
   shareToMoment () {
-    var that = this;
+    let that = this;
     that.setData({
       showShare: false,
       maskHidden: true
     })
+    let shareQues = that.data.question;
+    let chineseReg = /[\u4E00-\u9FA5]/g;
+    let shareTitle1 = '';
+    let shareTitle2 = '';
     var context = wx.createCanvasContext('mycanvas');
     context.fillStyle = 'rgba(255, 255, 255, 0)';
-    context.fillRect(0, 0, 375, 600)
-    that.drawRoundRect(context, 0, 0, 375, 600, 8);
-    var path1 = that.data.touxiang;
+    context.fillRect(0, 46, 375, 600)
+    that.drawRoundRect(context, 0, 46, 375, 600, 8);
+    var path1 = that.data.avatar;
     //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
     var path2 = that.data.path2;
-    context.setFontSize(20);
-    context.setFillStyle('#62559D');
-    context.setTextAlign('center');
-    context.fillText("很纠结，啦啦啦", 185, 280);
-    context.stroke();
+
+    if (chineseReg.test(shareQues)) {
+      if (shareQues.match(chineseReg).length > 15) {  //返回中文的个数
+        shareTitle1 = shareQues.substring(0, 14);
+        shareTitle2 = shareQues.substring(15,shareQues.length-1);
+        context.setFontSize(20);
+        context.setFillStyle('#62559D');
+        context.setTextAlign('center');
+        context.fillText(shareTitle1, 185, 280);
+        context.stroke();
+        context.setFontSize(20);
+        context.setFillStyle('#62559D');
+        context.setTextAlign('center');
+        context.fillText(shareTitle2, 185, 314);
+        context.stroke();
+      } else {
+        context.setFontSize(20);
+        context.setFillStyle('#62559D');
+        context.setTextAlign('center');
+        context.fillText(shareQues, 185, 280);
+        context.stroke();
+      }
+    }
 
     context.setFontSize(18);
     context.setFillStyle('#888');
@@ -334,29 +496,5 @@ Page({
         maskHidden: true
       });
     }, 1000)
-  },
-  // 点击头像跳转
-  gotoOthers () {
-    wx.navigateTo({
-      url: '/pages/mine/mine?&profile=other'
-    })
   }
 });
-
-// 投票选择结果处理
-// function countUp(that, chooseData, choosed, choose_orgin, choose) {
-//   let timer = setInterval(()=>{
-//     choose_orgin++;
-//     choosed = choose_orgin;
-//     that.setData({
-//       chooseData: chooseData
-//     })
-//     if(choose_orgin >= choose){
-//       clearInterval(timer);
-//       choosed = choose;
-//       that.setData({
-//         chooseData: chooseData
-//       })
-//     }
-//   }, 160);
-// }
