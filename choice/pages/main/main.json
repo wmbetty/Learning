@@ -3,6 +3,8 @@
     "navigationBarTitleText": "选象",
     "usingComponents": {
         "share-wxml": "../../components/share/share",
-        "dialog-wxml": "../../components/dialog/dialog"
-    }
+        "dialog-wxml": "../../components/dialog/dialog",
+        "empty-wxml": "../../components/empty/empty"
+    },
+    "disableScroll": true
 }

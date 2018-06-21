@@ -57,7 +57,7 @@ function wxShowModal(title, txt, showCancel, callback) {
     confirmText: '确认',
     title: title,
     content: txt,
-    confirmColor: '#343434',
+    confirmColor: '#E74C49',
     showCancel: showCancel,
     success: (res) => {
       callback(res)

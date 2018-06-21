@@ -46,31 +46,11 @@ Page({
   onLoad: function (options) {
     let that = this;
     tabBar.tabbar("tabBar", 1, that);
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-      let voteUnreadApi = backApi.voteUnreadApi+token;
-      let noticeUnreadApi = backApi.noticeUnreadApi+token;
-      let userInfo = wx.getStorageSync('userInfo');
-      let msgCount = wx.getStorageSync('msgTotal');
-      wx.setStorageSync('msgTotal', 0)
-      if (!userInfo.nickName) {
-        that.setData({
-          showDialog: true
-        })
-      }
-      Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
-        let vcount = res.data.data.vote
-        that.setData({
-          voteUnreadCount: vcount
-        })
-      })
-      Api.wxRequest(noticeUnreadApi,'GET',{},(res)=> {
-        let ncount = res.data.data.notice
-        that.setData({
-          noticeUnreadCount: ncount
-        })
-      })
-    }, 1000)
+    
+    wx.setNavigationBarColor({
+      frontColor:'#000000',
+       backgroundColor:'#F5F6F8'
+    })
   },
   onReady: function () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -80,7 +60,37 @@ Page({
       }
     })
   },
-  onShow: function () {},
+  onShow: function () {
+    let that = this;
+    setTimeout(()=> {
+      token = app.globalData.access_token;
+      let voteUnreadApi = backApi.voteUnreadApi+token;
+      let noticeUnreadApi = backApi.noticeUnreadApi+token;
+      let userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo.language) {
+        that.setData({
+          showDialog: true
+        })
+      } else {
+        wx.setStorageSync('msgTotal', 0);
+        wx.setStorageSync('voteUnreadCount', 0);
+        Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
+          let vcount = res.data.data.vote
+          that.setData({
+            voteUnreadCount: vcount
+          })
+        })
+        Api.wxRequest(noticeUnreadApi,'GET',{},(res)=> {
+          let ncount = res.data.data.notice
+          that.setData({
+            noticeUnreadCount:ncount
+          })
+        })
+      }
+    }, 1000)
+    
+  },
   onHide: function () {},
   onUnload: function () {},
   onPullDownRefresh: function () {},
@@ -106,18 +116,53 @@ Page({
     // }
   },
   gotoVotemsg () {
-    wx.navigateTo({
-      url: '/pages/votemsg/votemsg'
-    })
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo.nickName) {
+        that.setData({
+          showDialog: true
+        })
+      } else {
+        wx.navigateTo({
+          url: '/pages/votemsg/votemsg'
+        })
+        that.setData({
+          voteUnreadCount: 0
+        })
+        wx.setStorageSync('msgTotal', 0);
+      }
   },
   gotoNotice () {
-    wx.navigateTo({
-      url: '/pages/sysnotice/sysnotice'
-    })
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo.nickName) {
+        that.setData({
+          showDialog: true
+        })
+      } else {
+        wx.navigateTo({
+          url: '/pages/sysnotice/sysnotice'
+        })
+        that.setData({
+          noticeUnreadCount: 0
+        })
+      }
+    
   },
   gotoFeed () {
-    wx.navigateTo({
-      url: '/pages/feedback/feedback'
-    })
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+      
+      if (!userInfo.nickName) {
+        that.setData({
+          showDialog: true
+        })
+      } else {
+        wx.navigateTo({
+          url: '/pages/feedback/feedback'
+        })
+      }
   }
 })

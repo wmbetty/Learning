@@ -1,44 +1,49 @@
 <!--pages/mine/mine.wxml-->
 <import src="../../components/tabBar/tabBar.wxml"/>
-<view>
+<view class="{{isIphone?'is-iphone':''}}">
     <view class="mine-head">
         <view class="mine-banner">
             <view class="nums-box">
                 <image src="../../images/grey_gold.png" class="gold-coin" />
-                <view class="msg-box">{{points}}</view>
+                <view wx:if="{{userInfo.nickName}}" class="point-box">{{points}}</view>
             </view>
-            <image class="my-avatar" src="{{userInfo.avatarUrl}}" />
+            <image class="my-avatar" src="{{userInfo.avatarUrl || ''}}" />
             <image src="../../images/my_bg.png" class="my-bg"/>
         </view>
     </view>
     <view class="mine-infos">
-        <view class="my-name">{{userInfo.nickName}}</view>
-        <image src="{{userInfo.gender*1===1?'../../images/boy_icon.png':'../../images/girl_icon.png'}}" class="my-gender"/>
+        <view class="my-name">{{userInfo.nickName || ''}}</view>
+        <image wx:if="{{userInfo.gender===1}}" src="../../images/boy_icon.png" class="my-gender"/>
+        <image wx:if="{{userInfo.gender===2}}" src="../../images/girl_icon.png" class="my-gender"/>
     </view>
     <view class="tab-container">
-        <view class="tab-head">
-            <view class="tab-head-item my-publish-item" data-type="mine"  bindtap="voteOthers">
-                <view>发起({{myTotalCount}})</view>
-                <view class="bottom-line" wx:if="{{isMine}}"></view>
+        <view class="tab-head" wx:if="{{userInfo.nickName}}">
+            <view class="{{isMine?'tab-head-item my-publish-item blue-font':'tab-head-item my-publish-item'}}" data-type="mine"  bindtap="voteOthers">
+                <view>发起<text wx:if="{{myTotalCount}}">({{myTotalCount}})</text></view>
+                <view class="{{isMine?'bottom-line blue-line':'bottom-line'}}" wx:if="{{isMine}}"></view>
             </view>
-            <view class="tab-head-item blue-font" data-type="others"  bindtap="voteOthers">
-                <view>参与({{joinTotalCount}})</view>
-                <view class="bottom-line blue-line" wx:if="{{!isMine}}"></view>
+            <view class="{{!isMine?'tab-head-item blue-font':'tab-head-item'}}" data-type="others"  bindtap="voteOthers">
+                <view>参与<text wx:if="{{joinTotalCount}}">({{joinTotalCount}})</text></view>
+                <view class="{{!isMine?'bottom-line blue-line':'bottom-line'}}" wx:if="{{!isMine}}"></view>
             </view>
         </view>
-        <view class="tab-content">
+        <view class="tab-content" wx:if="{{userInfo.nickName}}">
             <view wx:if="{{myPublish.length}}">
                 <view wx:if="{{isMine}}">
-                    <view class="tab-list-item" bindtap="gotoDetail" wx:for="{{myPublish}}" data-id="{{item.id}}" wx:key="index">
+                    <view class="tab-list-item" bindtap="gotoDetail" hover-class="list-hover" wx:for="{{myPublish}}" data-my="1" data-id="{{item.id}}" wx:key="index">
                         <view class="item-title">{{item.question}}</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">
-                                <text class="left-pg-text">{{item.choose1}}%</text>
+                                <text class="left-pg-text">{{item.choose1_per}}%</text>
                                 <view class="percent-box">
-                                    <view class="left-progress" style="width:{{item.choose1?item.choose1:50}}%;"></view>
-                                    <view class="right-progress" style="width:{{item.choose2?item.choose2:50}}%;"></view>
+                                    <view class="left-progress" wx:if="{{item.choose1_per===100}}" style="width:{{item.choose1_per}}%;"></view>
+                                    <view class="right-progress" wx:if="{{item.choose1_per===100}}" style="width:0%;"></view>
+                                    <view class="left-progress" wx:if="{{item.choose2_per===100}}" style="width:0%;"></view>
+                                    <view class="right-progress" wx:if="{{item.choose2_per===100}}" style="width:{{item.choose2_per}}%;"></view>
+                                    <view wx:if="{{item.choose1_per!==100 && item.choose2_per!==100}}" class="left-progress" style="width:{{item.choose1_per?item.choose1_per:50}}%;"></view>
+                                    <view wx:if="{{item.choose1_per!==100 && item.choose2_per!==100}}" class="right-progress" style="width:{{item.choose2_per?item.choose2_per:50}}%;"></view>
                                 </view>
-                                <text class="right-pg-text">{{item.choose2*100}}%</text>
+                                <text class="right-pg-text">{{item.choose2_per}}%</text>
                             </view>
                             <view class="hot-cont-box">
                                 <image src="../../images/hot_icon.png" class="hot-icon" />
@@ -50,14 +55,18 @@
             </view>
             <view wx:if="{{myJoin.length}}">
                 <view wx:if="{{!isMine}}">
-                    <view class="tab-list-item" data-id="{{item.question.id}}" bindtap="gotoDetail" wx:for="{{myJoin}}" wx:key="index">
+                    <view class="{{item.question.status===4?'tab-list-item delete-bg':'tab-list-item'}}" hover-class="list-hover"  data-id="{{item.question.id}}" data-stat="{{item.question.status}}" bindtap="gotoDetail" wx:for="{{myJoin}}" wx:key="index">
                         <view class="item-title">{{item.question.question || '未知题目'}}</view>
                         <view class="item-datas">
                             <view class="percent-cont-box">
                                 <text class="left-pg-text">{{item.question.choose1_per}}%</text>
                                 <view class="percent-box">
-                                    <view class="left-progress" style="width:{{item.question.choose1_per}}%;"></view>
-                                    <view class="right-progress" style="width:{{item.question.choose2_per}}%;"></view>
+                                    <view class="left-progress" wx:if="{{item.question.choose1_per===100}}" style="width:{{item.question.choose1_per}}%;"></view>
+                                    <view class="right-progress" wx:if="{{item.question.choose1_per===100}}" style="width:0%;"></view>
+                                    <view class="left-progress" wx:if="{{item.question.choose2_per===100}}" style="width:0%;"></view>
+                                    <view class="right-progress" wx:if="{{item.question.choose2_per===100}}" style="width:{{item.question.choose2_per}}%;"></view>
+                                    <view wx:if="{{item.question.choose1_per!==100 && item.question.choose2_per!==100}}" class="left-progress" style="width:{{item.question.choose1_per?item.question.choose1_per:50}}%;"></view>
+                                    <view wx:if="{{item.question.choose1_per!==100 && item.question.choose2_per!==100}}" class="right-progress" style="width:{{item.question.choose2_per?item.question.choose2_per:50}}%;"></view>
                                 </view>
                                 <text class="right-pg-text">{{item.question.choose2_per}}%</text>
                             </view>
@@ -66,6 +75,7 @@
                                 <view>{{item.question.hots}}</view>
                             </view>
                         </view>
+                        <image wx:if="{{item.question.status===4}}" src="../../images/dele_tag.png" class="delete-icon"/>
                     </view>
                 </view>
             </view>
@@ -83,4 +93,4 @@
 
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 
-<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount}}"/>
+<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount}}"/>

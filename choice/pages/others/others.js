@@ -12,7 +12,7 @@ Page({
   data: {
     userInfo: {},
     myPublish: [],
-    totalCount: 1,
+    totalCount: 0,
     totalPage: '',
     currPage: '',
     viewHeight: 0
@@ -37,7 +37,7 @@ Page({
           that.setData({
             userInfo: datas
           })
-          Api.wxRequest(otherPublishQues,'GET',{mid:mid},(res)=> {
+          Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
             console.log(res, 'sssss')
             if (res.data.status*1===200 && res.data.data.length) {
               let myPublish = res.data.data;

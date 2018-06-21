@@ -7,6 +7,10 @@ Component({
     msgCount: {
       type: Number,
       value: 0
+    },
+    voteUnreadCount: {
+      type: Number,
+      value: 0
     }
   }
 })

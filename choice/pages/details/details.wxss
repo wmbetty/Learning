@@ -22,7 +22,7 @@ page{
 }
 .infos-head{font-size: 36rpx;}
 .r-share-btn{
-    width: 38rpx;height: 38rpx;margin-top: 12rpx;
+    width: 44rpx;height: 44rpx;margin-top: 12rpx;
     background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAY1BMVEUAAACIiIiJiYmMjIyJiYmIiIiIiIiQkJCmpqaIiIidnZ2IiIiJiYmKioqJiYmIiIiIiIiKioqKioqLi4uKioqJiYmQkJCJiYmJiYmJiYmJiYmJiYmJiYmJiYmIiIiJiYmIiIiLquayAAAAIHRSTlMAkOMidNnAFAThCJ3yQvfv8XszHSq4DN3UireyUDuwYyd1dTMAAAF9SURBVEjH7dfZboMwFARQG4ND2JeSPe38/1cWA8okaaMwr1VHAoGsw7UfwBfDpKX1SYMl1ZEDn3jMIe8Ns7H10/ht9IIfKS63x7YFnlLvzJIP/EL7paDHlGTI7ZLjB+dTHu1dzgjJ54duMSaKnVkRF81rnSoGWMWZESAQ1uhDwc6sh9F5lm247hXo7CQ3DVB1EjSzDOdYg7NM6/Emk+Aiy1BSg4sMJ6fBRXogUSBlAgwKpCyAXIGU42FVSKlCShVSqtDEQEQpQJPlvnwr3ZbwIZQCpFQhpQopVUj5Bsoy2xNq8kooyl2CrTOKJL3uXoyksXWUSr6Agyr5rvzLPyb5jReSA03YV06yHICEe5mQUM5z/xTiRmO5ZwuJR1Pe+gQhWQTUKXsTraQNvVvBfmhVugpoNkbowZb0EYB2nrbS95kuQD+uUuw1s7gCsA9zlfpbF0cIkE0ze+pTbl8lHxJM8ZuHWbQF1qVpUzL+O7xNbVnw6X+leF0s8ba8q/cNo9tNT99Xa0EAAAAASUVORK5CYII=') no-repeat;
     background-size: 100% 100%;
 }
@@ -68,7 +68,7 @@ page{
 .dark-red-font{color: #62559D;}
 .choice-box{padding: 40rpx 30rpx 0;display: flex;}
 .choice-item{
-    width: 336rpx;height: 320rpx;color: #fff;
+    width: 336rpx;height: 320rpx;position: relative;
 }
 .choice-item-cont{
     width: 280rpx;height: 180rpx;
@@ -76,15 +76,17 @@ page{
     margin: 0 auto;
     display: flex;justify-content: center;align-items: center;
 }
-.left-choice-item{margin-right: 20rpx;background: #11B591;}
-.right-choice-item{background: #62559D;}
+.left-choice-item{margin-right: 20rpx;background: #fff;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);}
+.right-choice-item{background: #fff;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);}
+.green-bg{background: #11B591;box-shadow: none;color: #fff;}
+.dark-redbg{background: #62559D;box-shadow: none;color: #fff;}
 .red-dot{
     display: inline-block;width: 16rpx;height: 16rpx;border-radius: 50%;
     background: #E74C49;margin-right: 12rpx;
 }
 .my-vote-tips{margin-top: 20rpx;font-size: 24rpx;color: #888;}
 .share-mask{
-    position: absolute;left: 0;top: 0;width: 100%;
+    position: fixed;left: 0;top: 0;width: 100%;
     background: rgba(0, 0, 0, 0.5);z-index: 99;
 }
 .share-btn-container{
@@ -147,3 +149,9 @@ button[class="baocun"]::after{
 .poster-close-icon{
     position: absolute;width: 60rpx;height: 60rpx;z-index: 100;top: 140rpx;right: 100rpx;
 }
+.vate-mask{
+    position: absolute;top: 0;left: 0;width: 100%;height: 100%;
+    background: rgba(0, 0, 0, 0.4);color: #fff;font-size: 80rpx;
+    display: flex;justify-content: center;align-items: center;font-weight: bold;
+}
+.vote-selected{color: #E74C49;}

@@ -180,3 +180,4 @@ view.wechat-item-box{
 .wechat-item-box:first-child{
     border-bottom: 1px solid #f1f1f1;
 }
+.main-empty-cont{padding-top: 188rpx;}

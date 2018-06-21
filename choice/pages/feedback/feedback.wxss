@@ -27,6 +27,10 @@ page{
     width: 690rpx;height: 92rpx;background: #E1E1E1;border-radius: 10rpx;color: #fff;
     display: flex;justify-content: center;align-items: center;font-size: 40rpx;margin: 0 auto;
 }
+.submit-btn::after{border: none;}
 .submit-btn-act{
     background: #E74C49
 }
+button[disabled]{  
+    background-color: #B83C3A;  
+}  

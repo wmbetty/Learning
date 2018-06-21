@@ -4,6 +4,8 @@ const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
 let token = '';
+let isPhoto;
+// let userDeny = '';
 
 Page({
 
@@ -13,8 +15,8 @@ Page({
   data: {
     indicatorDots: false,
     autoplay: false,
-    interval: 3000,
-    duration: 800,
+    interval: 800,
+    duration: 400,
     viewHeight: 0,
     currentIndex: 0,
     numActive: false,
@@ -32,7 +34,10 @@ Page({
     quesId: 0,
     question: '',
     msgCount: 0,
-    avatar: ''
+    avatar: '',
+    isEmpty: false,
+    voteUnreadCount: 0,
+    page: 1
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -43,6 +48,8 @@ Page({
       } else{
         return text
       }  
+    } else {
+      return text
     }
   },
   onLoad: function (options) {
@@ -53,30 +60,41 @@ Page({
       wx.navigateTo({
         url: `/pages/details/details?id=${questId}`
       })
-
     }
-
     wx.showLoading({
       title: '加载中',
     });
-
+  },
+  onReady: function () {
+    let wxGetSystemInfo = Api.wxGetSystemInfo();
+    wxGetSystemInfo().then(res => {
+      if (res.windowHeight) {
+        this.setData({viewHeight: res.windowHeight});
+      }
+    })
+  },
+  onShow: function () {
+    let that = this;
     // app.js onLunch为异步事件
     setTimeout(()=>{
-      token = app.globalData.access_token;
-      let msgCount = wx.getStorageSync('msgTotal');
+      token = wx.getStorageSync('token');
       let watchQuesApi = backApi.watchQuesApi+token;
-      that.setData({
-        msgCount: msgCount
-      })
+      let page = that.data.page;
+      
       // console.log(token)
-      Api.wxRequest(backApi.questions+token, 'GET', {}, (res)=>{
-        // console.log(res, 'rssssleng')
-        let datas = res.data.data;
+      Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
+        let datas = res.data.data || [];
         wx.hideLoading();
+        // if (datas.length===0) {
+        //   that.setData({
+        //     isEmpty: true
+        //   })
+        // }
         if (datas.length > 0) {
           for (let item of datas) {
-            item.option1 = that.textNumTest(item.option1);
-            item.option2 = that.textNumTest(item.option2);
+            item.option1 = item.option1.substring(0, 36);
+            item.option2 = item.option2.substring(0, 36);
+            item.question = item.question.substring(0, 30);
           }
           // console.log(datas, 'data')
           Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
@@ -89,6 +107,7 @@ Page({
         } else if (datas.length===0) {
           let noTopQuesApi = backApi.noTopQues+token;
           Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+            console.log(res, 'sss')
             let datas = res.data.data;
             if (datas.length > 0) {
               for (let item of datas) {
@@ -103,25 +122,36 @@ Page({
               })
               that.setData({chooseData: datas});
             } else {
-              Api.wxShowToast('没有数据了，去发布吧', 'none', 2000);
+              that.setData({
+                isEmpty: true
+              })
             }
           })
         }else {
           Api.wxShowToast('数据出错了', 'none', 2000);
         }
       })
-         
-    },1000)
+    },80)
+    let msgCount = wx.getStorageSync('msgTotal');
+    let voteUnreadCount = wx.getStorageSync('voteUnreadCount');
+      that.setData({
+        msgCount: msgCount,
+        voteUnreadCount: voteUnreadCount
+      })
+      
+      wx.getSetting({
+        success: (res) => {
+          // console.log(res, 'minemine')
+          let authSetting = res.authSetting;
+          let writePhotosAlbum = authSetting["scope.writePhotosAlbum"] || '';
+          if (writePhotosAlbum) {
+            isPhoto = true
+          } else {
+            isPhoto = false
+          }
+        }
+      })
   },
-  onReady: function () {
-    let wxGetSystemInfo = Api.wxGetSystemInfo();
-    wxGetSystemInfo().then(res => {
-      if (res.windowHeight) {
-        this.setData({viewHeight: res.windowHeight});
-      }
-    })
-  },
-  onShow: function () {},
   onHide: function () {},
   onUnload: function () {},
   onPullDownRefresh: function () {},
@@ -129,12 +159,19 @@ Page({
   onShareAppMessage () {
     let that = this;
     let questId = that.data.quesId;
+    let shareFriends = backApi.shareFriends+'?access-token='+token;
     return {
       title: '有选象 不纠结',
       path: `/pages/main/main?qid=${questId}`,
-      success() {},
+      success() {
+        Api.wxRequest(shareFriends,'POST',{},(res)=>{
+          console.log(res, 'friends')
+        })
+      },
       fail() {},
-      complete() { }
+      complete() {
+        
+      }
     }
   },
   onPageScroll () {
@@ -147,18 +184,63 @@ Page({
     let that = this;
     let chooseDatas = that.data.chooseData;
     let watchQuesApi = backApi.watchQuesApi+token;
-    // console.log(e,'22ee')
     let current = e.detail.current;
     for (let i=0;i<chooseDatas.length;i++) {
       if (i===current*1) {
         let watchQid = chooseDatas[i].id;
         Api.wxRequest(watchQuesApi,'POST',{qid: watchQid}, (res)=> {
           console.log(res, 'watch')
+          if (res.data.status*1===201) {
+            console.log(current, chooseDatas.length-1, 'llll')
+            if (current===chooseDatas.length-1) {
+              console.log('top该分页了')
+              let noTopQuesApi = backApi.noTopQues+token;
+              let page = that.data.page;
+              setTimeout(()=>{
+                Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
+                  // console.log(res, 'rssssleng')
+                  if (res.data.status*1 === 200) {
+                    that.setData({page: page+1});
+                    let topDatas = res.data.data || [];
+                    wx.hideLoading();
+                    if (topDatas.length===0) {
+                      Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+                        let datas = res.data.data || [];
+                        if (datas.length===0) {
+                          that.setData({
+                            isEmpty: true
+                          })
+                        } else {
+                          if (datas.length > 0) {
+                            for (let item of datas) {
+                              item.option1 = that.textNumTest(item.option1);
+                              item.option2 = that.textNumTest(item.option2);
+                            }
+                            chooseDatas = chooseDatas.concat(datas);
+                            that.setData({chooseData: chooseDatas});
+                          } else {
+                            Api.wxShowToast('没有数据了，去发布吧', 'none', 2000);
+                          }
+                        }
+                      })
+                    } else {
+                      for (let item of topDatas) {
+                        item.option1 = that.textNumTest(item.option1);
+                        item.option2 = that.textNumTest(item.option2);
+                      }
+                      chooseDatas = chooseDatas.concat(topDatas);
+                      // console.log(chooseDatas, 'chsss')
+                      that.setData({chooseData: chooseDatas});
+                    }
+                  }
+                })
+              },300)
+              
+            }
+          }
           let resMsg = res.data.msg || '';
-          if (resMsg.indexOf('Qid and Mid has already been taken') && resMsg) {
-            let currt = that.data.currentIndex;
-            Api.wxShowToast('这个问题已经投过票了，下一题吧', 'none', 2000);
-            that.setData({currentIndex: currt+1});
+          if (resMsg.indexOf('Qid and Mid has already been taken') != -1 && resMsg) {
+            // that.go
           }
           if (res.data.status*1===201) {
             console.log('watched')
@@ -166,11 +248,13 @@ Page({
         }) 
       }
     }
+    // console.log(current,chooseDatas, 'change')
+    
     
   },
   // 到他人中心
   gotoOthers (e) {
-    console.log(e, 'otherss')
+    // console.log(e, 'otherss')
     let mid = e.target.dataset.mid;
     wx.navigateTo({
       url: `/pages/others/others?mid=${mid}`
@@ -190,31 +274,35 @@ Page({
     });
     wx.getUserInfo({
       success: (res)=>{
+        console.log(res, 'getInfooomain')
         let userInfo = res.userInfo;
         if (userInfo.nickName) {
-          // app.globalData.userInfo = userInfo;
-          wx.setStorageSync('getUserInfo', true);
           wx.setStorageSync('userInfo', userInfo);
           Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
             console.log(res.data.status, 'sssssssss')
           })
+        }
+      },
+      complete: (res)=>{
+        console.log(res, 'infocom')
+        let errMsg = res.errMsg || '';
+        if (errMsg === 'getUserInfo:fail auth deny') {
+          
         }
       }
     })
   },
   goVote (e) {
     let that = this;
-    let getUserInfo = wx.getStorageSync('getUserInfo');
+    let userInfo = wx.getStorageSync('userInfo');
+    let language = userInfo.language || '';
+    // console.log(userInfo, 'infomain')
     let answerData = {
       qid: 0,
       choose: ''
     }
     // 判断是否授权
-    if (!getUserInfo) {
-      that.setData({
-        showDialog: true
-      })
-    } else {
+    if (language) {
       let chooseData = that.data.chooseData;
       let choose1_orgin = that.data.choose1_orgin;
       let choose2_orgin = that.data.choose2_orgin;
@@ -234,112 +322,222 @@ Page({
           return false;
         }
       }
-      //2.
-      if (direct === 'left') {
-        for (let i = 0;i<chooseData.length;i++) {
-          if (data_index === i) {
-            answerData.choose = 1+'';
-            console.log(answerData)
-            chooseData[i].choose_left = true;
-            chooseData[i].showMask = true;
-            let timer1 = setInterval(()=>{
-              if (choose1 >= 20) {
-                choose1_orgin=choose1_orgin+2;
-              } else {
-                choose1_orgin=choose1_orgin+3;
-              }
-              chooseData[i].choose1_per = choose1_orgin;
-              that.setData({
-                chooseData: chooseData
-              })
-              if(choose1_orgin >= choose1){
-                clearInterval(timer1);
-                chooseData[i].choose1_per = choose1;
-                that.setData({
-                  chooseData: chooseData
-                })
-              }
-            }, 80);
-          }
-        }
-        // console.log(chooseData, 'aaa')
-      }
-
-      // 3.
-
-      if (direct === 'right') {
-        for (let i = 0;i<chooseData.length;i++) {
-          if (data_index === i) {
-            answerData.choose = 2+'';
-            chooseData[i].choose_right = true;
-            chooseData[i].showMask = true;
-            let timer2 = setInterval(()=>{
-              if (choose2 >= 20) {
-                choose2_orgin=choose2_orgin+2;
-              } else {
-                choose2_orgin=choose2_orgin+3;
-              }
-              chooseData[i].choose2_per = choose2_orgin;
-              that.setData({
-                chooseData: chooseData
-              })
-              if(choose2_orgin >= choose2){
-                clearInterval(timer2);
-                chooseData[i].choose2_per = choose2;
-                that.setData({
-                  chooseData: chooseData
-                })
-              }
-            }, 80);
-          }
-        }
-      }
 
       // 4.投票请求
       // console.log(answerData, 'daaaa')
+      if (direct === 'left') {
+        answerData.choose = 1;
+      }
+      if (direct === 'right') {
+        answerData.choose = 2;
+      }
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
-        console.log(res.data, 'choose')
-        // 
+        
+        // console.log(res.data, 'choose')
+        // 投票成功后
         if (status === 201) {
+
+          let afterChoose = res.data.data;
+          // console.log(afterChoose, 'oose')
+          
+          if (direct === 'left') {
+            for (let i = 0;i<chooseData.length;i++) {
+              if (data_index === i) {
+                chooseData[i].hots = afterChoose.hots;
+                chooseData[i].choose_left = true;
+                chooseData[i].showMask = true;
+                let chse1 = afterChoose.choose1_per;
+                let chse2 = afterChoose.choose2_per;
+                // console.log(choose1,choose2, 'pereeeer')
+                if (chse1 === 0) {
+                  
+                  let timer1 = setInterval(()=>{
+                    if (chse2 >= 20) {
+                      choose2_orgin=choose2_orgin+2;
+                    } else {
+                      choose2_orgin=choose2_orgin+3;
+                    }
+                    chooseData[i].choose1_per = chse1;
+                    chooseData[i].choose2_per = choose2_orgin;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose2_orgin >= chse2){
+                      clearInterval(timer1);
+                      chooseData[i].choose2_per = chse2;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                  }, 15);
+                }
+                if (chse2 === 0) {
+                  
+                  let timer1 = setInterval(()=>{
+                    if (chse1 >= 20) {
+                      choose1_orgin=choose1_orgin+2;
+                    } else {
+                      choose1_orgin=choose1_orgin+3;
+                    }
+                    chooseData[i].choose1_per = choose1_orgin;
+                    chooseData[i].choose2_per = chse2;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose1_orgin >= chse1){
+                      clearInterval(timer1);
+                      chooseData[i].choose1_per = chse1;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                    
+                  }, 15);
+                }
+                if (chse1 !== 0 && chse2 !== 0) {
+                  let timer1 = setInterval(()=>{
+                    if (chse1 >= 20) {
+                      choose1_orgin=choose1_orgin+2;
+                    } else {
+                      choose1_orgin=choose1_orgin+3;
+                    }
+                    if (chse2 >= 20) {
+                      choose2_orgin=choose2_orgin+2;
+                    } else {
+                      choose2_orgin=choose2_orgin+3;
+                    }
+                    chooseData[i].choose1_per = choose1_orgin;
+                    chooseData[i].choose2_per = choose2_orgin;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose1_orgin >= choose1){
+                      clearInterval(timer1);
+                      chooseData[i].choose1_per = chse1;
+                      chooseData[i].choose2_per = chse2;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                  }, 15);
+                }
+                
+              }
+            }
+          }
+
+          if (direct === 'right') {
+            for (let i = 0;i<chooseData.length;i++) {
+              if (data_index === i) {
+                chooseData[i].hots = afterChoose.hots;
+                chooseData[i].choose_right = true;
+                chooseData[i].showMask = true;
+                let chse1 = afterChoose.choose1_per;
+                let chse2 = afterChoose.choose2_per;
+                // console.log(choose1,choose2, 'pereeeer')
+                if (chse1 === 0) {
+                  
+                  let timer1 = setInterval(()=>{
+                    if (chse2 >= 20) {
+                      choose2_orgin=choose2_orgin+2;
+                    } else {
+                      choose2_orgin=choose2_orgin+3;
+                    }
+                    chooseData[i].choose1_per = chse1;
+                    chooseData[i].choose2_per = choose2_orgin;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose2_orgin >= chse2){
+                      clearInterval(timer1);
+                      chooseData[i].choose2_per = chse2;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                  }, 15);
+                }
+                if (chse2 === 0) {
+                  
+                  let timer1 = setInterval(()=>{
+                    if (chse1 >= 20) {
+                      choose1_orgin=choose1_orgin+2;
+                    } else {
+                      choose1_orgin=choose1_orgin+3;
+                    }
+                    chooseData[i].choose1_per = choose1_orgin;
+                    chooseData[i].choose2_per = chse2;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose1_orgin >= chse1){
+                      clearInterval(timer1);
+                      chooseData[i].choose1_per = chse1;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                    
+                  }, 15);
+                }
+                if (chse1 !== 0 && chse2 !== 0) {
+                  let timer2 = setInterval(()=>{
+                    if (chse2 >= 20) {
+                      choose2_orgin=choose2_orgin+2;
+                    } else {
+                      choose2_orgin=choose2_orgin+3;
+                    }
+                    if (chse1 >= 20) {
+                      choose1_orgin=choose1_orgin+2;
+                    } else {
+                      choose1_orgin=choose1_orgin+3;
+                    }
+                    chooseData[i].choose1_per = choose1_orgin;
+                    chooseData[i].choose2_per = choose2_orgin;
+                    that.setData({
+                      chooseData: chooseData
+                    })
+                    if(choose2_orgin >= choose2){
+                      clearInterval(timer2);
+                      chooseData[i].choose1_per = chse1;
+                      chooseData[i].choose2_per = chse2;
+                      that.setData({
+                        chooseData: chooseData
+                      })
+                    }
+                  }, 15);
+                }
+              }
+            }
+          }
           setTimeout(() => {
             that.setData({currentIndex: data_index+1});
           },4000)
         }
         if (status===444) {
           let msg = res.data.msg;
-          if (msg.indexOf('has already been taken')) {
+          if (msg.indexOf('has already been taken') != -1) {
             Api.wxShowToast('这个问题投过票了，下一题吧', 'none', 2000);
           }
         }
-      });
-      // 请求消息
-      let msgTotalApi = backApi.msgUnreadTotal+token
-      Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-        // console.log(res, 'sssssssss')
-        if (res.data.status*1===200) {
-          setTimeout(()=> {
-            let msgTotal = res.data.data.total;
-            wx.setStorageSync('msgTotal', msgTotal);
-            that.setData({msgCount: msgTotal})
-          }, 100)
-        } else {
-          Api.wxShowToast('网络出错了', 'none', 2000);
-        }
+      })
+    } else {
+      that.setData({
+        showDialog: true
       })
     }
   },
   goShare (e) {
     let that = this;
-    console.log(e, 'eeshare')
     let quesId = e.target.dataset.question.id;
     let question = e.target.dataset.question.question;
     let avatar = e.target.dataset.question.member.avatar;
+    downLoadImg(avatar, 'headerUrl');
     that.setData({
       showShare: true,
       quesId: quesId,
-      question: question,
-      avatar: avatar
+      question: question
     })
   },
   // 取消分享
@@ -388,7 +586,7 @@ Page({
     context.fillStyle = 'rgba(255, 255, 255, 0)';
     context.fillRect(0, 46, 375, 600)
     that.drawRoundRect(context, 0, 46, 375, 600, 8);
-    var path1 = that.data.avatar;
+    let path1 = wx.getStorageSync('headerUrl');
     //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
     var path2 = that.data.path2;
 
@@ -413,6 +611,12 @@ Page({
         context.fillText(shareQues, 185, 280);
         context.stroke();
       }
+    } else {
+        context.setFontSize(20);
+        context.setFillStyle('#62559D');
+        context.setTextAlign('center');
+        context.fillText(shareQues, 185, 280);
+        context.stroke();
     }
 
     context.setFontSize(18);
@@ -454,27 +658,45 @@ Page({
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
-    if (!this.data.imagePath){
-      wx.showModal({
-        title: '提示',
-        content: '图片绘制中，请稍后重试',
-        showCancel:false
+    
+    if (isPhoto) {
+      if (!this.data.imagePath){
+        wx.showModal({
+          title: '提示',
+          content: '图片绘制中，请稍后重试',
+          showCancel:false
+        })
+      }
+      wx.saveImageToPhotosAlbum({
+        filePath: this.data.imagePath,
+        success:(res)=>{
+          let shareMoment = backApi.shareMoment+token;
+          Api.wxRequest(shareMoment,'POST',{},(res)=>{
+            console.log(res,'moment')
+          })
+          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+          this.setData({
+            maskHidden: false
+          })
+        },
+        fail:(err)=>{
+          if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {}
+          console.log(err,'err')
+        }
+      })
+    } else {
+      wx.openSetting({
+        success(settingdata) {
+          console.log(settingdata)
+               if (settingdata.authSetting["scope.writePhotosAlbum"]) {
+                Api.wxShowToast("获取权限成功，再次点击保存到相册")
+               } else {
+                Api.wxShowToast("获取权限失败")
+               }
+        }
       })
     }
-    wx.saveImageToPhotosAlbum({
-      filePath: this.data.imagePath,
-      success:(res)=>{
-        Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
-        this.setData({
-          maskHidden: false
-        })
-      },
-      fail:(err)=>{
-        if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-          Api.wxShowToast('您之前点击了不允许保存图片到相册', 'none', 2000); 
-        }
-      }
-    })
+    
   },
   
   //点击生成
@@ -497,4 +719,18 @@ Page({
       });
     }, 1000)
   }
-});
+})
+
+function downLoadImg(netUrl, storageKeyAvatarUrl) {
+  wx.getImageInfo({
+    src: netUrl,    //请求的网络图片路径
+    success: function (res) {
+      //请求成功后将会生成一个本地路径即res.path,然后将该路径缓存到storageKeyUrl关键字中
+      wx.setStorage({
+        key: storageKeyAvatarUrl,
+        data: res.path,
+      });
+
+    }
+  })
+}

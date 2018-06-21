@@ -6,7 +6,7 @@
             <navigator open-type="redirect" url="{{item.pagePath}}" wx:if="{{index*1 !== 2}}">
                 <view class="{{index*1===1?'msg-box':''}}">
                     <image class="icon" src='{{item.iconPath}}' />
-                    <view wx:if="{{index*1===1 && msgCount}}" class="msg-red-dot"></view>
+                    <view wx:if="{{index*1===1 && (msgCount*1>0 || voteUnreadCount*1>0)}}" class="msg-red-dot"></view>
                 </view>
                 <view class="{{item.current== 1 ? 'tabBartext' :''}}">{{item.text}}</view>
             </navigator>

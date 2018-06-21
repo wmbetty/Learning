@@ -16,10 +16,10 @@ page{
     display: flex;justify-content: space-between;font-size: 36rpx;color: #343434;
 }
 .feedback-icon{
-    width: 56rpx;height: 56rpx;margin-right: 24rpx;
+    width: 40rpx;height: 40rpx;margin-right: 24rpx;margin-top: 10rpx;
 }
 .info-icon{
-    width: 44rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx;
+    width: 40rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx;
 }
 .suggest-icon{
     width: 40rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx; 
@@ -31,6 +31,9 @@ page{
 }
 .msg-num-wide{
     width: 40rpx;height: 30rpx;border-radius: 16rpx;
+}
+.msg-num-wider{
+    width: 60rpx;border-radius: 30px;
 }
 .msg-rt-arrow{
     width: 24rpx;height: 26rpx;
@@ -45,3 +48,6 @@ page{
     font-size: 28rpx;color: #888;margin-top: -4rpx;
 }
 .feed-box .had-pad{padding-top: 18rpx;}
+.list-hover{
+    background: #ededed;
+}

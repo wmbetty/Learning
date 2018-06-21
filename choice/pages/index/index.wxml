@@ -1,19 +1,20 @@
 <!--index.wxml-->
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
-<view>
+
+<view wx:if="{{hasUserInfo}}">
     <view class="title-box">
-        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" data-direct="title" bindinput="titlePut" value="{{titleText}}" bindfocus="textFocus" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" />
+        <textarea class="{{showTextarea?'textarea-has-text':'title-textarea'}}" maxlength="30" data-direct="title" bindinput="titlePut" value="{{titleText}}" bindfocus="textFocus" bindtap="textTap" bindblur="textBlur" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" />
     </view>
     <view class="pub-cont">
         <view class="pub-cont-box">
-            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" data-direct="left" bindinput="titlePut" bindfocus="contFocus" value="{{leftHolder}}" />
+            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" maxlength="18" data-direct="left" bindinput="titlePut" bindfocus="contFocus" bindtap="textTap" bindblur="textBlur" value="{{leftHolder}}" />
         </view>
         <view class="pub-cont-box">
-            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" data-direct="right" bindinput="titlePut" bindfocus="contFocus" value="{{rightHolder}}" />
+            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" maxlength="18" data-direct="right" bindinput="titlePut" bindfocus="contFocus" bindtap="textTap" bindblur="textBlur" value="{{rightHolder}}" />
             <!-- textarea -->
         </view>
     </view>
-    <view class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" bindtap="goPublish">发布</view>
+    <button class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" disabled="{{btnDis}}" bindtap="goPublish">发布</button>
 </view>
 <!-- 加积分提示 -->
 <view class="gc-toast" wx:if="{{showToast}}">
@@ -32,16 +33,31 @@
         </view>
         <view class="share-infos">好友助攻 迎刃而解</view>
         <view class="share-content">
-            <view>你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？你在哪？</view>
+            <view>{{shareTitle}}</view>
             <view class="triangle-down"></view>
         </view>
         <view class="share-btn-box">
-            <image src="../../images/moment_icon.png" class="share-btn"/>
+            <image src="../../images/moment_icon.png" class="share-btn" bindtap="shareTomoment" />
             <view class="btn-splie-line"></view>
-            <image src="../../images/wechat_icon.png" class="share-btn"/>
+            <button class="share-btn-default" open-type="share" bindtap="shareToFriend">
+                <image src="../../images/wechat_icon.png" class="share-btn"/>
+            </button>
+            
         </view>
     </view>
 </view>
+
+<view class='imagePathBox' wx:if="{{maskHidden}}">
+        <image src="{{imagePath}}" class='shengcheng' />
+        <button class='baocun' catchtap='saveImageToPhotosAlbum'>图片保存至本地</button>
+        <image src="../../images/close.png" class="poster-close-icon" bindtap="cancelPosters" />
+    </view>
+    <view wx:if="{{maskHidden}}" class="mask"></view>
+    <view class="canvas-box" wx:if="{{maskHidden}}">
+        <canvas  style="width: 375px;height: 667px;position:fixed;top:999px" canvas-id="mycanvas"/>
+        <image src="{{path}}" />
+    </view>
+
 
 <!-- 授权弹窗 -->
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

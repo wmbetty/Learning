@@ -13,29 +13,33 @@ const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
-
-const login = "https://choosen.79643.com/v1/member/login"
-const questop = "https://choosen.79643.com/v1/questions/top?access-token="
-const noTopQues = "https://choosen.79643.com/v1/questions?access-token="
-const my_quest = "https://choosen.79643.com/v1/questions/my-question?access-token="
-const join_quest = "https://choosen.79643.com/v1/questions/join-question?access-token="
-const choose_answer = "https://choosen.79643.com/v1/choose?access-token="
-const watch_ques = "https://choosen.79643.com/v1/watch?access-token="
-const publish = "https://choosen.79643.com/v1/questions?access-token="
-const quesDetail = "https://choosen.79643.com/v1/questions/"
-const vote_count = "https://choosen.79643.com/v1/message/vote-count?access-token="
-const notice_count = "https://choosen.79643.com/v1/message/notice-count?access-token="
-const notice_msg = "https://choosen.79643.com/v1/message/notice-msg?access-token="
-const vote_msg = "https://choosen.79643.com/v1/message/vote-msg?access-token="
-const userInfo = "https://choosen.79643.com/v1/member/user-info?access-token="
-const myInfo = "https://choosen.79643.com/v1/member/info?access-token="
-const othersInfo = "https://choosen.79643.com/v1/member/other-info?access-token="
-const msgUnreadTotal = "https://choosen.79643.com/v1/message/total-count?access-token="
-const myChooseTagApi = "https://choosen.79643.com/v1/choose/my-choose?access-token="
-const readNoticeApi = "https://choosen.79643.com/v1/message/read-notice?access-token="
-const readVoteApi = "https://choosen.79643.com/v1/message/read-vote?access-token="
-const otherPublishQues = "https://choosen.79643.com/v1/questions/others-question?access-token="
-const feedback = "https://choosen.79643.com/v1/feed?access-token="
+const http = "https://fabu.choosen.79643.com/"
+// const http = "https://choosen.79643.com/"
+const login = `${http}v1/member/login`
+const questop = `${http}v1/questions/top?access-token=`
+const noTopQues = `${http}v1/questions?access-token=`
+const my_quest = `${http}v1/questions/my-question?access-token=`
+const join_quest = `${http}v1/questions/join-question?access-token=`
+const choose_answer = `${http}v1/choose?access-token=`
+const watch_ques = `${http}v1/watch?access-token=`
+const publish = `${http}v1/questions?access-token=`
+const quesDetail = `${http}v1/questions/`
+const vote_count = `${http}v1/message/vote-count?access-token=`
+const notice_count = `${http}v1/message/notice-count?access-token=`
+const notice_msg = `${http}v1/message/notice-msg?access-token=`
+const vote_msg = `${http}v1/message/vote-msg?access-token=`
+const userInfo = `${http}v1/member/user-info?access-token=`
+const myInfo = `${http}v1/member/info?access-token=`
+const othersInfo = `${http}v1/member/other-info?access-token=`
+const msgUnreadTotal = `${http}v1/message/total-count?access-token=`
+const myChooseTagApi = `${http}v1/choose/my-choose?access-token=`
+const readNoticeApi = `${http}v1/message/read-notice?access-token=`
+const readVoteApi = `${http}v1/message/read-vote?access-token=`
+const otherPublishQues = `${http}v1/questions/others-question?access-token=`
+const feedback = `${http}v1/feed?access-token=`
+const deleMyQues = `${http}v1/questions/`
+const shareFriends = `${http}v1/share/share-friend`
+const shareMoment = `${http}v1/share/share-circle?access-token=`
 
 module.exports = {
   formatTime: formatTime,
@@ -60,5 +64,8 @@ module.exports = {
   readVoteApi: readVoteApi,
   otherPublishQues: otherPublishQues,
   myInfo: myInfo,
-  feedback: feedback
+  feedback: feedback,
+  deleMyQues: deleMyQues,
+  shareFriends: shareFriends,
+  shareMoment: shareMoment
 }

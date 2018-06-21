@@ -1,28 +1,28 @@
 <!--pages/votemsg/votemsg.wxml-->
 <view class="page-head">投票</view>
-<view class="vote-list-group" wx:if="{{voteLists.length>0}}">
-    <view class="{{isDelete?'vote-list-item delete-bg':'vote-list-item'}}">
+<view class="vote-list-group" wx:if="{{voteLists.length>0}}" wx:for="{{voteLists}}" wx:key="{{index}}">
+    <view class="{{item.question.status===4?'vote-list-item delete-bg':'vote-list-item'}}" data-qid="{{item.question.id}}" data-stat="{{item.question.status}}" catchtap="gotoDetail">
         <view class="list-head">
-            <image src="" class="voter-avatar" />
+            <image src="{{item.frommember.avatar}}" class="voter-avatar" data-fromid="{{item.fromid}}" catchtap="gotoOthers"/>
             <view>
-                <view>你啃你西瓜</view>
-                <view class="time-text">15分钟前</view>
+                <view>{{item.frommember.nickname}}</view>
+                <view class="time-text">{{item.question.updated_time}}</view>
             </view>
         </view>
         <view class="flex-space voted-title">
-            <view>星期五，健身还是聚餐呢？</view>
-            <view class="s-circle"></view>
+            <view>{{item.question.question}}</view>
+            <view wx:if="{{item.question.status===0}}" class="s-circle"></view>
         </view>
         <view class="flex-space">
-            <view class="{{voteLeft?'green-font':'dark-red-font'}}">投了【{{voteLeft?'左':'右'}}边】一票</view>
+            <view class="{{item.choose===1?'green-font':'dark-red-font'}}">投了【{{item.choose===1?'左':'右'}}边】一票</view>
             <view class="vote-hot-box">
                 <image src="../../images/hot_icon.png" class="hot-icon" />
-                <view>32</view>
+                <view>{{item.question.hots}}</view>
             </view>
         </view>
-        <image wx:if="{{isDelete}}" src="../../images/dele_tag.png" class="delete-icon"/>
+        <image wx:if="{{item.question.status===4}}" src="../../images/dele_tag.png" class="delete-icon"/>
     </view>
 </view>
-<view wx:if="{{voteLists.length===0}}" class="empty-container">
+<view wx:if="{{noDatas}}" class="empty-container">
     <empty-wxml empty-info="暂时没有投票消息哦"></empty-wxml>
 </view>

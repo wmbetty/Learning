@@ -3,17 +3,17 @@
 <view class="main-container">
     <view class="main-head">
         <view class="left-item">
-            <view class="avatar-box" catchtap="gotoOthers">
-                <image src="{{userInfo.avatar?userInfo.avatar:'../../images/avatarDefault.png'}}" class="m-avatar"></image>
+            <view class="avatar-box" data-mid="{{details.mid}}" catchtap="gotoOthers">
+                <image src="{{details.member.avatar?details.member.avatar:'../../images/avatarDefault.png'}}" class="m-avatar"></image>
             </view>
             <view class="user-infos">
-                <view class="infos-head">{{userInfo.member.nickname || '选小象'}}</view>
-                <view wx:if="{{userInfo.member.gender}}" class="{{item.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
+                <view class="infos-head">{{details.member.nickname || ''}}</view>
+                <view wx:if="{{details.member.gender}}" class="{{details.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
             </view>
         </view>
         <view class="right-item">
-            <view class="r-share-btn" bindtap="gotoShare"></view>
-            <view class="ellipse-icon" bindtap="gotoDelete"></view>
+            <view class="r-share-btn" bindtouchend="gotoShare"></view>
+            <view wx:if="{{isMy}}" class="ellipse-icon" bindtap="gotoDelete"></view>
         </view>
     </view>
     <view class="main-body">
@@ -28,10 +28,11 @@
         </view>
         <view class="choice-box">
             <view class="choice-item-container">
-                <view class="choice-item left-choice-item">
+                <view class="{{ismyVoted?'choice-item left-choice-item green-bg':'choice-item left-choice-item'}}" data-choose="one" data-details="{{details}}" bindtap="goVote">
                     <view class="choice-item-cont">
                         {{details.option1 || ''}}
                     </view>
+                    <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose1_per}}%</view>
                 </view>
                 <view class="my-vote-tips">
                     <view wx:if="{{isLeft}}">
@@ -41,10 +42,11 @@
                 </view>
             </view>
             <view class="choice-item-container">
-                <view class="choice-item right-choice-item">
+                <view class="{{ismyVoted?'choice-item right-choice-item dark-redbg':'choice-item right-choice-item'}}" data-choose="two" data-details="{{details}}" bindtap="goVote">
                     <view class="choice-item-cont">
                         {{details.option2 || ''}}
                     </view>
+                    <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose2_per}}%</view>
                 </view>
                 <view class="my-vote-tips">
                     <view wx:if="{{isRight}}">
@@ -84,3 +86,5 @@
         <canvas  style="width: 375px;height: 667px;position:fixed;top:999px" canvas-id="mycanvas"/>
         <!-- <image src='{{path}}'></image> -->
     </view>
+
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

@@ -1,11 +1,11 @@
 <!--pages/main/main.wxml-->
 <import src="../../components/tabBar/tabBar.wxml"/>
-<view class="main-page">
+<view class="main-page" wx:if="{{!isEmpty}}">
     <swiper indicator-dots="{{indicatorDots}}" bindchange="currentChange"
-            autoplay="{{autoplay}}" current="{{currentIndex}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight}}px;">
+            autoplay="{{autoplay}}" current="{{currentIndex}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-100}}px;">
         <block wx:for="{{chooseData}}" wx:key="index">
-            <swiper-item>
-                <view class="main-container" style="height:{{viewHeight*0.75}}px;">
+            <swiper-item style="height:height:{{viewHeight-100}}px;">
+                <view class="main-container">
                     <view class="main-cont">
                         <view class="main-head">
                             <view class="left-item">
@@ -44,10 +44,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="up-text-box">
-                    <text>滑动切换</text>
-                    <text class="up-icon"></text>
-                </view>
+                
             </swiper-item>
         </block>
 
@@ -70,6 +67,10 @@
         </view>
     </view> -->
     <!-- <share-wxml mask="{{showShare}}" share="{{showShare}}" bind:cancelShare="cancelShare"></share-wxml> -->
+    <view wx:if="{{!isEmpty}}" class="up-text-box">
+                    <text>滑动切换</text>
+                    <text class="up-icon"></text>
+                </view>
 
     <view class='imagePathBox' wx:if="{{maskHidden}}">
         <image src="{{imagePath}}" class='shengcheng'></image>
@@ -98,4 +99,8 @@
         </view>
     </view>
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
-<template is="tabBar" data="{{tabBar:bindData.tabBar, msgCount}}"/>
+<view wx:if="{{isEmpty}}" class="main-empty-cont">
+    <empty-wxml empty-info="小纠结被刷光了" show-blue="{{isEmpty}}" blue-text="点击底部“+”发起我的选象"></empty-wxml>
+</view>
+
+<template is="tabBar" data="{{tabBar:bindData.tabBar, msgCount,voteUnreadCount}}"/>

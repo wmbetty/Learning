@@ -10,13 +10,19 @@ Page({
     restNum: 200,
     isSubmit: false,
     mobile: '',
-    content: ''
+    content: '',
+    contVal: '',
+    submitDis: false
   },
   onLoad: function (options) {
     let that = this;
     setTimeout(()=> {
       token = app.globalData.access_token;
     },200)
+    wx.setNavigationBarColor({
+      frontColor:'#000000',
+       backgroundColor:'#F5F6F8'
+    })
   },
   onReady: function () {},
   onShow: function () {},
@@ -26,40 +32,54 @@ Page({
   onReachBottom: function () {},
   onShareAppMessage: function () {},
   onPageScroll () {
-    wx.setNavigationBarTitle({
-      title: "建议"
-    })
-    wx.setNavigationBarColor({
-      frontColor:'#ffffff',
-      backgroundColor:'#E64340'  
-    })
+    // wx.setNavigationBarTitle({
+    //   title: "建议"
+    // })
+    // wx.setNavigationBarColor({
+    //   frontColor:'#ffffff',
+    //   backgroundColor:'#E64340'  
+    // })
   },
   putMobile (e) {
     let val =  (e.detail.value).replace(/\s+/g,"");
-    this.setData({mobile: val})
+    let mobileReg=/^[1][3,4,5,7,8][0-9]{9}$/;
+    if (!mobileReg.test(val)) {
+      Api.wxShowToast('请填写11位有效手机号', 'none', 2000);
+    } else {
+      this.setData({mobile: val})
+    }
+    
   },
+  // textNumTest (text) {
+  //   let chineseReg = /[\u4E00-\u9FA5]/g;
+  //   if (chineseReg.test(text)) {
+  //     if (text.match(chineseReg).length >= 30) {  //返回中文的个数  
+  //       text = text.substring(0, 29) + "...";
+  //       return text; 
+  //     } else{
+  //       return text
+  //     }  
+  //   } else {
+  //     return text
+  //   }
+  // },
   putAdvice (e) {
     let that = this;
-    let val =  (e.detail.value).replace(/\s+/g,"");
+    let val =  e.detail.value;
     let textNum = val.length;
     let restNum = 200 - textNum*1;
-    
-    if (textNum >= 200) {
+    if (textNum > 200) {
       Api.wxShowToast('建议最多200字哦', 'none', 2000);
-      return false;
-    }
-    if (textNum) {
+    } else if (0<textNum<=200){
+      val = val.substring(0, 200)
       that.setData({
         isSubmit: true,
-        content: val
+        content: val,
+        contVal: val,
+        textNum: textNum,
+        restNum: restNum
       })
-    } else{
-      that.setData({isSubmit: false})
     }
-    that.setData({
-      textNum: textNum,
-      restNum: restNum
-    })
   },
   submitAdvice () {
     let that = this;
@@ -69,16 +89,30 @@ Page({
       content: that.data.content,
       mobile: that.data.mobile
     }
+    
     if (textNum) {
+      that.setData({
+        submitDis: true
+      })
       Api.wxRequest(feedApi,'POST',feedData,(res)=> {
-        console.log(res, 'feed')
+        that.setData({
+          isSubmit: false
+        })
+        wx.showLoading({
+          title: '提交中',
+          mask: true
+        });
         if (res.data.status*1===201 && res.data.data.id) {
-          Api.wxShowToast('提交成功', 'none', 2200);
+          wx.hideLoading();
+          that.setData({
+            submitDis: false
+          })
+          Api.wxShowToast('感谢你的建议，小象会及时跟进哟~', 'none', 2200);
           setTimeout(()=> {
             wx.navigateBack({
               delta: 1
             })
-          }, 1500)
+          }, 600)
         }
       })
     } else {
