@@ -799,9 +799,9 @@ Page({
           } else {
             Api.wxShowToast('投过票了', 'none', 2000);
           }
-          // Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
-          //   console.log(res, 'ssss')
-          // })
+          Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
+            console.log(res, 'ssss')
+          })
         })
         
       }
