@@ -40,6 +40,7 @@ const feedback = `${http}v1/feed?access-token=`
 const deleMyQues = `${http}v1/questions/`
 const shareFriends = `${http}v1/share/share-friend`
 const shareMoment = `${http}v1/share/share-circle?access-token=`
+const posterApi = `${http}v1/questions/share-code?access-token=`
 
 module.exports = {
   formatTime: formatTime,
@@ -67,5 +68,6 @@ module.exports = {
   feedback: feedback,
   deleMyQues: deleMyQues,
   shareFriends: shareFriends,
-  shareMoment: shareMoment
+  shareMoment: shareMoment,
+  posterApi: posterApi
 }

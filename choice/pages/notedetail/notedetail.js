@@ -45,7 +45,7 @@ Page({
     }
       
     if (item.id) {
-      let time = item.updated_time;
+      let time = item.created_time;
       that.setData({
         time: time,
         content: item.template.content

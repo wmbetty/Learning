@@ -1,88 +1,50 @@
-<!--pages/main/main.wxml-->
+<!--pages/maintests/maintests.wxml-->
 <import src="../../components/tabBar/tabBar.wxml"/>
-<view class="main-page" wx:if="{{!isEmpty}}">
-    <swiper indicator-dots="{{indicatorDots}}" bindchange="currentChange"
-            autoplay="{{autoplay}}" current="{{currentIndex}}" interval="{{interval}}" duration="{{duration}}" vertical="true" style="height:{{viewHeight-100}}px;">
-        <block wx:for="{{chooseData}}" wx:key="index">
-            <swiper-item style="height:height:{{viewHeight-100}}px;">
-                <view class="main-container">
-                    <view class="main-cont">
-                        <view class="main-head">
-                            <view class="left-item">
-                                <view class="avatar-box">
-                                    <image src="{{(item.member&&item.member.avatar)?item.member.avatar:'../../images/avatarDefault.png'}}" data-mid="{{item.mid*1}}" class="m-avatar" catchtap="gotoOthers"></image>
-                                </view>
-                                <view class="user-infos">
-                                    <view class="infos-head">{{(item.member&&item.member.nickname)?item.member.nickname:'选小象'}}</view>
-                                    <view wx:if="{{item.member&&item.member.gender}}" class="{{item.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
-                                </view>
-                            </view>
-                            <view class="right-item">
-                                <view class="r-share-btn" data-question="{{item}}" bindtap="goShare"></view>
-                            </view>
-                        </view>
-                        <view class="main-body">
-                            <view class="body-title">{{item.question}}</view>
-                            <view class="main-totals">
-                                <text class="hot-icon"></text>
-                                <text>{{item.hots}}</text>
-                            </view>
-                        </view>
-                        <view class="content-box">
-                            <view class="vote-box" catchtap="goVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
-                                <view class="vote-cont">{{item.option1}}</view>
-                                <view class="cont-mask" wx:if="{{item.showMask}}">
-                                    <view class="{{item.choose_left?'vote-selected':''}}">{{item.choose1_per}}%</view>
-                                </view>
-                            </view>
-                            <view class="vote-box" catchtap="goVote" data-item="{{item}}" data-index="{{index}}" data-direct="right">
-                                <view class="vote-cont">{{item.option2}}</view>
-                                <view class="cont-mask" wx:if="{{item.showMask}}">
-                                    <view class="{{item.choose_right?'vote-selected':''}}">{{item.choose2_per}}%</view>
-                                </view>
-                            </view>
-                        </view>
-                    </view>
+<view class="m-container">
+  <view class="card_wrap">
+    <view bindtouchstart="touchstart" bindtouchend="touchend" animation="{{animationData[index]}}" style="z-index:{{-index}};" class="card_item" wx:for="{{ questionList }}" data-index="{{index}}" data-item="{{item}}"  wx:key="unique" wx:for-item="item">
+      <!-- 头像部分 -->
+      <view class="main-head">
+        <view class="left-item">
+            <view class="avatar-box">
+               <image src="{{(item.member&&item.member.avatar)?item.member.avatar:'../../images/avatarDefault.png'}}" data-mid="{{item.mid*1}}" class="m-avatar" catchtouchend="gotoOthers"></image>
+            </view>                     
+             <view class="user-infos">
+                <view class="infos-head">{{(item.member&&item.member.nickname)?item.member.nickname:'选小象'}}</view>
+                <view wx:if="{{item.member&&item.member.gender}}" class="{{item.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
+            </view>                   
                 </view>
-                
-            </swiper-item>
-        </block>
-
-    </swiper>
-
-    <!-- <view class="shareMask" wx:if="{{showShare}}">
-        <view class="share-main">
-            <view class="share-main-cont">
-                <view class="share-title">邀请好友来投票</view>
-                <view class="share-btn-box">
-                    <view class="share-btn">
-                        <view class="share-button" bindtap="formSubmit">朋友圈</view>
-                    </view>
-                    <view class="share-btn">
-                        <button class="share-button" open-type="share" bindtap="gotoShare">邀请好友</button>
-                    </view>
+                <view class="right-item">
+                    <view class="r-share-btn" data-question="{{item}}" catchtouchend="goShare"></view>
                 </view>
             </view>
-            <view class="share-cancel-btn" catchtap="cancelShare">取消</view>
+        <!-- 问题部分 -->
+        <view class="question-box">{{item.question}}</view>
+        <view class="main-totals">
+            <text class="hot-icon"></text>
+            <text>{{item.hots}}</text>
         </view>
-    </view> -->
-    <!-- <share-wxml mask="{{showShare}}" share="{{showShare}}" bind:cancelShare="cancelShare"></share-wxml> -->
-    <view wx:if="{{!isEmpty}}" class="up-text-box">
-                    <text>滑动切换</text>
-                    <text class="up-icon"></text>
+        <!-- 选项部分 -->
+        <view class="choose-box">
+            <view class="choose-item-box"  bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
+                <view>{{item.option1}}</view>
+                <view wx:if="{{item.showMask}}" class="vote-mask">
+                    <view class="{{item.choose_left?'vote-selected':''}}">{{item.choose1_per>100?50:item.choose1_per}}%</view>
                 </view>
-
-    <view class='imagePathBox' wx:if="{{maskHidden}}">
-        <image src="{{imagePath}}" class='shengcheng'></image>
-        <button class='baocun' catchtap='saveImageToPhotosAlbum'>图片保存至本地</button>
-        <image src="../../images/close.png" class="poster-close-icon" catchtap="cancelPoster"></image>
+                
+            </view>
+            <view class="choose-item-box" bindtap="gotoVote" data-direct="right" data-index="{{index}}" data-item="{{item}}">
+                <view>{{item.option2}}</view>
+                <view wx:if="{{item.showMask}}" class="vote-mask">
+                    <view class="{{item.choose_right?'vote-selected':''}}">{{item.choose2_per>100?50:item.choose2_per}}%</view>
+                </view>
+            </view>
+            
+        </view>
     </view>
-    <view wx:if="{{maskHidden}}" class="mask"></view>
-    <view class="canvas-box">
-        <canvas  style="width: 375px;height: 667px;position:fixed;top:999px" canvas-id="mycanvas"/>
-        <image src='{{path}}'></image>
-    </view>
+    
 </view>
+
 <view class="share-mask" style="height: {{viewHeight}}px;" wx:if="{{showShare}}">
         <view class="share-btn-container">
             <view class="wechat-container" wx:if="{{showShare}}">
@@ -90,7 +52,7 @@
                     <image src="../../images/wechat_icon.png" class="wechat-icon"/>
                     <view class="wechat-text">微信好友分享</view>
                 </button>
-                <view class="wechat-item-box" hover-stop-propagation="true" catchtap="formSubmit">
+                <view wx:if="{{showShare}}" class="wechat-item-box" hover-stop-propagation="true" catchtap="shareToMoment">
                     <image src="../../images/moment_icon.png" class="wechat-icon moment-icon"/>
                     <view class="wechat-text">生成朋友圈海报</view>
                 </view>
@@ -98,9 +60,32 @@
             <view class="cancel-btn" catchtap="cancelShare">取消</view>
         </view>
     </view>
+
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 <view wx:if="{{isEmpty}}" class="main-empty-cont">
     <empty-wxml empty-info="小纠结被刷光了" show-blue="{{isEmpty}}" blue-text="点击底部“+”发起我的选象"></empty-wxml>
 </view>
+<view wx:if="{{questionList.length}}" class="up-text-box" style="top:{{viewHeight-94}}px;">
+                    <text>滑动卡片切换</text>
+                    <text class="up-icon"></text>
+                </view>
+  </view>
+  <view class='imagePathBox' bindtap="closePoster" hidden="{{maskHidden == false}}">
+      <image src="{{imagePath}}" class='shengcheng'></image>
+      <view class="shengcheng poster-view" wx:show="{{showPosterView}}" catchtap="showMaskHidden">
+          <image src="../../images/posterBg.png" class="poster-banner" style="height:{{viewWidth*0.33}}px;"></image>
+          <image src="{{avatar}}" class="poster-avatar"></image>
+          <view class="poster-text">{{question}}</view>
+          <view class="poster-botom-text">长按识别小程序 表达你的观点哟</view>
+          <image src="../../images/posterArrow.png" class="poster-arrow"></image>
+          <image src="{{qrcodeImg}}" class="poster-code"></image>
+      </view>
+      <button class='baocun' bindtap='saveImageToPhotosAlbum'>保存海报</button>
+    </view>
+   <view hidden="{{maskHidden == false}}" class="mask"></view> 
+  <view class="canvas-box">
+      <canvas  style="width: 375px;height: 667px;position:fixed;top:9999px" canvas-id="mycanvas"/>
+  </view>
 
 <template is="tabBar" data="{{tabBar:bindData.tabBar, msgCount,voteUnreadCount}}"/>
+

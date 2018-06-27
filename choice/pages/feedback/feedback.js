@@ -116,7 +116,7 @@ Page({
         }
       })
     } else {
-      Api.wxShowToast('请填写建议', 'none', 2000);
+      Api.wxShowToast('填写建议反馈后方能提交哦', 'none', 2000);
     }
   }
 })

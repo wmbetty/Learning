@@ -6,7 +6,7 @@
             <image src="{{item.frommember.avatar}}" class="voter-avatar" data-fromid="{{item.fromid}}" catchtap="gotoOthers"/>
             <view>
                 <view>{{item.frommember.nickname}}</view>
-                <view class="time-text">{{item.question.updated_time}}</view>
+                <view class="time-text">{{item.created_time}}</view>
             </view>
         </view>
         <view class="flex-space voted-title">

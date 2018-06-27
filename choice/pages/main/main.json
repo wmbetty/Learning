@@ -5,6 +5,5 @@
         "share-wxml": "../../components/share/share",
         "dialog-wxml": "../../components/dialog/dialog",
         "empty-wxml": "../../components/empty/empty"
-    },
-    "disableScroll": true
+    }
 }

@@ -4,7 +4,7 @@
     <view class="user-info-box">
         <image src="{{item.template_type*1===3?'../../images/noticeLogo.png':'../../images/teamLogo.png'}}" class="uavatar"/>
         <view class="u-cont">
-            <view>选小象</view>
+            <view>{{item.template_type*1===3?'系统通知':'选小象'}}</view>
             <view class="time-text">{{time}}</view>
         </view>
     </view>

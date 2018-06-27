@@ -48,12 +48,6 @@
 				},
 				{
 					"id": -1,
-					"name": "test",
-					"pathName": "pages/test/test",
-					"query": ""
-				},
-				{
-					"id": -1,
 					"name": "index",
 					"pathName": "pages/index/index",
 					"query": ""
@@ -89,9 +83,9 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 8,
 					"name": "test",
-					"pathName": "pages/test/test",
+					"pathName": "pages/maintests/maintests",
 					"query": ""
 				},
 				{

@@ -7,8 +7,8 @@
             <image src="{{item.template_type*1===3?'../../images/noticeLogo.png':'../../images/teamLogo.png'}}" class="sys-avatar" />
             <view class="sys-rt-box">
                 <view class="sys-name-box">
-                    <view class="sys-name">选小象</view>
-                    <view class="sys-time">{{item.updated_time}}</view>
+                    <view class="sys-name">{{item.template_type*1===3?'系统通知':'选小象'}}</view>
+                    <view class="sys-time">{{item.created_time}}</view>
                 </view>
                 <view class="sys-cont-text">{{item.template.content+item.extra_msg}}</view>
             </view>

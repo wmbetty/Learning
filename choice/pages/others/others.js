@@ -15,7 +15,8 @@ Page({
     totalCount: 0,
     totalPage: '',
     currPage: '',
-    viewHeight: 0
+    viewHeight: 0,
+    mid: ''
   
   },
 
@@ -29,6 +30,7 @@ Page({
       let infoApi = backApi.othersInfo+token;
       let otherPublishQues = backApi.otherPublishQues+token;
       let mid = options.mid;
+      that.setData({mid:mid});
       Api.wxRequest(infoApi,'GET',{mid:mid},(res)=> {
         console.log(res, 'sssss')
         let datas = res.data.data;
@@ -141,12 +143,12 @@ Page({
     let myPublish = that.data.myPublish;
     let otherPublishQues = backApi.otherPublishQues+token;
     let totalPage = that.data.totalPage*1;
+    let mid = that.data.mid;
     console.log(currPage,totalPage)
     if (totalPage>1 && currPage <= totalPage) {
-      Api.wxRequest(otherPublishQues, 'GET', {page:currPage}, (res)=> {
+      Api.wxRequest(otherPublishQues, 'GET', {page:currPage,mid:mid}, (res)=> {
         if (res.data.status*1 === 200) {
           let pubs = res.data.data;
-          // console.log(myJoin)
           that.setData({
             myPublish: myPublish.concat(pubs),
             currPage: currPage

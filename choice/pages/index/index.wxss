@@ -6,9 +6,16 @@ page{
     border-bottom: 1px solid #f1f1f1;background: #fff;
     width: 100%;height: 540rpx;overflow: hidden;
     display: flex;justify-content: center;align-items: center;
+    position: relative;
+}
+.title-txt-view{
+    position: absolute;top:0;left: 0;
+    width: 100%;height: 100%;color: #888;
+    display: flex;justify-content: center;align-items: center;
 }
 .title-textarea{
-    width: 300rpx;height: 60rpx;padding: 242rpx 0;text-align: center;
+    width: 300rpx;height: 60rpx;padding: 242rpx 0;
+    text-align: center;
     font-size: 40rpx;margin: 0 auto;color: #888;
 }
 .textarea-has-text{
@@ -43,7 +50,7 @@ page{
 .publish-btn::after{border: none;}
 .share-mask{
     position: absolute;left: 0;top: 0;width: 100%;
-    background: rgba(0, 0, 0, 0.5);z-index: 99;
+    background: rgba(0, 0, 0, 0.5);z-index: 990;
 }
 .share-toast{
     width: 690rpx;border-radius: 20rpx;
@@ -117,8 +124,8 @@ page{
     right: 0;
     bottom: 0;
     z-index: 10;
-}
-.shengcheng{
+  }
+  .shengcheng{
     width: 80%;
     height: 80%;
     position: fixed;
@@ -126,17 +133,52 @@ page{
     left: 50%;
     margin-left: -40%;
     z-index: 10;
-}
-.baocun{
-    display: block;width: 70%;height: 72rpx;
-    padding: 0;line-height: 72rpx;text-align: center;
-    position: fixed;bottom: 360rpx;left: 15%;z-index: 1000;
-    background: #E74C49;color: #fff;
-    font-size: 28rpx;border-radius: 44rpx;
-}
-button[class="baocun"]::after{
+  }
+  .baocun{
+    display: block;
+  width: 48%;
+  height: 92rpx;
+  padding: 0;
+  line-height: 92rpx;
+  text-align: center;
+  position: fixed;
+  bottom: 50rpx;
+  left: 26%;
+  background: #62559D;
+  color: #fff;
+  font-size: 40rpx;
+  border-radius: 60rpx;
+  }
+  button[class="baocun"]::after{
     border: 0;
+  }
+  .poster-view{
+    background: #fff;z-index: 11;
 }
+.poster-banner{
+  /* position: absolute;top: 0;left: 0; */
+  width: 100%;height: 300rpx;
+}
+
+.poster-avatar{
+    width: 120rpx;height: 120rpx;margin: 30rpx auto 0;border-radius: 50%;display: block;
+}
+.poster-text{
+    width: 546rpx;height: 260rpx;margin: 0 auto;
+    display: flex;justify-content: center;align-items: center;
+    overflow: hidden;text-overflow: ellipsis;text-align: center;font-size: 50rpx;color: #343434;
+}
+.poster-botom-text{
+    text-align: center;color: #888;font-size: 24rpx;
+}
+.poster-arrow{
+    width: 20rpx;height: 12rpx;margin: 4rpx auto 20rpx;display: block;
+}
+.poster-code{
+    width: 92rpx;height: 92rpx;border-radius: 50%;margin: 0 auto;
+    display: block;
+}
+
 .poster-close-icon{
     position: absolute;width: 60rpx;height: 60rpx;z-index: 100;top: 140rpx;right: 100rpx;
 }

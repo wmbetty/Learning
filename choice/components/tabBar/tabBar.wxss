@@ -6,6 +6,8 @@
   .tabBar{
     width:100%;
     position: fixed;
+    z-index: 10;
+    /* float: left; */
     bottom:0;
     padding:10rpx;
     margin-left:-4rpx;
