@@ -57,7 +57,7 @@
           <view class="poster-text">{{shareTitle}}</view>
           <view class="poster-botom-text">长按识别小程序 表达你的观点哟</view>
           <image src="../../images/posterArrow.png" class="poster-arrow"></image>
-          <image src="{{qrcodeImg}}" class="poster-code"></image>
+          <image src="{{qrcode}}" class="poster-code"></image>
       </view>
       <button class='baocun' bindtap='saveImageToPhotosAlbum'>保存海报</button>
     </view> 

@@ -127,7 +127,7 @@ page{
   }
   .shengcheng{
     width: 80%;
-    height: 80%;
+    height: auto;padding-bottom: 24rpx;
     position: fixed;
     top: 50rpx;
     left: 50%;

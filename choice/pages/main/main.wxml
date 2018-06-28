@@ -2,7 +2,7 @@
 <import src="../../components/tabBar/tabBar.wxml"/>
 <view class="m-container">
   <view class="card_wrap">
-    <view bindtouchstart="touchstart" bindtouchend="touchend" animation="{{animationData[index]}}" style="z-index:{{-index}};" class="card_item" wx:for="{{ questionList }}" data-index="{{index}}" data-item="{{item}}"  wx:key="unique" wx:for-item="item">
+    <view bindtouchstart="touchstart" bindtouchend="touchend" animation="{{animationData[index]}}" style="z-index:{{-index}};height:{{viewHeight}}px;" class="card_item" wx:for="{{ questionList }}" data-index="{{index}}" data-item="{{item}}"  wx:key="unique" wx:for-item="item">
       <!-- 头像部分 -->
       <view class="main-head">
         <view class="left-item">

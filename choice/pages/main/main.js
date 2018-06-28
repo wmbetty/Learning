@@ -249,7 +249,7 @@ Page({
   },
   
   onLoad: function () {
-    console.log('onLoad');
+    // console.log('onLoad');
     let that = this;
     tabBar.tabbar("tabBar", 0, that);
     let questId = wx.getStorageSync('quesid');
@@ -261,9 +261,7 @@ Page({
         wx.setStorageSync('quesid', '');
       }, 300)
     }
-  },
-  onShow () {
-    let that = this;
+
     wx.showLoading({
       title: '加载中',
     });
@@ -326,6 +324,10 @@ Page({
         }
       })
     },80)
+
+  },
+  onShow () {
+    let that = this;
     let msgCount = wx.getStorageSync('msgTotal');
     let voteUnreadCount = wx.getStorageSync('voteUnreadCount');
       that.setData({
@@ -337,6 +339,7 @@ Page({
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
+        console.log(res.windowHeight,'high')
         this.setData({viewHeight: res.windowHeight,viewWidth:res.windowWidth});
       }
     })
@@ -379,13 +382,10 @@ Page({
     wx.showToast({
       title: '海报生成中...',
       icon: 'loading',
-      duration: 1500
+      duration: 2000
     });
     var that = this;
-    that.setData({
-      showShare: false,
-      maskHidden: true
-    })
+    
     let posterApi = backApi.posterApi+token;
       let postData = {
         page:`pages/details/details`,
@@ -394,18 +394,23 @@ Page({
       Api.wxRequest(posterApi,'POST',postData,(res)=>{
         console.log(res,'poster')
         if (res.data.status*1===200) {
-          if (res.data.data.url) {
-            let qrcodeImg = res.data.data.url;
-            that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
-            downLoadImg(qrcodeImg, 'qrcodeImg');
-            
-          }
+          setTimeout(()=>{
+            if (res.data.data.url) {
+              let qrcodeImg = res.data.data.url;
+              that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
+              downLoadImg(qrcodeImg, 'qrcodeImg');
+            }
+          },200)
         } else {
           Api.wxShowToast('小程序码获取失败~', 'none', 2000)
         }
       })
-  
-      var context = wx.createCanvasContext('mycanvas');
+      setTimeout(()=>{
+        that.setData({
+          showShare: false,
+          maskHidden: true
+        })
+        var context = wx.createCanvasContext('mycanvas');
       var question = that.data.question;
       
       context.setFillStyle("#ffffff")
@@ -518,77 +523,88 @@ Page({
       context.clip(); //裁剪上面的圆形
       context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
       context.draw();
+
+      wx.canvasToTempFilePath({
+        canvasId: 'mycanvas',
+        success: function (res) {
+          var tempFilePath = res.tempFilePath;
+          that.setData({
+            imagePath: tempFilePath,
+            canvasHidden:true
+          });
+        },
+        fail: function (res) {
+          console.log(res);
+        }
+      });
+      },2000)
+  
+      
       
 
       //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
-      setTimeout(function () {
-        wx.canvasToTempFilePath({
-          canvasId: 'mycanvas',
-          success: function (res) {
-            var tempFilePath = res.tempFilePath;
-            that.setData({
-              imagePath: tempFilePath,
-              canvasHidden:true
-            });
-          },
-          fail: function (res) {
-            console.log(res);
-          }
-        });
-      }, 500);
+      // setTimeout(function () {
+        
+      // }, 300);
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
-    console.log('save', 'sannnnn')
-    wx.saveImageToPhotosAlbum({
-      filePath: this.data.imagePath,
-      success:(res)=>{
-        Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
-        let shareMoment = backApi.shareMoment+token;
-        Api.wxRequest(shareMoment,'POST',{},(res)=>{
-          console.log(res,'moment')
-        })
-        
-        this.setData({
-          maskHidden: false
-        })
-      },
-      fail:(err)=>{
-        console.log(err, 'errMsg')
-        if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-          console.log('saveeee')
-          wx.openSetting({
-            success(settingdata) {
-              console.log(settingdata)
-                   if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                    Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                   } else {
-                    Api.wxShowToast("获取权限失败")
-                   }
-            }
-          }) 
-        }
-        if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-          wx.openSetting({
-            success(settingdata) {
-              console.log(settingdata)
-                   if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                    Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                   } else {
-                    Api.wxShowToast("获取权限失败")
-                   }
-            }
+    wx.showToast({
+      title: '保存中...',
+      icon: 'loading',
+      duration: 4600
+    });
+    setTimeout(()=>{
+      wx.saveImageToPhotosAlbum({
+        filePath: this.data.imagePath,
+        success:(res)=>{
+          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+          let shareMoment = backApi.shareMoment+token;
+          Api.wxRequest(shareMoment,'POST',{},(res)=>{
+            console.log(res,'moment')
           })
+          
+          this.setData({
+            maskHidden: false
+          })
+        },
+        fail:(err)=>{
+          console.log(err, 'errMsg')
+          if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+            console.log('saveeee')
+            wx.openSetting({
+              success(settingdata) {
+                console.log(settingdata)
+                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
+                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
+                     } else {
+                      Api.wxShowToast("获取权限失败")
+                     }
+              }
+            }) 
+          }
+          if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
+            wx.openSetting({
+              success(settingdata) {
+                console.log(settingdata)
+                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
+                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
+                     } else {
+                      Api.wxShowToast("获取权限失败")
+                     }
+              }
+            })
+          }
         }
-      }
-    })
-    if (!this.data.imagePath){
-      wx.showModal({
-        title: '提示',
-        content: '图片绘制中，请稍后重试',
-        showCancel:false
       })
-    }
+      if (!this.data.imagePath){
+        wx.showModal({
+          title: '提示',
+          content: '图片绘制中，请稍后重试',
+          showCancel:false
+        })
+      }
+    },4500)
   },
   shareToFriends () {
     this.setData({
@@ -797,7 +813,7 @@ Page({
               }
             }  
           } else {
-            Api.wxShowToast('投过票了', 'none', 2000);
+            Api.wxShowToast('投过票了', 'none', 300);
           }
           Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
             console.log(res, 'ssss')

@@ -30,7 +30,7 @@ Page({
     nickname: '',
     maskHidden: false,
     showPosterView: false,
-    qrcodeImg: '',
+    qrcode: '',
     titleFocus: false,
     viewWidth: 0
     
@@ -104,6 +104,7 @@ Page({
         that.setData({
           uavatar: userInfo.avatarUrl
         })
+        downLoadImg(userInfo.avatarUrl, 'headerUrl');
       }
       let myInfo = backApi.myInfo+token;
       Api.wxRequest(myInfo,'GET',{},(res)=>{
@@ -268,7 +269,7 @@ Page({
         mask: true
       });
       let status = res.data.status*1;
-      console.log(res,'tsss')
+      // console.log(res,'tsss')
       if (status===200) {
         Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
         that.setData({
@@ -458,39 +459,44 @@ Page({
     }, 1300)
   },
   shareTomoment () {
+    let that = this;
     wx.showToast({
       title: '海报生成中...',
       icon: 'loading',
       duration: 1500
     });
-
-    let that = this;
-    that.setData({
-      maskHidden: true,
-      isShare: false
-    })
     let posterApi = backApi.posterApi+token;
-    let postData = {
-      page:`pages/details/details`,
-      scene: that.data.qid
-    }
-    Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      console.log(res,'poster')
-      if (res.data.status*1===200) {
-        if (res.data.data.url) {
-          let qrcodeImg = res.data.data.url
-          downLoadImg(qrcodeImg, 'qrcodeImg');
-          that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
-        }
-      } else {
-        Api.wxShowToast('小程序码获取失败~', 'none', 2000)
-      }
-    })
-    
+            let postData = {
+              page:`pages/details/details`,
+              scene: that.data.qid
+            }
+            Api.wxRequest(posterApi,'POST',postData,(res)=>{
+              console.log(res,'poster')
+              if (res.data.status*1===200) {
+                if (res.data.data.url) {
+                  setTimeout(()=>{
+                    let qrcodeImg = res.data.data.url;
+                    that.setData({
+                      qrcode: qrcodeImg
+                    })
+                    downLoadImg(qrcodeImg, 'qrcodeImg');
+                  },200)
+                  
+                }
+              } else {
+                Api.wxShowToast('小程序码获取失败~', 'none', 2000)
+              }
+            })
     //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
     setTimeout(function () {
+      that.setData({
+        maskHidden: true,
+        isShare: false,
+        showPosterView: true
+      })
+
       var context = wx.createCanvasContext('mycanvas');
-    downLoadImg(that.data.uavatar, 'headerUrl');
+    
     let shareQues = that.data.shareTitle;
     let chineseReg = /[\u4E00-\u9FA5]/g;
     context.setFillStyle("#ffffff")
@@ -500,9 +506,7 @@ Page({
     //不知道是什么原因，手机环境能正常显示
     // downLoadImg(that.data.details.member.avatar, 'headerUrl');
     context.drawImage(path, 0, 0, 375, 154);
-    let path1 = wx.getStorageSync('headerUrl');
-    let qrcodeImg = wx.getStorageSync('qrcodeImg');
-    // console.log(qrcodeImg,'imgggg')
+    
     // console.log(path1,"path1")
     //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
     // var path2 = "/images/tx_bg.jpg";
@@ -522,23 +526,44 @@ Page({
     // context.stroke();
     //绘制一起吃面标语
     if (chineseReg.test(shareQues)) {
-      if (shareQues.match(chineseReg).length >= 10) {  //返回中文的个数
+      if (shareQues.match(chineseReg).length <= 13) {  //返回中文的个数
         context.setFontSize(26);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues.substring(0,9), 185, 378);
-      context.stroke();
-      context.setFontSize(27);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues.substring(10,19)+'...', 185, 414);
-      context.stroke();
-      } else {
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues, 185, 378);
+        context.stroke();
+      }
+      if (shareQues.match(chineseReg).length>13 && shareQues.match(chineseReg).length <= 26) {  //返回中文的个数
         context.setFontSize(26);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues, 185, 378);
-      context.stroke();
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues.substring(0,13), 185, 378);
+        context.stroke();
+        
+        context.setFontSize(26);
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues.substring(13,shareQues.length-1), 185, 414);
+        context.stroke();
+      }
+      if (shareQues.match(chineseReg).length>26) {  //返回中文的个数
+        context.setFontSize(26);
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues.substring(0,13), 185, 378);
+        context.stroke();
+        
+        context.setFontSize(26);
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues.substring(13,26), 185, 414);
+
+        context.stroke();
+        context.setFontSize(26);
+        context.setFillStyle('#343434');
+        context.setTextAlign('center');
+        context.fillText(shareQues.substring(26,shareQues.length-1), 185, 450);
+        context.stroke();
       }
     } else {
       if (shareQues.length>20) {
@@ -550,7 +575,7 @@ Page({
       context.setFontSize(26);
       context.setFillStyle('#343434');
       context.setTextAlign('center');
-      context.fillText(shareQues.substring(10,shareQues.length-1)+'...', 185, 414);
+      context.fillText(shareQues.substring(10,shareQues.length-1), 185, 414);
       context.stroke();
       } else {
         context.setFontSize(26);
@@ -593,7 +618,11 @@ Page({
     // context.stroke();
     //绘制右下角扫码提示语
     context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
+    let path1 = wx.getStorageSync('headerUrl');
+    let qrcodeImg = wx.getStorageSync('qrcodeImg');
+    console.log(qrcodeImg,path1,'imgggg qrcode');
       context.drawImage(qrcodeImg, 154, 582, 60, 60);
+      // console.log(qrcodeImg,'qrcode')
     //绘制头像
     context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
       context.strokeStyle = "#ffe200";
@@ -603,6 +632,7 @@ Page({
       wx.canvasToTempFilePath({
         canvasId: 'mycanvas',
         success: function (res) {
+          // console.log(context, 'canvas')
           var tempFilePath = res.tempFilePath;
           that.setData({
             imagePath: tempFilePath,
@@ -613,61 +643,70 @@ Page({
           console.log(res);
         }
       });
-    }, 500);
+    }, 2000);
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
-    if (!this.data.imagePath){
-      wx.showModal({
-        title: '提示',
-        content: '图片绘制中，请稍后重试',
-        showCancel:false
-      })
-    }
-    wx.saveImageToPhotosAlbum({
-      filePath: this.data.imagePath,
-      success:(res)=>{
-        let shareMoment = backApi.shareMoment+token;
-        Api.wxRequest(shareMoment,'POST',{},(res)=>{
-          console.log(res,'moment')
+    wx.showToast({
+      title: '保存中...',
+      icon: 'loading',
+      duration: 3000
+    });
+    setTimeout(()=>{
+      if (!this.data.imagePath){
+        wx.showModal({
+          title: '提示',
+          content: '图片绘制中，请稍后重试',
+          showCancel:false
         })
-        Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
-        this.setData({
-          maskHidden: false
-        })
-        setTimeout(()=> {
-          wx.navigateBack({
-            delta: 1
+      }
+      wx.saveImageToPhotosAlbum({
+        filePath: this.data.imagePath,
+        success:(res)=>{
+          let shareMoment = backApi.shareMoment+token;
+          Api.wxRequest(shareMoment,'POST',{},(res)=>{
+            console.log(res,'moment')
           })
-        }, 1800)
-      },
-      fail:(err)=>{
-        if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-          wx.openSetting({
-            success(settingdata) {
-              console.log(settingdata)
-                   if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                    Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                   } else {
-                    Api.wxShowToast("获取权限失败")
-                   }
-            }
-          }) 
-        }
-        if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-          wx.openSetting({
-            success(settingdata) {
-              console.log(settingdata)
-                   if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                    Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                   } else {
-                    Api.wxShowToast("获取权限失败")
-                   }
-            }
+          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
+          this.setData({
+            maskHidden: false
           })
+          setTimeout(()=> {
+            // wx.removeStorageSync('headerUrl');
+            // wx.removeStorageSync('qrcodeImg');
+            wx.navigateBack({
+              delta: 1
+            })
+          }, 1800)
+        },
+        fail:(err)=>{
+          if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+            wx.openSetting({
+              success(settingdata) {
+                console.log(settingdata)
+                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
+                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
+                     } else {
+                      Api.wxShowToast("获取权限失败")
+                     }
+              }
+            }) 
+          }
+          if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
+            wx.openSetting({
+              success(settingdata) {
+                console.log(settingdata)
+                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
+                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
+                     } else {
+                      Api.wxShowToast("获取权限失败")
+                     }
+              }
+            })
+          } 
         } 
-      } 
-    })
+      })
+    },3000)
   },
   
   shareToFriend () {
@@ -678,20 +717,20 @@ Page({
     }, 1800)
   },
   //点击生成
-  formSubmit: function (e) {
-    var that = this;
-    that.setData({
-      maskHidden: false
-    });
+  // formSubmit: function (e) {
+  //   var that = this;
+  //   that.setData({
+  //     maskHidden: false
+  //   });
     
-    setTimeout(function () {
-      wx.hideToast()
-      that.shareToMoment();
-      that.setData({
-        maskHidden: true
-      });
-    }, 1000)
-  },
+  //   setTimeout(function () {
+  //     wx.hideToast()
+  //     that.shareToMoment();
+  //     that.setData({
+  //       maskHidden: true
+  //     });
+  //   }, 1000)
+  // },
   textBlur (e) {
     let that = this;
     let title = that.data.titleText;
@@ -778,10 +817,7 @@ function downLoadImg(netUrl, storageKeyAvatarUrl) {
     src: netUrl,    //请求的网络图片路径
     success: function (res) {
       //请求成功后将会生成一个本地路径即res.path,然后将该路径缓存到storageKeyUrl关键字中
-      wx.setStorage({
-        key: storageKeyAvatarUrl,
-        data: res.path,
-      });
+      wx.setStorageSync(storageKeyAvatarUrl,res.path);
 
     }
   })

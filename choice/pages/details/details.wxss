@@ -137,7 +137,7 @@ page{
   }
   .shengcheng{
     width: 80%;
-    height: 80%;
+    height: auto;padding-bottom: 24rpx;
     position: fixed;
     top: 50rpx;
     left: 50%;
@@ -152,7 +152,7 @@ page{
   line-height: 92rpx;
   text-align: center;
   position: fixed;
-  bottom: 50rpx;
+  bottom: 110rpx;
   left: 26%;
   background: #62559D;
   color: #fff;
