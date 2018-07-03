@@ -36,7 +36,11 @@ Page({
     pagePad: false,
     txtActive: true,
     leftImgTemp: '',
-    rightImgTemp: ''
+    rightImgTemp: '',
+    showRightDele: false,
+    showLeftDele: false,
+    optionLtImage: '',
+    optionRtImage: ''
     
   },
   onReady () {
@@ -203,80 +207,101 @@ Page({
       })
     }
   },
+  // 上传图片
+  chooseImg (e) {
+    let that = this;
+    let imgopt = e.currentTarget.dataset.imgopt;
+    let uploadApi = backApi.uploadApi+token;
+    // let uploadApi = backApi.uploadApi;
+    
+    wx.chooseImage({
+      sizeType: ['compressed'],
+      success: function(res) {
+        var tempFilePaths = res.tempFilePaths;
+        if (imgopt==='left') {
+          that.setData({leftImgTemp: tempFilePaths,showLeftDele: true})
+        } else {
+          that.setData({rightImgTemp: tempFilePaths,showRightDele: true})
+        }
+        if (that.data.leftImgTemp && that.data.rightImgTemp) {
+          that.setData({
+            isPublish: true
+          })
+        } else {
+          that.setData({
+            isPublish: false
+          })
+        }
+        wx.uploadFile({
+          url: uploadApi,
+          filePath: tempFilePaths[0],
+          name: 'imageFile',
+          formData:{},
+          success: function(res){
+            console.log(res,'ssss')
+            let data = JSON.parse(res.data);
+            // console.log(data,'aaa')
+            let status = data.status*1;
+            if (status===200) {
+              if (imgopt==='left') {
+                that.setData({optionLtImage: data.data.file_url});
+              } else {
+                that.setData({optionRtImage: data.data.file_url});
+              }
+            } else {
+              Api.wxShowToast('图片上传失败~', 'none', 1400)
+            }
+          }
+        })
+        console.log(that.data.optionLtImage,that.data.optionRtImage,'img')
+      }
+    })
+  },
   // 点击发布
   goPublish () {
-    
     let publishApi = backApi.publishApi;
     let that = this;
-    if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
-      let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
-      return false;
-    }
-    if (that.data.titleText === '') {
-      let wxShowToast = Api.wxShowToast('请填写标题', 'none', 2000);
-      return false;
-    }
-    if (that.data.leftText === '') {
-      let wxShowToast = Api.wxShowToast('请填写左选项', 'none', 2000);
-      return false;
-    }
-    if (that.data.rightText === '') {
-      let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
-      return false;
-    }
-    
-    let postData = {
-      question: that.data.titleText.substring(0,30),
-      option1: that.data.leftText.substring(0,36),
-      option2: that.data.rightText.substring(0,36)
-    }
-    that.setData({
-      btnDis: true
-    })
-    Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
-      that.setData({
-        isPublish: false
-      })
-      wx.showLoading({
-        title: '发布中',
-        mask: true
-      });
-      let status = res.data.status*1;
-      // console.log(res,'tsss')
-      if (status===200) {
-        Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
-        that.setData({
-          qid: res.data.data.id,
-          showToast: false,
-          leftHolder: '点击输入左选项',
-          rightHolder: '点击输入右选项',
-          titleText: '点击输入标题',
-          leftText: '',
-          rightText: '',
-          isPublish: false,
-          showTextarea: false,
-          showLeft: false,
-          showRight: false,
-          btnDis: false
-        });
-        // 2s后消失
-        setTimeout(() => {
-          that.setData({
-            showToast: false,
-            hasUserInfo: false,
-            isShare: true
-          });
-        }, 1500)
-        // wx.navigateTo({
-        //   url: `/pages/mine/mine`
-        // })
+    let txtActive = that.data.txtActive;
+    let leftImgTemp = that.data.leftImgTemp;
+    let rightImgTemp = that.data.rightImgTemp;
+    if (txtActive) { //上传文字
+      if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
+        let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
+        return false;
       }
-      if (status === 201) {
-        publishedPoint = res.data.data.member.points;
-        // console.log(publishedPoint,myPoint,'pointttt')
-        wx.hideLoading();
-        if (publishedPoint===myPoint) {
-          Api.wxShowToast('发布成功', 'success', 2000);
+      if (that.data.titleText === '') {
+        let wxShowToast = Api.wxShowToast('请填写标题', 'none', 2000);
+        return false;
+      }
+      if (that.data.leftText === '') {
+        let wxShowToast = Api.wxShowToast('请填写左选项', 'none', 2000);
+        return false;
+      }
+      if (that.data.rightText === '') {
+        let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
+        return false;
+      }
+      
+      let postData = {
+        question: that.data.titleText.substring(0,30),
+        option1: that.data.leftText.substring(0,36),
+        option2: that.data.rightText.substring(0,36)
+      }
+      that.setData({
+        btnDis: true
+      })
+      Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+        that.setData({
+          isPublish: false
+        })
+        wx.showLoading({
+          title: '发布中',
+          mask: true
+        });
+        let status = res.data.status*1;
+        // console.log(res,'tsss')
+        if (status===200) {
+          Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
           that.setData({
             qid: res.data.data.id,
             showToast: false,
@@ -299,14 +324,16 @@ Page({
               isShare: true
             });
           }, 1500)
-          // wx.navigateTo({
-          //   url: `/pages/mine/mine`
-          // })
-        } else {
-          setTimeout(()=> {
+        }
+        if (status === 201) {
+          publishedPoint = res.data.data.member.points;
+          // console.log(publishedPoint,myPoint,'pointttt')
+          wx.hideLoading();
+          if (publishedPoint===myPoint) {
+            Api.wxShowToast('发布成功', 'success', 2000);
             that.setData({
               qid: res.data.data.id,
-              showToast: true,
+              showToast: false,
               leftHolder: '点击输入左选项',
               rightHolder: '点击输入右选项',
               titleText: '点击输入标题',
@@ -318,21 +345,82 @@ Page({
               showRight: false,
               btnDis: false
             });
-            // 请求通知消息
-            // let msgTotalApi = backApi.msgUnreadTotal+token
-            // Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-            //   // console.log(res, 'sssssssss')
-            //   if (res.data.status*1===200) {
-            //     setTimeout(()=> {
-            //       let msgTotal = res.data.data.total;
-            //       wx.setStorageSync('msgTotal', msgTotal);
-            //     }, 100)
-            //   } else {
-            //     Api.wxShowToast('网络出错了', 'none', 2000);
-            //   }
-            // })
-  
-          }, 300)
+            // 2s后消失
+            setTimeout(() => {
+              that.setData({
+                showToast: false,
+                hasUserInfo: false,
+                isShare: true
+              });
+            }, 1500)
+          } else {
+            setTimeout(()=> {
+              that.setData({
+                qid: res.data.data.id,
+                showToast: true,
+                leftHolder: '点击输入左选项',
+                rightHolder: '点击输入右选项',
+                titleText: '点击输入标题',
+                leftText: '',
+                rightText: '',
+                isPublish: false,
+                showTextarea: false,
+                showLeft: false,
+                showRight: false,
+                btnDis: false
+              });
+    
+            }, 300)
+            // 2s后消失
+            setTimeout(() => {
+              that.setData({
+                showToast: false,
+                hasUserInfo: false,
+                isShare: true
+              });
+            }, 1500)
+          }
+        }
+      })
+    } else { //上传图片
+      if (that.data.titleText === '点击输入标题' && leftImgTemp === '' && rightImgTemp === '') {
+        let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
+        return false;
+      }
+      if (leftImgTemp==='') {
+        Api.wxShowToast('请上传左边图片', 'none', 2000);
+        return false;
+      }
+      if (rightImgTemp==='') {
+        Api.wxShowToast('请上传右边图片', 'none', 2000);
+        return false;
+      }
+      let postData = {
+        question: that.data.titleText.substring(0,30),
+        option1: that.data.optionLtImage,
+        option2: that.data.optionLtImage
+      }
+      that.setData({
+        btnDis: true
+      })
+      Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+        that.setData({
+          isPublish: false
+        })
+        wx.showLoading({
+          title: '发布中',
+          mask: true
+        });
+        let status = res.data.status*1;
+        // console.log(res,'tsss')
+        if (status===200) {
+          Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
+          that.setData({
+            qid: res.data.data.id,
+            showToast: false,
+            isPublish: false,
+            btnDis: false
+          });
           // 2s后消失
           setTimeout(() => {
             that.setData({
@@ -342,8 +430,47 @@ Page({
             });
           }, 1500)
         }
-      }
-    })
+        if (status === 201) {
+          publishedPoint = res.data.data.member.points;
+          wx.hideLoading();
+          if (publishedPoint===myPoint) {
+            Api.wxShowToast('发布成功', 'success', 2000);
+            that.setData({
+              qid: res.data.data.id,
+              showToast: false,
+              isPublish: false,
+              btnDis: false
+            });
+            // 2s后消失
+            setTimeout(() => {
+              that.setData({
+                showToast: false,
+                hasUserInfo: false,
+                isShare: true
+              });
+            }, 1500)
+          } else {
+            setTimeout(()=> {
+              that.setData({
+                qid: res.data.data.id,
+                showToast: true,
+                isPublish: false,
+                btnDis: false
+              });
+    
+            }, 300)
+            // 2s后消失
+            setTimeout(() => {
+              that.setData({
+                showToast: false,
+                hasUserInfo: false,
+                isShare: true
+              });
+            }, 1500)
+          }
+        }
+      })
+    }
   },
   showMaskHidden () {
     let that = this;
@@ -809,36 +936,28 @@ Page({
     let tab = e.currentTarget.dataset.tab;
     if (tab==='text') {
       that.setData({txtActive:true})
+      if (that.data.titleText === '点击输入标题' || that.data.leftText === '' || that.data.rightText === '') {
+        that.setData({isPublish:false})
+      }
+
     } else {
       that.setData({txtActive:false})
+      if (that.data.titleText === '点击输入标题' || that.data.leftImgTemp === '' || that.data.rightImgTemp === '') {
+        that.setData({isPublish:false})
+      }
     }
   },
-  chooseImg (e) {
+  // 删除图片
+  deleImage (e) {
+    console.log(e, 'eee')
     let that = this;
-    let imgopt = e.currentTarget.dataset.imgopt;
-    
-    wx.chooseImage({
-      success: function(res) {
-        var tempFilePaths = res.tempFilePaths;
-        if (imgopt==='left') {
-          that.setData({leftImgTemp: tempFilePaths})
-        } else {
-          that.setData({rightImgTemp: tempFilePaths})
-        }
-        // wx.uploadFile({
-        //   url: 'https://example.weixin.qq.com/upload', //仅为示例，非真实的接口地址
-        //   filePath: tempFilePaths[0],
-        //   name: 'file',
-        //   formData:{
-        //     'user': 'test'
-        //   },
-        //   success: function(res){
-        //     var data = res.data
-        //     //do something
-        //   }
-        // })
-      }
-    })
+    let opt = e.target.dataset.opt;
+    if (opt==='left') {
+      that.setData({leftImgTemp: '',showLeftDele: false,isPublish:false})
+    }
+    if (opt==='right') {
+      that.setData({rightImgTemp: '',showRightDele: false,isPublish:false})
+    }
   }
 });
 

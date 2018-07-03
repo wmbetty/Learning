@@ -41,6 +41,8 @@ const deleMyQues = `${http}v1/questions/`
 const shareFriends = `${http}v1/share/share-friend`
 const shareMoment = `${http}v1/share/share-circle?access-token=`
 const posterApi = `${http}v1/questions/share-code?access-token=`
+const uploadApi = `${http}v1/questions/upload-images?access-token=`
+// const uploadApi = `${http}v1/questions/upload-images`
 
 module.exports = {
   formatTime: formatTime,
@@ -69,5 +71,6 @@ module.exports = {
   deleMyQues: deleMyQues,
   shareFriends: shareFriends,
   shareMoment: shareMoment,
-  posterApi: posterApi
+  posterApi: posterApi,
+  uploadApi: uploadApi
 }

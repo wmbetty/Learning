@@ -31,11 +31,11 @@ page{
 
 .text-holder-white{color: #fff;text-align: center;}
 .pub-cont{
-    background: #fff;
+    /* background: #fff; */
     display: flex;justify-content: space-between;
 }
 .pub-cont-box{
-    width: 49%;height: 380rpx;overflow: hidden;
+    width: 50%;height: 380rpx;overflow: hidden;background: #fff;
     position: relative;
 }
 .bd-right{border-right: 1px solid #f1f1f1;}
@@ -225,12 +225,21 @@ page{
 }
 .default-img{
     display: block;width: 92rpx;height: 92rpx;margin: 110rpx auto 22rpx;
-    background: #000;
+    /* background: #000; */
 }
 .default-imgtext{
     color: #888;font-size: 40rpx;text-align: center;
 }
 .upload-image{
-    width:100%;height:100%;background:#000;display:block;
+    width:100%;height:100%;display:block;
+    /* background:#000; */
 }
 .default-img-box{width: 100%;height: 100%;}
+.img-border-right{border-right: 1px solid #eee;}
+.deleImg{
+    position: absolute;right: 12rpx;top: 12rpx;
+    width: 52rpx;height: 52rpx;
+}
+.pub-img-box{
+    height: 446rpx;margin-bottom: 160rpx;
+}

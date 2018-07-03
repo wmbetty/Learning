@@ -25,19 +25,21 @@
     </view>
     <view wx:if="{{!txtActive}}">
         <view class="pub-cont">
-            <view class="pub-cont-box" data-imgopt="left" bindtap="chooseImg">
+            <view class="pub-cont-box pub-img-box img-border-right" data-imgopt="left" bindtap="chooseImg">
                 <view class="default-img-box" wx:if="{{!leftImgTemp}}">
-                    <image src="" class="default-img" />
+                    <image src="../../images/upload_icon.png" class="default-img" />
                     <view class="default-imgtext">点击上传图片</view>
                 </view>
-                <image wx:if="{{leftImgTemp}}" class="upload-image" src="{{leftImgTemp}}" />
+                <image mode="aspectFill" wx:if="{{leftImgTemp}}" class="upload-image" src="{{leftImgTemp}}" />
+                <image wx:if="{{showLeftDele}}" src="../../images/dele_img_icon.png" data-opt="left" class="deleImg" catchtap="deleImage" />
             </view>
-            <view class="pub-cont-box" data-imgopt="right" bindtap="chooseImg">
+            <view class="pub-cont-box pub-img-box" data-imgopt="right" bindtap="chooseImg">
                 <view wx:if="{{!rightImgTemp}}" class="default-img-box">
-                    <image src="" class="default-img" />
+                    <image src="../../images/upload_icon.png" class="default-img" />
                     <view class="default-imgtext">点击上传图片</view>
                 </view>
-                <image wx:if="{{rightImgTemp}}" class="upload-image" src="{{rightImgTemp}}" />
+                <image mode="aspectFill" wx:if="{{rightImgTemp}}" class="upload-image" src="{{rightImgTemp}}" />
+                <image wx:if="{{showRightDele}}" src="../../images/dele_img_icon.png" data-opt="right" class="deleImg" catchtap="deleImage" />
             </view>
         </view>
     </view>
