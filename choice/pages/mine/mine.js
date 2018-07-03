@@ -66,18 +66,6 @@ Page({
     if (isIphone) {
       that.setData({isIphone: true})
     }
-
-    token = app.globalData.access_token;
-    let infoApi = backApi.myInfo+token;
-      Api.wxRequest(infoApi,'GET',{},(res)=> {
-        // console.log(res, 'sssss')
-        let datas = res.data.data;
-        // console.log(datas, 'dssss')
-        that.setData({
-          points: datas.points || 0
-        })
-      })
-    
   },
   onReady: function () {
     let that = this;
@@ -101,6 +89,16 @@ Page({
       that.setData({
         msgCount: msgCount,
         voteUnreadCount: voteUnreadCount
+      })
+      token = app.globalData.access_token;
+    let infoApi = backApi.myInfo+token;
+      Api.wxRequest(infoApi,'GET',{},(res)=> {
+        // console.log(res, 'sssss')
+        let datas = res.data.data;
+        // console.log(datas, 'dssss')
+        that.setData({
+          points: datas.points || 0
+        })
       })
       let questionApi = backApi.my_question+token;
       let joinApi = backApi.my_join+token;

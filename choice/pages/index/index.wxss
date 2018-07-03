@@ -1,12 +1,22 @@
 /**index.wxss**/
 page{
     background: #F4F4F8;position: relative;
+    /* padding-bottom: 60rpx; */
 }
+/* .page-pad{padding-bottom: 280rpx;} */
 .title-box{
     border-bottom: 1px solid #f1f1f1;background: #fff;
     width: 100%;height: 540rpx;overflow: hidden;
     display: flex;justify-content: center;align-items: center;
     position: relative;
+}
+.title-box-sm{height: 440rpx;}
+.text-holder{
+    text-align:center;color: #888;font-size: 40rpx;
+}
+.text-areas{
+    text-align:center;display:table-cell;vertical-aglin:middle;
+    height:540rpx;width:100%;
 }
 .title-txt-view{
     position: absolute;top:0;left: 0;
@@ -18,22 +28,16 @@ page{
     text-align: center;
     font-size: 40rpx;margin: 0 auto;color: #888;
 }
-.textarea-has-text{
-    width: 480rpx;height: 170rpx;padding: 185rpx 0;text-align: center;
-    font-size: 40rpx;margin: 0 auto;color: #333;
-}
-.text-holder{
-    color: #888;text-align: center;
-}
+
 .text-holder-white{color: #fff;text-align: center;}
 .pub-cont{
     background: #fff;
     display: flex;justify-content: space-between;
 }
 .pub-cont-box{
-    width: 49%;height: 300rpx;overflow: hidden;margin: 40rpx 0;
+    width: 49%;height: 380rpx;overflow: hidden;
 }
-.pub-cont-box:first-child{border-right: 1px solid #f1f1f1;}
+.bd-right{border-right: 1px solid #f1f1f1;}
 .cont-holder{
     width: 100%;height: 60rpx;font-size:40rpx;text-align: center;margin: 110rpx auto 0;color: #888;
 }
@@ -181,4 +185,23 @@ page{
 
 .poster-close-icon{
     position: absolute;width: 60rpx;height: 60rpx;z-index: 100;top: 140rpx;right: 100rpx;
+}
+.text-val{
+    width: 84%;
+    height: 80%;
+    /* padding-top: 40rpx; */
+    text-align: center;
+    font-size: 40rpx;
+    color: #888;padding: 0 7% 0;
+    margin: 10% auto 10%;
+    /* display: table-cell; vertical-align: middle; */
+    /* display: flex;align-items: center;justify-content: center; */
+}
+.text-holder{
+    color: #888;text-align: center;font-size: 40rpx;
+}
+.textarea-has-text{
+    /* width: 480rpx;height: 170rpx;padding: 185rpx 0;text-align: center; */
+    /* font-size: 40rpx;margin: 0 auto; */
+    color: #343434;
 }

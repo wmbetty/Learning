@@ -193,7 +193,7 @@ Page({
     return {
       title: that.data.details.question,
       path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/share_card.png',
+      imageUrl:'/images/posterBg.jpg',
       success() {
         Api.wxRequest(shareFriends,'POST',{},(res)=>{
           // console.log(res, 'friends')
@@ -473,10 +473,17 @@ showMaskHidden () {
       wx.saveImageToPhotosAlbum({
         filePath: this.data.imagePath,
         success:(res)=>{
-          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+          // Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
           let shareMoment = backApi.shareMoment+token;
           Api.wxRequest(shareMoment,'POST',{},(res)=>{
-            console.log(res,'moment')
+            // console.log(res,'moment')
+            let points = res.data.data.points || 0;
+            if (points) {
+              // that.setData({showScore:true})
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
+            } else {
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+            }
           })
           
           this.setData({

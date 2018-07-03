@@ -2,18 +2,19 @@
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 
 <view wx:if="{{hasUserInfo}}" data-txt="title">
-    <view class="title-box">
+    <view class="{{pagePad?'title-box title-box-sm':'title-box'}}">
         <!-- <view class="title-txt-view" wx:if="{{!showTextarea}}" bindtap="txtFocus">点击输入标题</view> -->
         <!-- {{showTextarea?'title-textarea textarea-has-text':'title-textarea'}} -->
-        <textarea class="{{showTextarea?'title-textarea textarea-has-text':'title-textarea'}}" auto-focus="{{titleFocus}}" maxlength="32" data-direct="title" bindinput="titlePut" value="{{titleText}}" bindfocus="textFocus" bindtap="textTap" bindblur="textBlur" placeholder-class="{{showTextarea?'text-holder-white':'text-holder'}}" />
+        <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" maxlength="32" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
+        <!-- <textarea class="text-areas" placeholder="你好" placeholder-class="text-holder" /> -->
     </view>
     <view class="pub-cont">
         <view class="pub-cont-box" data-txt="left" bindtouchend="textFocus">
-            <textarea class="{{showLeft?'cont-textarea':'cont-holder'}}" maxlength="20" data-direct="left" bindinput="titlePut" bindfocus="contFocus" bindtap="textTap" bindblur="textBlur" value="{{leftHolder}}" />
+            <textarea adjust-position="{{false}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" maxlength="20" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
         </view>
         <view class="pub-cont-box" data-txt="right" bindtouchend="textFocus">
-            <textarea class="{{showRight?'cont-textarea':'cont-holder'}}" maxlength="20" data-direct="right" bindinput="titlePut" bindfocus="contFocus" bindtap="textTap" bindblur="textBlur" value="{{rightHolder}}" />
-            <!-- textarea -->
+            <textarea adjust-position="{{false}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" maxlength="20" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
+            
         </view>
     </view>
     <button class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" disabled="{{btnDis}}" bindtap="goPublish">发布</button>

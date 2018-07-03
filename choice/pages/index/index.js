@@ -32,7 +32,8 @@ Page({
     showPosterView: false,
     qrcode: '',
     titleFocus: false,
-    viewWidth: 0
+    viewWidth: 0,
+    pagePad: false
     
   },
   onReady () {
@@ -42,10 +43,6 @@ Page({
         this.setData({viewHeight: res.windowHeight,viewWidth:res.windowWidth});
       }
     })
-  },
-  txtFocus (e) {
-    let that = this;
-    that.setData({titleFocus:true,showTextarea:true})
   },
   cancelDialog () {
     let that = this;
@@ -115,8 +112,13 @@ Page({
     }, 200)
   },
   textFocus () {
-    if (this.data.titleText === '点击输入标题') {
-      this.setData({
+    let that =this;
+    let title = that.data.titleText;
+    let leftText = that.data.leftText;
+    let rightText = that.data.rightText;
+    // console.log(title,leftText,rightText,'tit  focusssss')
+    if (title === '点击输入标题') {
+      that.setData({
         showTextarea: true,
         titleText: ''
       })
@@ -124,19 +126,37 @@ Page({
   },
   contFocus (e) {
     let that = this;
+    let title = that.data.titleText;
     let direct = e.target.dataset.direct;
     let leftHolder = that.data.leftHolder;
     let rightHolder = that.data.rightHolder;
+    let leftText = that.data.leftText;
+    let rightText = that.data.rightText;
+    // console.log(title,leftText,rightText,'focusssss')
     if (direct === 'left' && leftHolder === '点击输入左选项') {
+      if (title==='') {
+        that.setData({
+          titleText: '点击输入标题',
+          showTextarea: false
+        })
+      }
       that.setData({
         showLeft: true,
-        leftHolder: ''
+        leftHolder: '',
+        pagePad: true
       })
     }
     if (direct === 'right' && rightHolder === '点击输入右选项') {
+      if (title==='') {
+        that.setData({
+          titleText: '点击输入标题',
+          showTextarea: false
+        })
+      }
       that.setData({
         showRight: true,
-        rightHolder: ''
+        rightHolder: '',
+        pagePad: true
       })
     }
   },
@@ -145,79 +165,34 @@ Page({
     let val = e.detail.value;
     let direct = e.target.dataset.direct;
     let chineseReg = /[\u4E00-\u9FA5]/g;
-    
+
     if (direct === 'title') {
-      if (val) {
+      if (val && val !== '点击输入标题') {
         that.setData({
           titleText: val,
           shareTitle: val
         })
-        if (val.length>=30) {
-          Api.wxShowToast('标题不超过30个字', 'none', 2000);
-        }
-        // if (chineseReg.test(val)) {
-        //   if (val.match(chineseReg).length >= 15) {  //返回中文的个数  
-        //     Api.wxShowToast('标题字数不超过16个汉字', 'none', 2000);    
-        //   }  
-        // } else {
-        //   if (val.length>=26) {
-        //     that.setData({
-        //       titleMax: 26
-        //     })
-        //     Api.wxShowToast('标题字数超出限制', 'none', 2000);
-        //   }
-        // }
+      }
+      
+      if (val.length>=30) {
+        Api.wxShowToast('标题不超过30个字', 'none', 2000);
       }
     }
     if (direct === 'left') {
-      if (val) {
-        that.setData({
-          leftText: val
-        })
-        if (val.length>=18) {
-          Api.wxShowToast('左选项不超过18个字', 'none', 2000);
-        }
-        // if (chineseReg.test(val)) {
-        //   if (val.match(chineseReg).length >= 18) {  //返回中文的个数  
-        //     let wxShowToast = Api.wxShowToast('左选项字数不超过18个汉字', 'none', 2000);  
-        //     that.setData({
-        //       leftMax: 18
-        //     })
-        //   } else {
-        //     if (val.length>=32) {
-        //       that.setData({
-        //         leftMax: 32
-        //       })
-        //       Api.wxShowToast('左选项字数超出限制', 'none', 2000);
-        //     }
-        //   }  
-        // }
+      that.setData({
+        leftText: val
+      })
+      if (val.length>=18) {
+        Api.wxShowToast('左选项不超过18个字', 'none', 2000);
       }
     }
     if (direct === 'right') {
-      if (val) {
-        that.setData({
-          rightText: val
-        })
-      }
+      that.setData({
+        rightText: val
+      })
       if (val.length>=18) {
         Api.wxShowToast('右选项不超过18个字', 'none', 2000);
       }
-      // if (chineseReg.test(val)) {
-      //   if (val.match(chineseReg).length >= 18) {  //返回中文的个数  
-      //     let wxShowToast = Api.wxShowToast('右选项字数不超过18个汉字', 'none', 2000);  
-      //     that.setData({
-      //       rightMax: 18
-      //     })
-      //   }  
-      // } else {
-      //   if (val.length>=32) {
-      //     that.setData({
-      //       rightMax: 32
-      //     })
-      //     Api.wxShowToast('右选项字数超出限制', 'none', 2000);
-      //   }
-      // }
     }
     // 发布按钮样式
     if (that.data.titleText !== '' && that.data.leftText !== '' && that.data.rightText !== '') {
@@ -414,7 +389,7 @@ Page({
     return {
       title: that.data.shareTitle,
       path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/share_card.png',
+      imageUrl:'/images/posterBg.jpg',
       success() {
         Api.wxRequest(shareFriends,'POST',{},(res)=>{
           console.log(res, 'friends')
@@ -665,9 +640,15 @@ Page({
         success:(res)=>{
           let shareMoment = backApi.shareMoment+token;
           Api.wxRequest(shareMoment,'POST',{},(res)=>{
-            console.log(res,'moment')
+            let points = res.data.data.points || 0;
+            if (points) {
+              // that.setData({showScore:true})
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
+            } else {
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+            }
           })
-          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
+          // Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
           this.setData({
             maskHidden: false
           })
@@ -677,7 +658,7 @@ Page({
             wx.navigateBack({
               delta: 1
             })
-          }, 1800)
+          }, 3200)
         },
         fail:(err)=>{
           if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
@@ -737,6 +718,7 @@ Page({
     let leftText = that.data.leftText;
     let rightText = that.data.rightText;
     let direct = e.currentTarget.dataset.direct;
+    
     if (title==='' && direct === 'title') {
       that.setData({
         titleText: '点击输入标题',
@@ -744,12 +726,25 @@ Page({
       })
     }
     if (leftText === '' && direct === 'left') {
+      if (title==='') {
+        that.setData({
+          titleText: '点击输入标题',
+          showTextarea: false
+        })
+      }
       that.setData({
         leftHolder: '点击输入左选项',
-        showLeft: false
+        showLeft: false,
+        
       })
     }
     if (rightText === '' && direct === 'right') {
+      if (title==='') {
+        that.setData({
+          titleText: '点击输入标题',
+          showTextarea: false
+        })
+      }
       that.setData({
         rightHolder: '点击输入右选项',
         showRight: false
@@ -769,7 +764,6 @@ Page({
     let leftHolder = that.data.leftHolder;
     let direct = e.currentTarget.dataset.direct;
     let rightHolder = that.data.rightHolder;
-    console.log(title, 'teee')
     if (title === '点击输入标题' && direct === 'title') {
       that.setData({
         titleText: '',
@@ -779,13 +773,15 @@ Page({
     if (leftHolder === '点击输入左选项' && direct === 'left') {
       that.setData({
         leftHolder: '',
-        showLeft: true
+        showLeft: true,
+        pagePad: false
       })
     }
     if (rightHolder === '点击输入右选项' && direct === 'right') {
       that.setData({
         rightHolder: '',
-        showRight: true
+        showRight: true,
+        pagePad: false
       })
     }
     // console.log(e, 'blur')

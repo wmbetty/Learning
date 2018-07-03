@@ -37,7 +37,13 @@ Page({
     maskHidden: false,
     showPosterView: false,
     qrcodeImg: '',
-    cardTop: 0
+    cardTop: 0,
+    showScore: false,
+    isDown: false,
+    frontIndex: 0,
+    frontId: 0,
+    hadUp: false,
+    downList: []
   },
   //手指接触屏幕
   touchstart (e) {
@@ -48,151 +54,181 @@ Page({
   touchend (e) {
     let that = this;
     let curr_id = e.currentTarget.dataset.item.id;
+    let listItem = e.currentTarget.dataset.item;
     let index = e.currentTarget.dataset.index;
     let qList = that.data.questionList;
-    let watchQuesApi = backApi.watchQuesApi+token;
+    
     let noTopQuesApi = backApi.noTopQues+token;
     let page = that.data.page;
+    let downList = that.data.downList;
     var endx, endy;
     endx = e.changedTouches[0].pageX;
     endy = e.changedTouches[0].pageY;
     var direction = getDirection(startx, starty, endx, endy);
     if (direction === 1) {
+      that.setData({isDown: false});
       that.slidethis(index,curr_id);
-                if (qList.length-1===0) {
-                  Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
-                    if (res.data.status*1 === 200) {
-                      that.setData({page: page+1});
-                      let topDatas = res.data.data || [];
-                      if (topDatas.length===0) {
-                        Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
-                          let datas = res.data.data || [];
-                          if (datas.length===0) {
-                            // that.setData({
-                            //   isEmpty: true
-                            // })
-                          } else {
-                            if (datas.length > 0) {
-                              for (let item of datas) {
-                                item.option1 = item.option1.substring(0, 18);
-                                item.option2 = item.option2.substring(0, 18);
-                                item.question = item.question.substring(0, 30);
-                              }
-                              // qList = qList.concat(topDatas);
-                              that.setData({qList: topDatas});
-                              Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                                console.log('watch')
-                              })
-                            } else {
-                              // that.setData({
-                              //   isEmpty: true
-                              // })
-                            }
-                          }
-                        })
-                      } else {
-                        for (let item of topDatas) {
-                          item.option1 = item.option1.substring(0, 18);
-                          item.option2 = item.option2.substring(0, 18);
-                          item.question = item.question.substring(0, 30);
-                        }
-                        // qList = qList.concat(topDatas);
-                        that.setData({questionList: topDatas});
-                        Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                          console.log('watch')
-                        })
-                      }
-                    }
-                  })
-                } else {
-                  Api.wxRequest(watchQuesApi,'POST',{qid: curr_id}, (res)=> {
-                    console.log(res, 'watch')
-                    if (res.data.status*1===201) {
-                      if (qList.length-1===0) {
-                        let noTopQuesApi = backApi.noTopQues+token;
-                        let page = that.data.page;
-                        setTimeout(()=>{
-                          Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
-                            // console.log(res, 'rssssleng10后')
-                            if (res.data.status*1 === 200) {
-                              // console.log(res, 'rssssleng10后')
-                              that.setData({page: page+1});
-                              let topDatas = res.data.data || [];
-                              wx.hideLoading();
-                              if (topDatas.length===0) {
-                                Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
-                                  let datas = res.data.data || [];
-                                  if (datas.length===0) {
-                                    // that.setData({
-                                    //   isEmpty: true
-                                    // })
-                                  } else {
-                                    if (datas.length > 0) {
-                                      for (let item of datas) {
-                                        item.option1 = item.option1.substring(0, 18);
-                                        item.option2 = item.option2.substring(0, 18);
-                                        item.question = item.question.substring(0, 30);
-                                      }
-                                      // chooseDatas = chooseDatas.concat(datas);
-                                      that.setData({questionList: datas});
-                                      Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                                        console.log('watch')
-                                      })
-                                    } else {
-                                      Api.wxShowToast('没有数据了，去发布吧', 'none', 2000);
-                                    }
-                                  }
-                                })
-                              } else {
-                                for (let item of topDatas) {
-                                  item.option1 = item.option1.substring(0, 18);
-                                  item.option2 = item.option2.substring(0, 18);
-                                  item.question = item.question.substring(0, 30);
-                                }
-                                // chooseDatas = chooseDatas.concat(topDatas);
-                                // console.log(chooseDatas, 'chsss')
-                                that.setData({questionList: topDatas});
-                              }
-                            }
-                          })
-                        },300)
+      downList = downList.concat(listItem);
+      that.setData({hadUp: true,downList: downList});
+
+                // if (index === qList.length-1) {
+                //   Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
+                //     if (res.data.status*1 === 200) {
+                //       that.setData({page: page+1});
+                //       let topDatas = res.data.data || [];
+                //       if (topDatas.length===0) {
+                //         Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+                //           let datas = res.data.data || [];
+                //           if (datas.length===0) {
+                //             that.setData({
+                //               isEmpty: true
+                //             })
+                //           } else {
+                //             that.setData({isEmpty: false})
+                //             if (datas.length > 0) {
+                //               for (let item of datas) {
+                //                 item.option1 = item.option1.substring(0, 18);
+                //                 item.option2 = item.option2.substring(0, 18);
+                //                 item.question = item.question.substring(0, 30);
+                //               }
+                //               qList = qList.concat(topDatas);
+                //               that.setData({questionList: qList});
+                //               Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
+                //                 console.log('watch')
+                //               })
+                //             } else {
+                //               that.setData({
+                //                 isEmpty: true
+                //               })
+                //             }
+                //           }
+                //         })
+                //       } else {
+                //         for (let item of topDatas) {
+                //           item.option1 = item.option1.substring(0, 18);
+                //           item.option2 = item.option2.substring(0, 18);
+                //           item.question = item.question.substring(0, 30);
+                //         }
+                //         qList = qList.concat(topDatas);
+                //         that.setData({questionList: qList});
+                //         Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
+                //           console.log('watch')
+                //         })
+                //       }
+                //     }
+                //   })
+                // } else {
+                //   Api.wxRequest(watchQuesApi,'POST',{qid: curr_id}, (res)=> {
+                //     console.log(res, 'watch')
+                //     if (res.data.status*1===201) {
+                //       if (index === qList.length-1) {
+                //         let noTopQuesApi = backApi.noTopQues+token;
+                //         let page = that.data.page;
+                //         setTimeout(()=>{
+                //           Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
+                //             // console.log(res, 'rssssleng10后')
+                //             if (res.data.status*1 === 200) {
+                //               // console.log(res, 'rssssleng10后')
+                //               that.setData({page: page+1});
+                //               let topDatas = res.data.data || [];
+                //               wx.hideLoading();
+                //               if (topDatas.length===0) {
+                //                 Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+                //                   let datas = res.data.data || [];
+                //                   if (datas.length===0) {
+                //                     that.setData({
+                //                       isEmpty: true
+                //                     })
+                //                   } else {
+                //                     if (datas.length > 0) {
+                //                       for (let item of datas) {
+                //                         item.option1 = item.option1.substring(0, 18);
+                //                         item.option2 = item.option2.substring(0, 18);
+                //                         item.question = item.question.substring(0, 30);
+                //                       }
+                //                       qList = qList.concat(datas);
+                //                       that.setData({questionList: qList});
+                //                       Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
+                //                         console.log('watch')
+                //                       })
+                //                     } else {
+                //                       Api.wxShowToast('没有数据了，去发布吧', 'none', 2000);
+                //                     }
+                //                   }
+                //                 })
+                //               } else {
+                //                 for (let item of topDatas) {
+                //                   item.option1 = item.option1.substring(0, 18);
+                //                   item.option2 = item.option2.substring(0, 18);
+                //                   item.question = item.question.substring(0, 30);
+                //                 }
+                //                 qList = qList.concat(topDatas);
+                //                 // console.log(chooseDatas, 'chsss')
+                //                 that.setData({questionList: qList});
+                //               }
+                //             }
+                //           })
+                //         },300)
                         
-                      }
-                    }
-                    let resMsg = res.data.msg || '';
-                    if (resMsg.indexOf('Qid and Mid has already been taken') != -1 && resMsg) {
-                      // that.go
-                    }
-                    if (res.data.status*1===201) {
-                      console.log('watched')
-                    }
-                  })
-                }
+                //       }
+                //     }
+                //     let resMsg = res.data.msg || '';
+                //     if (resMsg.indexOf('Qid and Mid has already been taken') != -1 && resMsg) {
+                //       // that.go
+                //     }
+                //     if (res.data.status*1===201) {
+                //       console.log('watched')
+                //     }
+                //   })
+                // }
+    } else {
+      // 下滑事件
+      that.setData({isDown: true});
+      let hadUp = that.data.hadUp;
+      let downList = that.data.downList;
+      console.log(downList, 'tttt');
+      if (hadUp) {
+        // that.slidethis(index,curr_id);
+      }
+      console.log('downnnn')
     }
   },
   //事件处理函数
   slidethis (index, qid) {
     let that = this;
     let page = that.data.page;
+    let isDown = that.data.isDown;
+    let watchQuesApi = backApi.watchQuesApi+token;
     let noTopQuesApi = backApi.noTopQues+token;
     var animation = wx.createAnimation({
-      duration: 500,
+      duration: 400,
       timingFunction: 'cubic-bezier(.8,.2,.1,0.8)',
     });
     that.animation = animation;
-    that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
-    that.animation.opacity(0).step({duration: 1200});
+    // if (isDown) {
+    //   that.animation.translateY((that.data.viewHeight-60)).translateX(15).step();
+    //   that.animation.opacity(1).step({duration: 1200});
+    // } else {
+    //   that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
+    //   that.animation.opacity(0).step({duration: 1200});
+    // }
+    
+      that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
+      that.animation.opacity(0).step({duration: 1200});
+
     // that.animation.translateY(50).translateX(0).opacity(0).step();
     // that.animation.translateY(-200).translateX(15).opacity(0).step();
     var animationData = that.data.animationData;
     animationData[index] = that.animation.export();
     that.setData({
-      animationData: animationData,
-      cardTop: 380
+      animationData: animationData
     });
     setTimeout(function() {
       var questionList = that.data.questionList;
-      console.log(index,questionList.length,'lllla')
+      // console.log(index,questionList.length,'lllla')
+      // if (questionList.length>0) {
+      //   that.setData({isEmpty: false})
+      // }
       if (index===questionList.length-1) {
         Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
           if (res.data.status*1 === 200) {
@@ -235,6 +271,10 @@ Page({
             }
           }
         })
+      } else {
+        Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
+          console.log('watch')
+        })
       }
       // }
       // var slidethis = questionList.shift();
@@ -245,11 +285,10 @@ Page({
       // var index = e.target.dataset.index;
       // var animationData = this.data.animationData;
       // animationData[index] = this.animation.export();
-    }, 300);
+    }, 200);
   },
   
   onLoad: function () {
-    // console.log('onLoad');
     let that = this;
     tabBar.tabbar("tabBar", 0, that);
     let questId = wx.getStorageSync('quesid');
@@ -261,79 +300,180 @@ Page({
         wx.setStorageSync('quesid', '');
       }, 300)
     }
-
     wx.showLoading({
       title: '加载中',
     });
-    // app.js onLunch为异步事件
-    setTimeout(()=>{
-      token = wx.getStorageSync('token');
-      let watchQuesApi = backApi.watchQuesApi+token;
-      let noTopQuesApi = backApi.noTopQues+token;
-      let page = that.data.page;
-      
-      // console.log(token)
-      Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
-        // console.log(res, 'ressslater')
-        let status = res.data.status*1;
-        if (status===200) {
-          wx.hideLoading();
-          let datas = res.data.data || [];
-          if (datas.length===0) {
-            // top=0时
-            Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
-              let status = res.data.status*1;
-              if (status===200) {
-                let datas = res.data.data || [];
-                if (datas.length>0) {
-                  for (let item of datas) {
-                    item.option1 = item.option1.substring(0, 18);
-                    item.option2 = item.option2.substring(0, 18);
-                    item.question = item.question.substring(0, 30);
-                  }
-                  that.setData({questionList: datas})
-                } else {
-                  that.setData({
-                    isEmpty: true
-                  })
-                }
-              } else {
-                Api.wxShowToast('网络出错了', 'none', 2000);
-              }
-            })
-          }
-          if (datas.length>0) {
-            for (let item of datas) {
-              item.option1 = item.option1.substring(0, 18);
-              item.option2 = item.option2.substring(0, 18);
-              item.question = item.question.substring(0, 30);
-            }
-            that.setData({questionList: datas})
-            Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
-              if (res.data.status*1===201) {
-                console.log('watched')
-              }
-            })
-          } else {
-            that.setData({
-              isEmpty: true
-            })
-          }
-        } else {
-          Api.wxShowToast('网络出错了', 'none', 2000);
-        }
-      })
-    },80)
 
+    wx.login({
+      success: function(res) {
+        let reqData = {};
+        let code = res.code;
+        if (code) {
+          reqData.code = code;
+          Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
+            // console.log(res, 'apptokenuser')
+            let acc_token = res.data.data.access_token;
+            token = acc_token;
+            // console.log(acc_token, 'token')
+            if (acc_token) {
+              app.globalData.access_token = acc_token;
+              wx.setStorageSync('token', acc_token);
+              let userInfo = wx.getStorageSync('userInfo', userInfo);
+              // console.log(token, 'oooo')
+              let userInfoApi = backApi.userInfo+acc_token
+              if (userInfo) {
+                let userData = {
+                  avatarUrl: userInfo.avatarUrl,
+                  nickName: userInfo.nickName,
+                  country: userInfo.country,
+                  city: userInfo.city,
+                  language: userInfo.language,
+                  province: userInfo.province,
+                  gender: userInfo.gender
+                }
+                Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+                  console.log(res.data.status, 'sssssssss')
+                })
+              }
+
+              let voteUnreadApi = backApi.voteUnreadApi+acc_token;
+              setInterval(()=>{
+                Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
+                  if (res.data.status*1===200) {
+                    if (res.data.data.vote) {
+                      wx.setStorageSync('voteUnreadCount', res.data.data.vote);
+                    }
+                  } else {
+                    // Api.wxShowToast('网络出错了', 'none', 2000);
+                  }
+                })
+              },5000)
+
+              let watchQuesApi = backApi.watchQuesApi+acc_token;
+              let noTopQuesApi = backApi.noTopQues+acc_token;
+              let page = that.data.page;
+              Api.wxRequest(backApi.questions+acc_token, 'GET', {page: page}, (res)=>{
+                let status = res.data.status*1;
+                if (status===200) {
+                  wx.hideLoading();
+                  let datas = res.data.data || [];
+                  if (datas.length===0) {
+                    // top=0时
+                    Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+                      let status = res.data.status*1;
+                      if (status===200) {
+                        let datas = res.data.data || [];
+                        if (datas.length>0) {
+                          for (let item of datas) {
+                            item.option1 = item.option1.substring(0, 18);
+                            item.option2 = item.option2.substring(0, 18);
+                            item.question = item.question.substring(0, 30);
+                          }
+                          that.setData({questionList: datas})
+                        }
+                        if (datas.length===0) {
+                          that.setData({
+                            isEmpty: true
+                          })
+                        }
+                      } else {
+                        Api.wxShowToast('网络出错了', 'none', 2000);
+                      }
+                    })
+                  }
+                  if (datas.length>0) {
+                    for (let item of datas) {
+                      item.option1 = item.option1.substring(0, 18);
+                      item.option2 = item.option2.substring(0, 18);
+                      item.question = item.question.substring(0, 30);
+                    }
+                    that.setData({questionList: datas})
+                    Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+                      if (res.data.status*1===201) {
+                        console.log('watched')
+                      }
+                    })
+                  } else {
+                    that.setData({
+                      isEmpty: true
+                    })
+                  }
+                } else {
+                  Api.wxShowToast('网络出错了', 'none', 2000);
+                }
+              })
+            }
+          })
+        }
+      }
+    });
   },
   onShow () {
     let that = this;
-    let msgCount = wx.getStorageSync('msgTotal');
-    let voteUnreadCount = wx.getStorageSync('voteUnreadCount');
-      that.setData({
-        msgCount: msgCount,
-        voteUnreadCount: voteUnreadCount
-      })
+    let list = that.data.questionList;
+    // let msgCount = wx.getStorageSync('msgTotal');
+    // let voteUnreadCount = wx.getStorageSync('voteUnreadCount');
+    //   that.setData({
+    //     msgCount: msgCount,
+    //     voteUnreadCount: voteUnreadCount
+    //   })
+      // token = wx.getStorageSync('token');
+      // if (list.length===0) {
+      //   let watchQuesApi = backApi.watchQuesApi+token;
+      // let noTopQuesApi = backApi.noTopQues+token;
+      //   let page = that.data.page;
+      // Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
+      //   let status = res.data.status*1;
+      //   if (status===200) {
+      //     wx.hideLoading();
+      //     let datas = res.data.data || [];
+      //     if (datas.length===0) {
+      //       // top=0时
+      //       Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+      //         let status = res.data.status*1;
+      //         if (status===200) {
+      //           let datas = res.data.data || [];
+      //           if (datas.length>0) {
+      //             for (let item of datas) {
+      //               item.option1 = item.option1.substring(0, 18);
+      //               item.option2 = item.option2.substring(0, 18);
+      //               item.question = item.question.substring(0, 30);
+      //             }
+      //             that.setData({questionList: datas})
+      //           }
+      //           if (datas.length===0) {
+      //             that.setData({
+      //               isEmpty: true
+      //             })
+      //           }
+      //         } else {
+      //           // Api.wxShowToast('网络出错了', 'none', 2000);
+      //         }
+      //       })
+      //     }
+      //     if (datas.length>0) {
+      //       for (let item of datas) {
+      //         item.option1 = item.option1.substring(0, 18);
+      //         item.option2 = item.option2.substring(0, 18);
+      //         item.question = item.question.substring(0, 30);
+      //       }
+      //       that.setData({questionList: datas})
+      //       Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+      //         if (res.data.status*1===201) {
+      //           console.log('watched')
+      //         }
+      //       })
+      //     } else {
+      //       that.setData({
+      //         isEmpty: true
+      //       })
+      //     }
+      //   } else {
+      //     // Api.wxShowToast('网络出错了', 'none', 2000);
+      //   }
+      // })
+      // }
+
   },
   onReady () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -351,7 +491,7 @@ Page({
     return {
       title: that.data.question,
       path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/share_card.png',
+      imageUrl:'/images/posterBg.jpg',
       success() {
         Api.wxRequest(shareFriends,'POST',{},(res)=>{
           console.log(res, 'friends')
@@ -558,10 +698,17 @@ Page({
       wx.saveImageToPhotosAlbum({
         filePath: this.data.imagePath,
         success:(res)=>{
-          Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+          
           let shareMoment = backApi.shareMoment+token;
           Api.wxRequest(shareMoment,'POST',{},(res)=>{
-            console.log(res,'moment')
+            // console.log(res,'momentttt')
+            let points = res.data.data.points || 0;
+            if (points) {
+              // that.setData({showScore:true})
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
+            } else {
+              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+            }
           })
           
           this.setData({
@@ -658,9 +805,9 @@ Page({
   // 投票
   gotoVote (e) {
     let that = this;
-    // let page = that.data.page;
+    let page = that.data.page;
     let watchQuesApi = backApi.watchQuesApi+token;
-    // let noTopQuesApi = backApi.noTopQues+token;
+    let noTopQuesApi = backApi.noTopQues+token;
     let userInfo = wx.getStorageSync('userInfo');
     let language = userInfo.language || '';
     let answerData = {
@@ -682,54 +829,56 @@ Page({
       let answerApi = backApi.u_answer;
       let page = that.data.page;
       answerData.qid = qid;
-      console.log(e,'xxx')
 
-      if (idx===qList.length-1) {
-        Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
-          if (res.data.status*1 === 200) {
-            that.setData({page: page+1});
-            let topDatas = res.data.data || [];
-            if (topDatas.length===0) {
-              Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
-                let datas = res.data.data || [];
-                if (datas.length===0) {
-                  that.setData({
-                    isEmpty: true
-                  })
-                } else {
-                  if (datas.length > 0) {
-                    for (let item of datas) {
-                      item.option1 = item.option1.substring(0, 18);
-                      item.option2 = item.option2.substring(0, 18);
-                      item.question = item.question.substring(0, 30);
-                    }
-                    qList = qList.concat(topDatas);
-                    Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                      console.log('watch')
-                    })
-                    that.setData({questionList: qList});
-                  } else {
-                    that.setData({
-                      isEmpty: true
-                    })
-                  }
-                }
-              })
-            } else {
-              for (let item of topDatas) {
-                item.option1 = item.option1.substring(0, 18);
-                item.option2 = item.option2.substring(0, 18);
-                item.question = item.question.substring(0, 30);
-              }
-              qList = qList.concat(topDatas);
-              Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                console.log('watch')
-              })
-              that.setData({questionList: qList});
-            }
-          }
-        })
-      }
+      // if (idx===qList.length-1) {
+      //   Api.wxRequest(backApi.questions+token, 'GET', {page: page+1}, (res)=>{
+      //     if (res.data.status*1 === 200) {
+      //       that.setData({page: page+1});
+      //       let topDatas = res.data.data || [];
+      //       if (topDatas.length===0) {
+      //         Api.wxRequest(noTopQuesApi, 'GET', {}, (res)=>{
+      //           let datas = res.data.data || [];
+      //           if (datas.length===0) {
+      //             that.setData({
+      //               isEmpty: true
+      //             })
+      //           } else {
+      //             that.setData({
+      //               isEmpty: false
+      //             })
+      //             if (datas.length > 0) {
+      //               for (let item of datas) {
+      //                 item.option1 = item.option1.substring(0, 18);
+      //                 item.option2 = item.option2.substring(0, 18);
+      //                 item.question = item.question.substring(0, 30);
+      //               }
+      //               qList = qList.concat(topDatas);
+      //               Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
+      //                 console.log('watch')
+      //               })
+      //               that.setData({questionList: qList});
+      //             } else {
+      //               that.setData({
+      //                 isEmpty: true
+      //               })
+      //             }
+      //           }
+      //         })
+      //       } else {
+      //         for (let item of topDatas) {
+      //           item.option1 = item.option1.substring(0, 18);
+      //           item.option2 = item.option2.substring(0, 18);
+      //           item.question = item.question.substring(0, 30);
+      //         }
+      //         qList = qList.concat(topDatas);
+      //         Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
+      //           console.log('watch')
+      //         })
+      //         that.setData({questionList: qList});
+      //       }
+      //     }
+      //   })
+      // }
       // qList[0].showMask = true;
       if (direct === 'left') {
         answerData.choose = 1;
@@ -815,9 +964,9 @@ Page({
           } else {
             Api.wxShowToast('投过票了', 'none', 300);
           }
-          Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
-            console.log(res, 'ssss')
-          })
+          // Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
+          //   console.log(res, 'ssss')
+          // })
         })
         
       }
@@ -913,12 +1062,13 @@ Page({
       
       setTimeout(()=>{
         that.slidethis(idx,qid);
-        // if (that.data.questionList.length===1) {
+        console.log(idx,that.data.questionList.length,'lennnnn')
+        // if (idx === that.data.questionList.length-1) {
         //   that.setData({
-        //             isEmpty: true
-        //           })
+        //     isEmpty: true
+        //   })
         // }
-      },6000)
+      },4000)
 
     } else {
       // 微信授权
