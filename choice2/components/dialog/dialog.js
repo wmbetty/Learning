@@ -7,6 +7,14 @@ Component({
     dialogShow:{
       type: Boolean,
       value: false
+    },
+    openType: {
+      type: String,
+      value: 'getUserInfo'
+    },
+    authInfo: {
+      type: String,
+      value: '需要微信授权登录才能更多操作哦'
     }
   },
 

@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
+<import src="../../components/we-cropper/we-cropper.wxml"/>
 <view class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
     <view class="tab-item-box">
         <view class="{{txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="text" bindtap="changeTab"><image src="{{txtActive?'../../images/text_icon.png':'../../images/text_act_icon.png'}}" class="tab-item-img"></image></view>
@@ -7,23 +8,22 @@
     </view>
 </view>
 <view wx:if="{{hasUserInfo}}">
-    <view class="{{pagePad?'title-box title-box-sm':'title-box'}}">
-        <!-- <view class="title-txt-view" wx:if="{{!showTextarea}}" bindtap="txtFocus">点击输入标题</view> -->
-        <!-- {{showTextarea?'title-textarea textarea-has-text':'title-textarea'}} -->
+    <view wx:if="{{!showCropper}}" class="{{pagePad?'title-box title-box-sm':'title-box'}}">
+        
         <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" maxlength="32" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
-        <!-- <textarea class="text-areas" placeholder="你好" placeholder-class="text-holder" /> -->
+        
         </view>
-    <view wx:if="{{txtActive}}">
+    <view hidden="{{!txtActive}}">
         <view class="pub-cont">
             <view class="pub-cont-box" data-txt="left" bindtouchend="textFocus">
-                <textarea adjust-position="{{false}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" maxlength="20" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
+                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" maxlength="20" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
             </view>
             <view class="pub-cont-box" data-txt="right" bindtouchend="textFocus">
-                <textarea adjust-position="{{false}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" maxlength="20" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
+                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" maxlength="20" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
             </view>
         </view>
     </view>
-    <view wx:if="{{!txtActive}}">
+    <view hidden="{{txtActive}}">
         <view class="pub-cont">
             <view class="pub-cont-box pub-img-box img-border-right" data-imgopt="left" bindtap="chooseImg">
                 <view class="default-img-box" wx:if="{{!leftImgTemp}}">
@@ -91,6 +91,21 @@
   <view class="canvas-box">
       <canvas  style="width: 375px;height: 667px;position:fixed;top:9999px" canvas-id="mycanvas"/>
   </view>
+
+<!-- 裁剪 -->
+  
+<view class="cropper-wrapper" wx:if="{{showCropper}}" style="height:{{viewHeight}}px;">
+    <template is="we-cropper" data="{{...cropperData.cropperOpt}}"/>
+    <view class="cropper-buttons">
+        <view class="upload select-again-btn" bindtouchstart="uploadTap">
+            重选
+        </view>
+        <view class="getCropperImage" bindtouchstart="getCropperImage">
+            确定
+        </view>
+    </view>
+    <!-- <view class='empty-view'></view> -->
+</view>
 
 
 <!-- 授权弹窗 -->

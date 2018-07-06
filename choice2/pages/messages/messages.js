@@ -164,5 +164,10 @@ Page({
           url: '/pages/feedback/feedback'
         })
       }
+  },
+  gotoUser () {
+    wx.navigateTo({
+      url: '/pages/usercenter/usercenter'
+    })
   }
 })

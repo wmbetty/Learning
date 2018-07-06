@@ -7,13 +7,14 @@
                 <image src="../../images/grey_gold.png" class="gold-coin" />
                 <view class="msg-box">{{userInfo.points}}</view>
             </view>
-            <image class="my-avatar" src="{{userInfo.avatar}}" />
+            <image class="my-avatar" src="{{userInfo.avatar || '../../images/avatarDefault.png'}}" />
             <image src="../../images/my_bg.png" class="my-bg"/>
         </view>
     </view>
     <view class="mine-infos">
-        <view class="my-name">{{userInfo.nickname}}</view>
-        <image src="{{userInfo.gender*1===1?'../../images/boy_icon.png':'../../images/girl_icon.png'}}" class="my-gender"/>
+        <view class="my-name">{{userInfo.nickname || '无名氏'}}</view>
+        <image wx:if="{{userInfo.gender*1===1}}" src="../../images/boy_icon.png" class="my-gender"/>
+        <image wx:if="{{userInfo.gender*1===2}}" src="../../images/girl_icon.png" class="my-gender"/>
     </view>
     <view class="tab-container">
         <view class="tab-head">

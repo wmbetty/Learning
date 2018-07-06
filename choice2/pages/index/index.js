@@ -1,14 +1,21 @@
 const tabBar = require('../../components/tabBar/tabBar.js');
+import WeCropper from '../../components/we-cropper/we-cropper.js'
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
 let token = '';
 let publishedPoint = '';
 let myPoint = '';
+let ImgLock = '';
+const device = wx.getSystemInfoSync();
+const width = device.windowWidth;
+const height = device.windowHeight - 50;
+const isIphone = wx.getSystemInfoSync('isIphone');
 
 Page({
   data: {
     showTextarea: false,
+    isLeftDirect: '',
     showLeft: false,
     showRight: false,
     leftHolder: '点击输入左选项',
@@ -33,6 +40,7 @@ Page({
     qrcode: '',
     titleFocus: false,
     viewWidth: 0,
+    viewHeight: 0,
     pagePad: false,
     txtActive: true,
     leftImgTemp: '',
@@ -40,8 +48,101 @@ Page({
     showRightDele: false,
     showLeftDele: false,
     optionLtImage: '',
-    optionRtImage: ''
+    optionRtImage: '',
+    showCropper: false,
+    adjustPosi: false,
+    spacing: 0,
+    cropperData: {
+      cropperOpt: {
+        id: 'cropper',
+        width,
+        height,
+        scale: 2.5,
+        zoom: 8,
+        cut: {
+          x: (width - 320) / 2,
+          y: (height - 460) / 2,
+          width: 320,
+          height: 380
+        }
+      }
+    }
     
+  },
+  touchStart (e) {
+    this.wecropper.touchStart(e)
+  },
+  touchMove (e) {
+    this.wecropper.touchMove(e)
+  },
+  touchEnd (e) {
+    this.wecropper.touchEnd(e)
+  },
+  getCropperImage () {
+    let that = this;
+    let isLeftDirect = that.data.isLeftDirect;
+    let uploadApi = backApi.uploadApi+token;
+
+    that.wecropper.getCropperImage((src) => {
+      if (src) {
+        if (isLeftDirect) {
+          that.setData({leftImgTemp: src,showLeftDele: true})
+          wx.uploadFile({
+            url: uploadApi,
+            filePath: src,
+            name: 'imageFile',
+            formData:{},
+            success: function(res){
+              let data = JSON.parse(res.data);
+              let status = data.status*1;
+              if (status===200) {
+                console.log(data.data.file_url,'llll')
+                that.setData({optionLtImage: data.data.file_url});
+              } else {
+                Api.wxShowToast('图片上传失败~', 'none', 1400)
+              }
+            }
+          })
+        } else {
+          that.setData({rightImgTemp: src,showRightDele: true})
+          wx.uploadFile({
+            url: uploadApi,
+            filePath: src,
+            name: 'imageFile',
+            formData:{},
+            success: function(res){
+              let data = JSON.parse(res.data);
+              let status = data.status*1;
+              if (status===200) {
+                console.log(data.data.file_url,'llllrrr')
+                that.setData({optionRtImage: data.data.file_url});
+              } else {
+                Api.wxShowToast('图片上传失败~', 'none', 1400)
+              }
+            }
+          })
+        }
+        that.setData({showCropper: false})
+      } else {
+        console.log('获取图片地址失败，请稍后重试')
+      }
+    })
+  },
+  uploadTap () {
+    const self = this
+    console.log(11)
+
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success (res) {
+        const src = res.tempFilePaths[0]
+        //  获取裁剪图片资源后，给data添加src属性及其值
+
+        self.wecropper.pushOrign(src)
+      }
+    })
   },
   onReady () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -86,12 +187,43 @@ Page({
   onLoad: function(option) {
     let that = this;
     tabBar.tabbar("tabBar", 2, that);//0表示第一个tabbar
+    
+    let model = isIphone.model;
+      if (model.indexOf('iPhone') == -1) {
+        that.setData({adjustPosi:true,spacing:140})
+      }
+
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
         that.setData({winHeight: res.windowHeight});
       }
     })
+    const { cropperOpt } = that.data.cropperData;
+
+    new WeCropper(cropperOpt)
+      .on('ready', (ctx) => {
+        console.log(`wecropper is ready for work!`)
+      })
+      .on('beforeImageLoad', (ctx) => {
+        console.log(`before picture loaded, i can do something`)
+        console.log(`current canvas context:`, ctx)
+        wx.showToast({
+          title: '上传中',
+          icon: 'loading',
+          duration: 20000
+        })
+      })
+      .on('imageLoad', (ctx) => {
+        console.log(`picture loaded`)
+        console.log(`current canvas context:`, ctx)
+        wx.hideToast()
+      })
+      .on('beforeDraw', (ctx, instance) => {
+        console.log(`before canvas draw,i can do something`)
+        console.log(`current canvas context:`, ctx)
+      })
+      .updateCanvas()
   },
   onShow () {
     let that = this;
@@ -109,13 +241,14 @@ Page({
           uavatar: userInfo.avatarUrl
         })
         downLoadImg(userInfo.avatarUrl, 'headerUrl');
+        let myInfo = backApi.myInfo+token;
+        Api.wxRequest(myInfo,'GET',{},(res)=>{
+          if (res.data.status*1===200) {
+            myPoint = res.data.data.points;
+            ImgLock = res.data.data.release_img_lock*1;
+          }
+        })
       }
-      let myInfo = backApi.myInfo+token;
-      Api.wxRequest(myInfo,'GET',{},(res)=>{
-        if (res.data.status*1===200) {
-          myPoint = res.data.data.points;
-        }
-      })
     }, 200)
   },
   textFocus () {
@@ -167,6 +300,8 @@ Page({
     let val = e.detail.value;
     let direct = e.target.dataset.direct;
     let chineseReg = /[\u4E00-\u9FA5]/g;
+    let leftImg = that.data.optionLtImage;
+    let rightImg = that.data.optionRtImage;
 
     if (direct === 'title') {
       if (val && val !== '点击输入标题') {
@@ -174,6 +309,9 @@ Page({
           titleText: val,
           shareTitle: val
         })
+        if (leftImg && rightImg) {
+          that.setData({isPublish: true})
+        }
       }
       
       if (val.length>=30) {
@@ -211,17 +349,17 @@ Page({
   chooseImg (e) {
     let that = this;
     let imgopt = e.currentTarget.dataset.imgopt;
-    let uploadApi = backApi.uploadApi+token;
-    // let uploadApi = backApi.uploadApi;
     
     wx.chooseImage({
       sizeType: ['compressed'],
       success: function(res) {
         var tempFilePaths = res.tempFilePaths;
+        that.setData({showCropper: true});
+        that.wecropper.pushOrign(tempFilePaths[0]);
         if (imgopt==='left') {
-          that.setData({leftImgTemp: tempFilePaths,showLeftDele: true})
+          that.setData({isLeftDirect:true})
         } else {
-          that.setData({rightImgTemp: tempFilePaths,showRightDele: true})
+          that.setData({rightImgTemp: tempFilePaths,showRightDele: true,isLeftDirect:false})
         }
         if (that.data.leftImgTemp && that.data.rightImgTemp) {
           that.setData({
@@ -232,28 +370,7 @@ Page({
             isPublish: false
           })
         }
-        wx.uploadFile({
-          url: uploadApi,
-          filePath: tempFilePaths[0],
-          name: 'imageFile',
-          formData:{},
-          success: function(res){
-            console.log(res,'ssss')
-            let data = JSON.parse(res.data);
-            // console.log(data,'aaa')
-            let status = data.status*1;
-            if (status===200) {
-              if (imgopt==='left') {
-                that.setData({optionLtImage: data.data.file_url});
-              } else {
-                that.setData({optionRtImage: data.data.file_url});
-              }
-            } else {
-              Api.wxShowToast('图片上传失败~', 'none', 1400)
-            }
-          }
-        })
-        console.log(that.data.optionLtImage,that.data.optionRtImage,'img')
+        
       }
     })
   },
@@ -264,6 +381,7 @@ Page({
     let txtActive = that.data.txtActive;
     let leftImgTemp = that.data.leftImgTemp;
     let rightImgTemp = that.data.rightImgTemp;
+    
     if (txtActive) { //上传文字
       if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
         let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
@@ -285,7 +403,8 @@ Page({
       let postData = {
         question: that.data.titleText.substring(0,30),
         option1: that.data.leftText.substring(0,36),
-        option2: that.data.rightText.substring(0,36)
+        option2: that.data.rightText.substring(0,36),
+        type: 1
       }
       that.setData({
         btnDis: true
@@ -395,10 +514,13 @@ Page({
         Api.wxShowToast('请上传右边图片', 'none', 2000);
         return false;
       }
+      let leftImg =  that.data.optionLtImage;
+      let rightImg =  that.data.optionRtImage;
       let postData = {
         question: that.data.titleText.substring(0,30),
-        option1: that.data.optionLtImage,
-        option2: that.data.optionLtImage
+        option1: leftImg,
+        option2: rightImg,
+        type: 2
       }
       that.setData({
         btnDis: true
@@ -934,17 +1056,30 @@ Page({
   changeTab (e) {
     let that = this;
     let tab = e.currentTarget.dataset.tab;
+    let titleText = that.data.titleText;
+    let leftImgTemp = that.data.leftImgTemp;
+    let rightImgTemp = that.data.rightImgTemp;
     if (tab==='text') {
       that.setData({txtActive:true})
-      if (that.data.titleText === '点击输入标题' || that.data.leftText === '' || that.data.rightText === '') {
+      if (titleText === '点击输入标题' || that.data.leftText === '' || that.data.rightText === '') {
         that.setData({isPublish:false})
+      } else {
+        that.setData({isPublish:true})
       }
 
     } else {
-      that.setData({txtActive:false})
-      if (that.data.titleText === '点击输入标题' || that.data.leftImgTemp === '' || that.data.rightImgTemp === '') {
-        that.setData({isPublish:false})
+      if (ImgLock===1) {
+        Api.wxShowToast("发布文字选项获得3人投票可解锁图片选项", 'none', 2200)
       }
+      if (ImgLock===2) {
+        that.setData({txtActive:false})
+        if (titleText === '点击输入标题' || leftImgTemp === '' || rightImgTemp === '') {
+          that.setData({isPublish:false})
+        } else {
+          that.setData({isPublish:true})
+        }
+      }
+      
     }
   },
   // 删除图片

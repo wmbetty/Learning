@@ -1,4 +1,5 @@
 //app.js
+var aldstat = require("utils/ald-stat.js");
 const Api = require('wxapi/wxApi');
 const backApi = require('utils/util');
 let voteUnreadApi = ''

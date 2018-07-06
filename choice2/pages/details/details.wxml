@@ -26,35 +26,41 @@
                 <text>{{details.hots}}</text>
             </view>
             <view class="percent-text dark-red-font" wx:if="{{ismyVoted}}">{{details.choose2_per || 0}}%</view>
+            <image wx:if="{{isLeft}}" src="{{myAvatar || '../../images/avatarDefault.png'}}" class="votor-avatar my-avatar" />
+            <image wx:if="{{isLeft}}" src="../../images/posterArrow.png" class="votor-arrow down-arrow" />
+            <image wx:if="{{isRight}}" src="{{myAvatar || '../../images/avatarDefault.png'}}" class="votor-avatar my-avatar-right" />
+            <image wx:if="{{isRight}}" src="../../images/posterArrow.png" class="votor-arrow my-arrow-right" />
         </view>
         <view class="choice-box">
             <view class="choice-item-container">
-                <view class="{{ismyVoted?'choice-item left-choice-item green-bg':'choice-item left-choice-item'}}" data-choose="one" data-details="{{details}}" bindtap="goVote">
-                    <view class="choice-item-cont">
+                <view class="{{details.type===2?'choice-item choice-item-img':'choice-item'}}" data-choose="one" data-details="{{details}}" bindtap="goVote">
+                    <view wx:if="{{details.type===1}}" class="choice-item-cont">
                         {{details.option1 || ''}}
                     </view>
+                    <image class="ques-img" wx:if="{{details.type===2}}" src="{{details.option1}}" />
                     <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose1_per}}%</view>
                 </view>
-                <view class="my-vote-tips">
+                <!-- <view class="my-vote-tips">
                     <view wx:if="{{isLeft}}">
                         <text class="red-dot"></text>
                         <text>我的选择</text>
                     </view>
-                </view>
+                </view> -->
             </view>
             <view class="choice-item-container">
-                <view class="{{ismyVoted?'choice-item right-choice-item dark-redbg':'choice-item right-choice-item'}}" data-choose="two" data-details="{{details}}" bindtap="goVote">
-                    <view class="choice-item-cont">
+                <view class="{{details.type===2?'choice-item choice-item-img':'choice-item'}}" data-choose="two" data-details="{{details}}" bindtap="goVote">
+                    <view wx:if="{{details.type===1}}" class="choice-item-cont">
                         {{details.option2 || ''}}
                     </view>
+                    <image class="ques-img" wx:if="{{details.type===2}}" src="{{details.option2}}" />
                     <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose2_per}}%</view>
                 </view>
-                <view class="my-vote-tips">
+                <!-- <view class="my-vote-tips">
                     <view wx:if="{{isRight}}">
                         <text class="red-dot"></text>
                         <text>我的选择</text>
                     </view>
-                </view>
+                </view> -->
             </view>
         </view>
     </view>

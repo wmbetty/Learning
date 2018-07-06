@@ -42,6 +42,8 @@ const shareFriends = `${http}v1/share/share-friend`
 const shareMoment = `${http}v1/share/share-circle?access-token=`
 const posterApi = `${http}v1/questions/share-code?access-token=`
 const uploadApi = `${http}v1/questions/upload-images?access-token=`
+const userBaseApi = `${http}v1/basis/user-basis?access-token=`
+const showBaseApi = `${http}v1/member/show-basis?access-token=`
 // const uploadApi = `${http}v1/questions/upload-images`
 
 module.exports = {
@@ -72,5 +74,7 @@ module.exports = {
   shareFriends: shareFriends,
   shareMoment: shareMoment,
   posterApi: posterApi,
-  uploadApi: uploadApi
+  uploadApi: uploadApi,
+  userBaseApi: userBaseApi,
+  showBaseApi: showBaseApi
 }

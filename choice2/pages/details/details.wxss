@@ -14,7 +14,7 @@ page{
     width: 72rpx;height: 72rpx;margin-right: 20rpx;
 }
 .m-avatar{
-    display: block;width: 100%;height: 100%;border-radius: 50%;
+    display: block;width: 100%;height: 100%;border-radius: 50%;border: 1px solid #eee;
 }
 .user-infos{
     padding-top: 12rpx;
@@ -68,6 +68,28 @@ page{
 }
 .total-showPer{
     justify-content: space-between;
+    position: relative;
+}
+.votor-avatar{
+    position: absolute;top: 12rpx;
+    width: 42rpx;height: 42rpx;border-radius: 50%;
+    border: 1px solid #eee;
+}
+.my-avatar{
+    left: 42rpx;
+}
+.my-avatar-right{
+    right: 42rpx;
+}
+.votor-arrow{
+    position: absolute;top: 62rpx;
+    width: 20rpx;height: 12rpx;
+}
+.down-arrow{
+    left: 55rpx;
+}
+.my-arrow-right{
+    right: 56rpx;
 }
 .percent-text{font-size: 52rpx;}
 .green-font{color: #11B591;}
@@ -75,13 +97,16 @@ page{
 .choice-box{padding: 40rpx 30rpx 0;display: flex;}
 .choice-item{
     width: 336rpx;height: 320rpx;position: relative;
+    border: 1px solid #f1f1f1;
 }
+.choice-item-img{height: 376rpx;}
 .choice-item-cont{
     width: 280rpx;height: 180rpx;
     padding-top: 70rpx;
     margin: 0 auto;
     display: flex;justify-content: center;align-items: center;
 }
+.ques-img{width: 100%;height: 100%;}
 .left-choice-item{margin-right: 20rpx;background: #fff;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);}
 .right-choice-item{background: #fff;box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);}
 .green-bg{background: #11B591;box-shadow: none;color: #fff;}

@@ -160,7 +160,7 @@ Page({
             // Api.wxShowToast('网络出错了', 'none', 2000);
           }
         })
-      }, 5000)
+      }, 8000)
 
     } else {
       that.setData({

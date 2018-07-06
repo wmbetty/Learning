@@ -32,7 +32,8 @@ Page({
     hasVoted: false,
     qrcodeImg: '',
     showPosterView: false,
-    viewWidth: 0
+    viewWidth: 0,
+    myAvatar: ''
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -170,8 +171,9 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
+    // console.log(userInfo, '000')
     if (userInfo.language) {
-      
+      that.setData({myAvatar: userInfo.avatarUrl})
     } else {
       that.setData({
         showDialog: true

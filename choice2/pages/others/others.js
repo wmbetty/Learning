@@ -35,12 +35,11 @@ Page({
         console.log(res, 'sssss')
         let datas = res.data.data;
         // console.log(datas, 'dssss')
-        if (datas.avatar) {
+        if (datas.id) {
           that.setData({
             userInfo: datas
           })
           Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
-            console.log(res, 'sssss')
             if (res.data.status*1===200 && res.data.data.length) {
               let myPublish = res.data.data;
               let totalPage = res.header['X-Pagination-Page-Count'];
