@@ -2,7 +2,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 
 Page({
   data: {
@@ -12,16 +12,18 @@ Page({
     mobile: '',
     content: '',
     contVal: '',
-    submitDis: false
+    submitDis: false,
+    token: ''
   },
   onLoad: function (options) {
-    let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-    },200)
     wx.setNavigationBarColor({
       frontColor:'#000000',
        backgroundColor:'#F5F6F8'
+    });
+    let that = this;
+    backApi.getToken().then(function(response) {
+      let token = response;
+      that.setData({token: token});
     })
   },
   onReady: function () {},
@@ -84,6 +86,7 @@ Page({
   submitAdvice () {
     let that = this;
     let textNum = this.data.textNum;
+    let token = that.data.token;
     let feedApi = backApi.feedback+token;
     let feedData = {
       content: that.data.content,

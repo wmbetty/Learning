@@ -95,6 +95,14 @@ page{background: #F5F6F8;position: relative;}
 .choose-item-img{
   display: block;width: 100%;height: 100%;
 }
+.delay-img{
+  filter: blur(10px);width: 100%;height: 100%;
+  position: absolute;left: 0;top: 0;
+}
+.hexie-img{
+  width: 100%;height: 100%;
+  position: absolute;left: 0;top: 0;
+}
 .vote-mask{
     transition: all 0.5s ease-in;
     position: absolute;left: 0;top:0;width: 100%;height: 100%;background: rgba(0,0,0, 0.4);color: #fff;
@@ -270,8 +278,157 @@ width: 100%;height: 240rpx;
 .list-hover{
   background: #ededed;
 }
+.voted-thumb-box{
+  width: 440rpx;height: 440rpx;
+  position: absolute;left: 23%;top: 160px;
+  /* display: flex; */
+  /* margin-left: -220rpx;margin-top: -220rpx; */
 
-.myCanvas{
+  /* background: red; */
+}
+.thumb1{
+  width: 268rpx;height: 266rpx;
+  position: absolute;left: 19%;top:24%;opacity: 0;
+  animation: thumb1 1s;
+}
+.thumb2{
+  width: 268rpx;height: 266rpx;
+  position: absolute;left: 18%;top:21%;
+  /* opacity: 0; */
+  animation: thumb2 1s ease-out;opacity: 1;
+  z-index: 15;
+}
+@keyframes thumb1{
+  50% {
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+@keyframes thumb2{
+  50% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100%{
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+.dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  left: 105px;
+  top: 108px;
+  /* border: 1px solid #E74C49; */
+  border-radius: 50%;
+  background: transparent;
+  /* background-color:#E74C49; 实心圆 ，如果没有这个就是一个小圆圈 */
+  z-index: 12;
+  }
+  /* 产生动画（向外扩散变大）的圆圈 第一个圆 */
+  .pulse {
+  position: absolute;
+  width: 220rpx;
+  height: 220rpx;
+  left: 48px;
+  top: 50px;
+  border: 3px solid #E74C49;
+  border-radius: 50%;
+  z-index: 14;
+  opacity: 0;
+  animation: warn 1.4s ease-out;
+  /* box-shadow: 1px 1px 30px #E74C49;  */
+  
+  }
+  /* 产生动画（向外扩散变大）的圆圈 第二个圆 */
+  .pulse1 {
+  position: absolute;
+  width: 360rpx;
+  height: 360rpx;
+  left: 14px;
+  top: 14px;
+  border: 3px solid #E74C49;
+  border-radius: 50%;
+  z-index: 11;
+  opacity: 0;
+  animation: warn1 1s ease-out;
+  animation-delay: 1.8s;
+  /* animation-iteration-count: infinite; */
+  }
+  .pulse2{
+    position: absolute;
+    width: 400rpx;
+    height: 400rpx;
+    left: 8px;
+    top: 8px;
+    border: 3px solid #E74C49;
+    border-radius: 50%;
+    z-index: 11;
+    opacity: 0;
+    animation: warn1 1s ease-out;
+    animation-delay: 2s;
+    /* animation-iteration-count: infinite; */
+  }
+
+  @keyframes warn {
+    /* 0% {
+    transform: scale(0.3);
+    opacity: 0.0;
+    }
+    
+    25% {
+    transform: scale(0.3);
+    opacity: 0.4;
+    } */
+    
+    50% {
+    transform: scale(0.5);
+    opacity: 1;
+    }
+    
+    75% {
+    transform: scale(0.8);
+    opacity: 1;
+    }
+    
+    100% {
+    transform: scale(1);
+    opacity: 1;
+    }
+    }
+    
+    @keyframes warn1 {
+    /* 0% {
+    transform: scale(0.3);
+    opacity: 0.0;
+    }
+    
+    25% {
+    transform: scale(0.3);
+    opacity: 0.4;
+    } */
+    
+    50% {
+    transform: scale(0.3);
+    opacity: 1;
+    }
+    
+    75% {
+    transform: scale(0.5);
+    opacity: 1;
+    }
+    
+    100% {
+    transform: scale(0.8);
+    opacity: 1;
+    }
+    }
+
+/* .myCanvas{
   background-color: transparent;
   width: 90px;
   height:400px;
@@ -289,7 +446,7 @@ width: 100%;height: 240rpx;
   position: fixed;z-index: 99;bottom: 58px;
 }
 .left-v-img{right: 68%;}
-.right-v-img{left: 62%;}
+.right-v-img{left: 62%;} */
 
 .bt-img{
   /* position: absolute;z-index: 99; */

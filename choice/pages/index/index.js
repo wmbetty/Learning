@@ -2,7 +2,7 @@ const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 let publishedPoint = '';
 let myPoint = '';
 
@@ -33,7 +33,8 @@ Page({
     qrcode: '',
     titleFocus: false,
     viewWidth: 0,
-    pagePad: false
+    pagePad: false,
+    token: ''
     
   },
   onReady () {
@@ -52,6 +53,7 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let token = that.data.token;
     let userInfoApi = backApi.userInfo+token;
     that.setData({
       showDialog: false
@@ -88,28 +90,34 @@ Page({
   },
   onShow () {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-      let userInfo = wx.getStorageSync('userInfo');
-      // console.log(userInfo, 'uuu1111')
-      if (!userInfo.language) {
+    let userInfo = wx.getStorageSync('userInfo');
+    console.log(userInfo,'index userinfo')
+    if (!userInfo.language) {
+      backApi.getToken().then(function(response) {
+        let token = response;
         that.setData({
           showDialog: true,
           hasUserInfo: false,
+          token: token
         })
-      } else {
-        that.setData({
-          uavatar: userInfo.avatarUrl
-        })
-        downLoadImg(userInfo.avatarUrl, 'headerUrl');
-      }
-      let myInfo = backApi.myInfo+token;
-      Api.wxRequest(myInfo,'GET',{},(res)=>{
-        if (res.data.status*1===200) {
-          myPoint = res.data.data.points;
-        }
       })
-    }, 200)
+
+    } else {
+      that.setData({
+        uavatar: userInfo.avatarUrl
+      })
+      downLoadImg(userInfo.avatarUrl, 'headerUrl');
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token:token});
+        let myInfo = backApi.myInfo+token;
+        Api.wxRequest(myInfo,'GET',{},(res)=>{
+          if (res.data.status*1===200) {
+            myPoint = res.data.data.points;
+          }
+        })
+      })
+    }
   },
   textFocus () {
     let that =this;
@@ -210,6 +218,7 @@ Page({
     
     let publishApi = backApi.publishApi;
     let that = this;
+    let token = that.data.token;
     if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
       let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
       return false;
@@ -231,6 +240,8 @@ Page({
       question: that.data.titleText.substring(0,30),
       option1: that.data.leftText.substring(0,36),
       option2: that.data.rightText.substring(0,36)
+      // ,
+      // type: 1
     }
     that.setData({
       btnDis: true
@@ -275,7 +286,6 @@ Page({
       }
       if (status === 201) {
         publishedPoint = res.data.data.member.points;
-        // console.log(publishedPoint,myPoint,'pointttt')
         wx.hideLoading();
         if (publishedPoint===myPoint) {
           Api.wxShowToast('发布成功', 'success', 2000);
@@ -377,15 +387,13 @@ Page({
         url: `/pages/mine/mine`
       })
     },50)
-    // wx.navigateTo({
-    //   url: `/pages/details/details?id=${this.data.qid}`
-    // })
   },
   onShareAppMessage () {
     let that = this;
     let questId = that.data.qid;
+    let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
-    // console.log(questId, 'ddd')
+
     return {
       title: that.data.shareTitle,
       path: `/pages/main/main?qid=${questId}`,
@@ -440,6 +448,7 @@ Page({
       icon: 'loading',
       duration: 1500
     });
+    let token = that.data.token;
     let posterApi = backApi.posterApi+token;
             let postData = {
               page:`pages/details/details`,
@@ -477,28 +486,8 @@ Page({
     context.setFillStyle("#ffffff")
     context.fillRect(0, 0, 375, 667)
     var path = "../../images/posterBg.png";
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    //不知道是什么原因，手机环境能正常显示
-    // downLoadImg(that.data.details.member.avatar, 'headerUrl');
     context.drawImage(path, 0, 0, 375, 154);
-    
-    // console.log(path1,"path1")
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    // var path2 = "/images/tx_bg.jpg";
     var path3 = "/images/my_bg.jpg";
-    // var path4 = "/images/bg.png";
-    // var path5 = "/images/empty_img.png";
-    // context.drawImage(path2, 126, 186, 120, 120);
-    //不知道是什么原因，手机环境能正常显示
-    // context.save(); // 保存当前context的状态
-
-    // var name = that.data.name;
-    //绘制名字
-    // context.setFontSize(24);
-    // context.setFillStyle('#333333');
-    // context.setTextAlign('center');
-    // context.fillText(that.data.nickname||'', 185, 340);
-    // context.stroke();
     //绘制一起吃面标语
     if (chineseReg.test(shareQues)) {
       if (shareQues.match(chineseReg).length <= 13) {  //返回中文的个数
@@ -560,37 +549,11 @@ Page({
       context.stroke();
       }
     }
-    
-    // //绘制验证码背景
-    // context.drawImage(path3, 48, 390, 280, 84);
-    // //绘制code码
-    // context.setFontSize(40);
-    // context.setFillStyle('#ffe200');
-    // context.setTextAlign('center');
-    // context.fillText('呵呵', 185, 435);
-    // context.stroke();
-    //绘制左下角文字背景图
-    // context.drawImage(path4, 25, 520, 184, 82);
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("有选象，不纠结", 60, 540);
-    // context.stroke();
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("扫码给ta你的建议～", 60, 568);
-    // context.stroke();
     context.setFontSize(14);
       context.setFillStyle('#888888');
         context.setTextAlign('center');
         context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
         context.stroke();
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("优惠券1张哦~", 35, 580);
-    // context.stroke();
     //绘制右下角扫码提示语
     context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
     let path1 = wx.getStorageSync('headerUrl');
@@ -627,6 +590,8 @@ Page({
       icon: 'loading',
       duration: 3000
     });
+    let that = this;
+    let token = that.data.token;
     setTimeout(()=>{
       if (!this.data.imagePath){
         wx.showModal({
@@ -636,7 +601,7 @@ Page({
         })
       }
       wx.saveImageToPhotosAlbum({
-        filePath: this.data.imagePath,
+        filePath: that.data.imagePath,
         success:(res)=>{
           let shareMoment = backApi.shareMoment+token;
           Api.wxRequest(shareMoment,'POST',{},(res)=>{
@@ -649,12 +614,10 @@ Page({
             }
           })
           // Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
-          this.setData({
+          that.setData({
             maskHidden: false
           })
           setTimeout(()=> {
-            // wx.removeStorageSync('headerUrl');
-            // wx.removeStorageSync('qrcodeImg');
             wx.navigateBack({
               delta: 1
             })
@@ -697,21 +660,6 @@ Page({
       })
     }, 1800)
   },
-  //点击生成
-  // formSubmit: function (e) {
-  //   var that = this;
-  //   that.setData({
-  //     maskHidden: false
-  //   });
-    
-  //   setTimeout(function () {
-  //     wx.hideToast()
-  //     that.shareToMoment();
-  //     that.setData({
-  //       maskHidden: true
-  //     });
-  //   }, 1000)
-  // },
   textBlur (e) {
     let that = this;
     let title = that.data.titleText;
@@ -784,27 +732,6 @@ Page({
         pagePad: false
       })
     }
-    // console.log(e, 'blur')
-    // let direct = e.currentTarget.dataset.direct;
-    // let val = e.detail.value;
-    // if (direct === 'title' && val === '') {
-    //   that.setData({
-    //     titleText: '点击输入标题',
-    //     showTextarea: false
-    //   })
-    // }
-    // if (direct === 'left' && val === '') {
-    //   that.setData({
-    //     leftHolder: '点击输入左选项',
-    //     showLeft: false
-    //   })
-    // }
-    // if (direct === 'right' && val === '') {
-    //   that.setData({
-    //     rightHolder: '点击输入右选项',
-    //     showRight: false
-    //   })
-    // }
   }
 });
 

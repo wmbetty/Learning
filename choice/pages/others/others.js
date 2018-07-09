@@ -1,8 +1,8 @@
 // pages/others/others.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-let token = '';
+// const app = getApp();
+// let token = '';
 
 Page({
 
@@ -16,7 +16,8 @@ Page({
     totalPage: '',
     currPage: '',
     viewHeight: 0,
-    mid: ''
+    mid: '',
+    token: ''
   
   },
 
@@ -25,22 +26,19 @@ Page({
    */
   onLoad: function (options) {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
+    backApi.getToken().then(function(response) {
+      let token = response;
       let infoApi = backApi.othersInfo+token;
       let otherPublishQues = backApi.otherPublishQues+token;
       let mid = options.mid;
-      that.setData({mid:mid});
+      that.setData({mid:mid,token:token});
       Api.wxRequest(infoApi,'GET',{mid:mid},(res)=> {
-        console.log(res, 'sssss')
         let datas = res.data.data;
-        // console.log(datas, 'dssss')
-        if (datas.avatar) {
+        if (datas.id) {
           that.setData({
             userInfo: datas
-          })
+          });
           Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
-            console.log(res, 'sssss')
             if (res.data.status*1===200 && res.data.data.length) {
               let myPublish = res.data.data;
               let totalPage = res.header['X-Pagination-Page-Count'];
@@ -50,27 +48,18 @@ Page({
                 totalPage: totalPage,
                 currPage: currPage,
                 totalCount: totalCount,
-                myPublish: res.data.data
+                myPublish: myPublish
               })
             }
-            // let datas = res.data.data;
-            // console.log(datas, 'dssss')
-            // if (datas.id) {
-            
-            // } else {
-            //   Api.wxShowToast('获取信息失败', 'none', 2000);
-            // }
           })
         } else {
           Api.wxShowToast('获取信息失败', 'none', 2000);
         }
       })
-      
-    }, 1000)
+    })
   },
   // 详情
   gotoDetail (e) {
-    // console.log(e, 'idd')
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
       url: `/pages/details/details?id=${id}`
@@ -79,7 +68,6 @@ Page({
 
 
   onPageScroll (e) {
-    // console.log(e,this.data.viewHeight/3, 'eeee')
     if (e.scrollTop*1>=this.data.viewHeight/3) {
       wx.setNavigationBarColor({
         frontColor:'#ffffff',
@@ -141,10 +129,10 @@ Page({
     let that = this;
     let currPage = that.data.currPage*1+1;
     let myPublish = that.data.myPublish;
+    let token = that.data.token;
     let otherPublishQues = backApi.otherPublishQues+token;
     let totalPage = that.data.totalPage*1;
     let mid = that.data.mid;
-    console.log(currPage,totalPage)
     if (totalPage>1 && currPage <= totalPage) {
       Api.wxRequest(otherPublishQues, 'GET', {page:currPage,mid:mid}, (res)=> {
         if (res.data.status*1 === 200) {

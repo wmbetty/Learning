@@ -2,8 +2,8 @@
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-let token = '';
+// const app = getApp();
+// let token = '';
 
 Page({
 
@@ -16,7 +16,8 @@ Page({
     noticeUnreadCount: 0,
     showDialog: false,
     msgCount: 0,
-    viewHeight: 0
+    viewHeight: 0,
+    token: ''
   
   },
   cancelDialog () {
@@ -27,6 +28,7 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let token = that.data.token;
     let userInfoApi = backApi.userInfo+token;
     that.setData({
       showDialog: false
@@ -62,17 +64,19 @@ Page({
   },
   onShow: function () {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-      let voteUnreadApi = backApi.voteUnreadApi+token;
-      let noticeUnreadApi = backApi.noticeUnreadApi+token;
-      let userInfo = wx.getStorageSync('userInfo');
-      
-      if (!userInfo.language) {
-        that.setData({
-          showDialog: true
-        })
-      } else {
+    let userInfo = wx.getStorageSync('userInfo');
+
+    if (!userInfo.language) {
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token,showDialog: true});
+      })
+    } else {
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token});
+        let voteUnreadApi = backApi.voteUnreadApi+token;
+        let noticeUnreadApi = backApi.noticeUnreadApi+token;
         wx.setStorageSync('msgTotal', 0);
         wx.setStorageSync('voteUnreadCount', 0);
         Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
@@ -87,8 +91,8 @@ Page({
             noticeUnreadCount:ncount
           })
         })
-      }
-    }, 1000)
+      })
+    }
     
   },
   onHide: function () {},

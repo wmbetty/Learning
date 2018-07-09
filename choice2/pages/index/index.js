@@ -3,7 +3,7 @@ import WeCropper from '../../components/we-cropper/we-cropper.js'
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 let publishedPoint = '';
 let myPoint = '';
 let ImgLock = '';
@@ -51,7 +51,10 @@ Page({
     optionRtImage: '',
     showCropper: false,
     adjustPosi: false,
+    token: '',
     spacing: 0,
+    openType: 'getUserInfo',
+    authInfo: '需要微信授权登录才能更多操作哦',
     cropperData: {
       cropperOpt: {
         id: 'cropper',
@@ -80,6 +83,7 @@ Page({
   },
   getCropperImage () {
     let that = this;
+    let token = that.data.token;
     let isLeftDirect = that.data.isLeftDirect;
     let uploadApi = backApi.uploadApi+token;
 
@@ -160,29 +164,41 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let token = that.data.token;
+    let openType = that.data.openType;
     let userInfoApi = backApi.userInfo+token;
     that.setData({
       showDialog: false
     });
-    wx.getUserInfo({
-      success: (res)=>{
-        let userInfo = res.userInfo;
-        if (userInfo.nickName) {
-          that.setData({
-            uavatar: userInfo.avatarUrl,
-            nickname: userInfo.nickName
-          })
-          wx.setStorageSync('userInfo', userInfo);
-          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            if (res.data.status*1===200) {
-              that.setData({
-                hasUserInfo: true
-              })
+    if (openType==='getUserInfo') {
+      wx.getUserInfo({
+        success: (res)=>{
+          let userInfo = res.userInfo;
+          if (userInfo.nickName) {
+            wx.setStorageSync('userInfo', userInfo);
+            that.setData({
+              uavatar: userInfo.avatarUrl,
+              hasUserInfo: true
+            })
+            Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+              console.log(res.data.status, 'index update-user')
+            })
+          }
+        },
+        fail: (res)=>{
+          wx.openSetting({
+            success(settingdata) {
+              if (settingdata.authSetting["scope.userInfo"]) {
+                Api.wxShowToast("获取权限成功")
+              } else {
+                Api.wxShowToast("获取权限失败")
+              }
             }
           })
         }
-      }
-    })
+      })
+    } else {
+    }
   },
   onLoad: function(option) {
     let that = this;
@@ -227,20 +243,25 @@ Page({
   },
   onShow () {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-      let userInfo = wx.getStorageSync('userInfo');
-      // console.log(userInfo, 'uuu1111')
-      if (!userInfo.language) {
+    let userInfo = wx.getStorageSync('userInfo');
+    if (!userInfo.language) {
+      backApi.getToken().then(function(response) {
+        let token = response;
         that.setData({
           showDialog: true,
           hasUserInfo: false,
+          token: token
         })
-      } else {
-        that.setData({
-          uavatar: userInfo.avatarUrl
-        })
-        downLoadImg(userInfo.avatarUrl, 'headerUrl');
+      })
+
+    } else {
+      that.setData({
+        uavatar: userInfo.avatarUrl
+      });
+      downLoadImg(userInfo.avatarUrl, 'headerUrl');
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token});
         let myInfo = backApi.myInfo+token;
         Api.wxRequest(myInfo,'GET',{},(res)=>{
           if (res.data.status*1===200) {
@@ -248,13 +269,12 @@ Page({
             ImgLock = res.data.data.release_img_lock*1;
           }
         })
-      }
-    }, 200)
+      })
+    }
   },
   textFocus () {
     let that =this;
     let title = that.data.titleText;
-    // console.log(title, 'eeee')
     if (title === '点击输入标题') {
       that.setData({
         showTextarea: true,
@@ -335,7 +355,7 @@ Page({
       }
     }
     // 发布按钮样式
-    if (that.data.titleText !== '' && that.data.leftText !== '' && that.data.rightText !== '') {
+    if (that.data.titleText !== '点击输入标题' && that.data.leftText !== '' && that.data.rightText !== '') {
       that.setData({
         isPublish: true
       })
@@ -381,6 +401,7 @@ Page({
     let txtActive = that.data.txtActive;
     let leftImgTemp = that.data.leftImgTemp;
     let rightImgTemp = that.data.rightImgTemp;
+    let token = that.data.token;
     
     if (txtActive) { //上传文字
       if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
@@ -408,7 +429,8 @@ Page({
       }
       that.setData({
         btnDis: true
-      })
+      });
+
       Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
         that.setData({
           isPublish: false
@@ -623,16 +645,13 @@ Page({
       wx.reLaunch({
         url: `/pages/mine/mine`
       })
-    },50)
-    // wx.navigateTo({
-    //   url: `/pages/details/details?id=${this.data.qid}`
-    // })
+    },100)
   },
   onShareAppMessage () {
     let that = this;
     let questId = that.data.qid;
+    let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
-    // console.log(questId, 'ddd')
     return {
       title: that.data.shareTitle,
       path: `/pages/main/main?qid=${questId}`,
@@ -687,6 +706,7 @@ Page({
       icon: 'loading',
       duration: 1500
     });
+    let token = this.data.token;
     let posterApi = backApi.posterApi+token;
             let postData = {
               page:`pages/details/details`,
@@ -724,28 +744,9 @@ Page({
     context.setFillStyle("#ffffff")
     context.fillRect(0, 0, 375, 667)
     var path = "../../images/posterBg.png";
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    //不知道是什么原因，手机环境能正常显示
-    // downLoadImg(that.data.details.member.avatar, 'headerUrl');
     context.drawImage(path, 0, 0, 375, 154);
-    
-    // console.log(path1,"path1")
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    // var path2 = "/images/tx_bg.jpg";
-    var path3 = "/images/my_bg.jpg";
-    // var path4 = "/images/bg.png";
-    // var path5 = "/images/empty_img.png";
-    // context.drawImage(path2, 126, 186, 120, 120);
-    //不知道是什么原因，手机环境能正常显示
-    // context.save(); // 保存当前context的状态
 
-    // var name = that.data.name;
-    //绘制名字
-    // context.setFontSize(24);
-    // context.setFillStyle('#333333');
-    // context.setTextAlign('center');
-    // context.fillText(that.data.nickname||'', 185, 340);
-    // context.stroke();
+    var path3 = "/images/my_bg.jpg";
     //绘制一起吃面标语
     if (chineseReg.test(shareQues)) {
       if (shareQues.match(chineseReg).length <= 13) {  //返回中文的个数
@@ -807,37 +808,11 @@ Page({
       context.stroke();
       }
     }
-    
-    // //绘制验证码背景
-    // context.drawImage(path3, 48, 390, 280, 84);
-    // //绘制code码
-    // context.setFontSize(40);
-    // context.setFillStyle('#ffe200');
-    // context.setTextAlign('center');
-    // context.fillText('呵呵', 185, 435);
-    // context.stroke();
-    //绘制左下角文字背景图
-    // context.drawImage(path4, 25, 520, 184, 82);
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("有选象，不纠结", 60, 540);
-    // context.stroke();
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("扫码给ta你的建议～", 60, 568);
-    // context.stroke();
     context.setFontSize(14);
       context.setFillStyle('#888888');
         context.setTextAlign('center');
         context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
         context.stroke();
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("优惠券1张哦~", 35, 580);
-    // context.stroke();
     //绘制右下角扫码提示语
     context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
     let path1 = wx.getStorageSync('headerUrl');
@@ -874,8 +849,10 @@ Page({
       icon: 'loading',
       duration: 3000
     });
+    let that = this;
+    let token = this.data.token;
     setTimeout(()=>{
-      if (!this.data.imagePath){
+      if (!that.data.imagePath){
         wx.showModal({
           title: '提示',
           content: '图片绘制中，请稍后重试',
@@ -883,58 +860,35 @@ Page({
         })
       }
       wx.saveImageToPhotosAlbum({
-        filePath: this.data.imagePath,
+        filePath: that.data.imagePath,
         success:(res)=>{
           let shareMoment = backApi.shareMoment+token;
           Api.wxRequest(shareMoment,'POST',{},(res)=>{
             let points = res.data.data.points || 0;
             if (points) {
-              // that.setData({showScore:true})
               Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
             } else {
               Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
             }
           })
-          // Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
-          this.setData({
+          that.setData({
             maskHidden: false
-          })
-          setTimeout(()=> {
-            // wx.removeStorageSync('headerUrl');
-            // wx.removeStorageSync('qrcodeImg');
-            wx.navigateBack({
-              delta: 1
-            })
-          }, 3200)
+          });
         },
         fail:(err)=>{
-          if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-            wx.openSetting({
-              success(settingdata) {
-                console.log(settingdata)
-                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                     } else {
-                      Api.wxShowToast("获取权限失败")
-                     }
-              }
-            }) 
-          }
-          if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-            wx.openSetting({
-              success(settingdata) {
-                console.log(settingdata)
-                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                     } else {
-                      Api.wxShowToast("获取权限失败")
-                     }
-              }
-            })
-          } 
+          that.setData({
+            showDialog: true,
+            openType: 'openSetting',
+            authInfo: '需要获取相册权限才能保存图片哦'
+          })
         } 
       })
     },3000)
+    setTimeout(()=> {
+      wx.navigateBack({
+        delta: 1
+      })
+    }, 9500)
   },
   
   shareToFriend () {
@@ -944,21 +898,6 @@ Page({
       })
     }, 1800)
   },
-  //点击生成
-  // formSubmit: function (e) {
-  //   var that = this;
-  //   that.setData({
-  //     maskHidden: false
-  //   });
-    
-  //   setTimeout(function () {
-  //     wx.hideToast()
-  //     that.shareToMoment();
-  //     that.setData({
-  //       maskHidden: true
-  //     });
-  //   }, 1000)
-  // },
   textBlur (e) {
     let that = this;
     let title = that.data.titleText;
@@ -1069,13 +1008,14 @@ Page({
 
     } else {
       if (ImgLock===1) {
-        Api.wxShowToast("发布文字选项获得3人投票可解锁图片选项", 'none', 2200)
+        Api.wxShowToast("发文字选项，获3票 解锁发图", 'none', 2200)
       }
       if (ImgLock===2) {
         that.setData({txtActive:false})
         if (titleText === '点击输入标题' || leftImgTemp === '' || rightImgTemp === '') {
           that.setData({isPublish:false})
-        } else {
+        }
+        if ((titleText !== '点击输入标题' || titleText !== '') && leftImgTemp !== '' && rightImgTemp !== '') {
           that.setData({isPublish:true})
         }
       }

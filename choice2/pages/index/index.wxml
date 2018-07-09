@@ -109,4 +109,4 @@
 
 
 <!-- 授权弹窗 -->
-<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog" open-type="{{openType}}" auth-info="{{authInfo}}"></dialog-wxml>

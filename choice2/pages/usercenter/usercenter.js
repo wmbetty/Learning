@@ -2,7 +2,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 
 Page({
 
@@ -13,7 +13,8 @@ Page({
     userBaseInfo: {},
     showDialog: false,
     openType: 'openSetting',
-    authInfo: '需要获取相册权限才能保存图片哦'
+    authInfo: '需要获取相册权限才能保存图片哦',
+    token: ''
   },
   cancelDialog () {
     this.setData({showDialog:false})
@@ -39,21 +40,20 @@ Page({
        backgroundColor:'#F5F6F8'
     })
     let that = this;
-    
-    setTimeout(()=> {
-      token = app.globalData.access_token;
+    backApi.getToken().then(function(response) {
+      let token = response;
+      that.setData({token: token});
       let userBaseApi = backApi.userBaseApi+token;
       Api.wxRequest(userBaseApi,'GET',{},(res)=>{
-        console.log(res,'baseeeee')
+        console.log(res,'watch userbase');
         that.setData({userBaseInfo: res.data.data})
       })
-
-    },80)
+    })
 
   },
   savePhoto () {
     let that = this;
-    let IMG_URL = that.data.userBaseInfo.template_url
+    let IMG_URL = that.data.userBaseInfo.template_url;
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
@@ -97,7 +97,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    wx.setStorageSync('userbase',0);
   },
 
   /**

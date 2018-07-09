@@ -37,6 +37,7 @@
             <view>用户基地</view>
         </view>
         <view class="list-item-side had-pad">
+            <view wx:if="{{showBaseTag}}" class="userbase-tag"></view>
             <!-- <view wx:if="{{noticeUnreadCount*1>0}}" class="{{msgNum*1 >= 10?'msg-num msg-num-wide':'msg-num'}}">{{noticeUnreadCount}}</view> -->
             <!-- <view wx:if="{{noticeUnreadCount*1>=100}}" class="msg-num msg-num-wider">{{noticeUnreadCount*1>999?'999+':noticeUnreadCount}}</view>
             <view wx:if="{{noticeUnreadCount*1<100&&noticeUnreadCount>=1}}" class="msg-num">{{noticeUnreadCount}}</view> -->

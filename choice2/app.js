@@ -7,55 +7,44 @@ App({
   globalData: {
     userInfo: null,
     access_token: '',
-    getUserInfo: null
+    getUserInfo: null,
+    userbase: 1
   },
   onLaunch: function () {
-    // 展示本地存储能力
-    // var logs = wx.getStorageSync('logs') || [];
-    // logs.unshift(Date.now());
-    // wx.setStorageSync('logs', logs);
     
   },
   onShow (options) {
-    let that = this;
-    // var timestamp=new Date().getTime()*3*24*3600;
-    // 登录
-    // wx.login({
-    //   success: function(res) {
-    //     let reqData = {};
-    //     let code = res.code;
-    //     if (code) {
-    //       reqData.code = code;
-    //       Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
-    //         console.log(res, 'apptokenuser')
-    //         let acc_token = res.data.data.access_token;
-    //         // console.log(acc_token, 'token')
-    //         if (acc_token) {
-    //           that.globalData.access_token = acc_token;
-    //           wx.setStorageSync('token', acc_token);
-    //           let userInfo = wx.getStorageSync('userInfo', userInfo);
-    //           // console.log(token, 'oooo')
-    //           let userInfoApi = backApi.userInfo+acc_token
-    //           if (userInfo) {
-    //             let userData = {
-    //               avatarUrl: userInfo.avatarUrl,
-    //               nickName: userInfo.nickName,
-    //               country: userInfo.country,
-    //               city: userInfo.city,
-    //               language: userInfo.language,
-    //               province: userInfo.province,
-    //               gender: userInfo.gender
-    //             }
-    //             Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-    //               console.log(res.data.status, 'sssssssss')
-    //             })
-    //           }
-              
-    //         }
-    //       })
-    //     }
-    //   }
-    // });
+    wx.login({
+      success: function(res) {
+        let reqData = {};
+        let code = res.code;
+        if (code) {
+          reqData.code = code;
+          Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
+            let acc_token = res.data.data.access_token;
+            if (acc_token) {
+              let userInfo = wx.getStorageSync('userInfo', userInfo);
+              let userInfoApi = backApi.userInfo+acc_token;
+              if (userInfo) {
+                let userData = {
+                  avatarUrl: userInfo.avatarUrl,
+                  nickName: userInfo.nickName,
+                  country: userInfo.country,
+                  city: userInfo.city,
+                  language: userInfo.language,
+                  province: userInfo.province,
+                  gender: userInfo.gender
+                };
+                Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+                  console.log(res.data.status, 'app.js update-user')
+                })
+              }
+            }
+          })
+        }
+      }
+    });
+    // 是否是通过分享进入
     let scene = options.scene*1;
     if (scene === 1007 || scene === 1008) {
       let quesid = options.query.qid;
@@ -63,7 +52,7 @@ App({
     } else {
       wx.setStorageSync('quesid', '');
     }
-    
+
     // 判断是否是iPhone手机
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {

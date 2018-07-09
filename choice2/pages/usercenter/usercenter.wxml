@@ -5,12 +5,12 @@
     <image src="../../images/user_base.png" class="main-head" />
     <image class="qrcode-img" src="{{userBaseInfo.qrcode_url}}"/>
     <view class="u-infos">
-        <view>1. 保存二维码，微信识别加选小象</view>
-        <view>2. 选小象邀请进入用户基地群</view>
-        <view>3. 我们一起改变世界</view>
+        <view>1. 保存二维码，微信识别添加小尼</view>
+        <view>2. 发送暗号：简单选择</view>
+        <view>3. 将被邀请进入用户基地群</view>
     </view>
     <view class="scan-info">———— 或搜索微信号 ————</view>
-    <view class="wx-no">{{userBaseInfo.wechat_number}}</view>
+    <text class="wx-no" selectable="{{true}}}">{{userBaseInfo.wechat_number}}</text>
 </view>
 <image src="../../images/save_qrcode_btn.png" class="save-btn" bindtap="savePhoto" />
 

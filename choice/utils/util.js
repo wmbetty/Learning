@@ -1,3 +1,6 @@
+
+const Api = require('../wxapi/wxApi');
+
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -42,6 +45,26 @@ const shareFriends = `${http}v1/share/share-friend`
 const shareMoment = `${http}v1/share/share-circle?access-token=`
 const posterApi = `${http}v1/questions/share-code?access-token=`
 
+
+function getToken(){
+  return new Promise(function(resolve,reject){
+    //ajax...
+    wx.login({
+      success: function(res) {
+        let reqData = {};
+        let code = res.code;
+        if (code) {
+          reqData.code = code;
+          Api.wxRequest(login,'POST',reqData,(res)=>{
+            resolve(res.data.data.access_token)
+          })
+        }
+      }
+    });
+    //如果有错的话就reject
+  })
+}
+
 module.exports = {
   formatTime: formatTime,
   loginApi: login,
@@ -69,5 +92,6 @@ module.exports = {
   deleMyQues: deleMyQues,
   shareFriends: shareFriends,
   shareMoment: shareMoment,
-  posterApi: posterApi
+  posterApi: posterApi,
+  getToken: getToken
 }

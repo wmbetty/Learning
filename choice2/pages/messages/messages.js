@@ -1,9 +1,9 @@
 // pages/messages/messages.js
-// const tabBar = require('../../components/tabBar/tabBar.js');
+const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-let token = '';
+// const app = getApp();
+// let token = '';
 
 Page({
 
@@ -16,8 +16,9 @@ Page({
     noticeUnreadCount: 0,
     showDialog: false,
     msgCount: 0,
-    viewHeight: 0
-  
+    viewHeight: 0,
+    token: ''
+
   },
   cancelDialog () {
     let that = this;
@@ -27,6 +28,7 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let token = that.data.token;
     let userInfoApi = backApi.userInfo+token;
     that.setData({
       showDialog: false
@@ -45,11 +47,11 @@ Page({
   },
   onLoad: function (options) {
     let that = this;
-    // tabBar.tabbar("tabBar", 1, that);
-    
+    tabBar.tabbar("tabBar", 1, that);
+
     wx.setNavigationBarColor({
       frontColor:'#000000',
-       backgroundColor:'#F5F6F8'
+      backgroundColor:'#F5F6F8'
     })
   },
   onReady: function () {
@@ -62,17 +64,19 @@ Page({
   },
   onShow: function () {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
-      let voteUnreadApi = backApi.voteUnreadApi+token;
-      let noticeUnreadApi = backApi.noticeUnreadApi+token;
-      let userInfo = wx.getStorageSync('userInfo');
-      
-      if (!userInfo.language) {
-        that.setData({
-          showDialog: true
-        })
-      } else {
+    let userInfo = wx.getStorageSync('userInfo');
+
+    if (!userInfo.language) {
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token,showDialog: true});
+      })
+    } else {
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token});
+        let voteUnreadApi = backApi.voteUnreadApi+token;
+        let noticeUnreadApi = backApi.noticeUnreadApi+token;
         wx.setStorageSync('msgTotal', 0);
         wx.setStorageSync('voteUnreadCount', 0);
         Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
@@ -87,9 +91,9 @@ Page({
             noticeUnreadCount:ncount
           })
         })
-      }
-    }, 1000)
-    
+      })
+    }
+
   },
   onHide: function () {},
   onUnload: function () {},
@@ -100,7 +104,7 @@ Page({
     // if (e.scrollTop*1>=this.data.viewHeight/3) {
     //   wx.setNavigationBarColor({
     //     frontColor:'#ffffff',
-    //     backgroundColor:'#E64340'  
+    //     backgroundColor:'#E64340'
     //   })
     //   wx.setNavigationBarTitle({
     //     title: "消息"
@@ -108,7 +112,7 @@ Page({
     // } else {
     //   wx.setNavigationBarColor({
     //     frontColor:'#ffffff',
-    //     backgroundColor:'#F5F6F8'  
+    //     backgroundColor:'#F5F6F8'
     //   })
     //   wx.setNavigationBarTitle({
     //     title: ""
@@ -118,52 +122,52 @@ Page({
   gotoVotemsg () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-      
-      if (!userInfo.nickName) {
-        that.setData({
-          showDialog: true
-        })
-      } else {
-        wx.navigateTo({
-          url: '/pages/votemsg/votemsg'
-        })
-        that.setData({
-          voteUnreadCount: 0
-        })
-        wx.setStorageSync('msgTotal', 0);
-      }
+
+    if (!userInfo.nickName) {
+      that.setData({
+        showDialog: true
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/votemsg/votemsg'
+      })
+      that.setData({
+        voteUnreadCount: 0
+      })
+      wx.setStorageSync('msgTotal', 0);
+    }
   },
   gotoNotice () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-      
-      if (!userInfo.nickName) {
-        that.setData({
-          showDialog: true
-        })
-      } else {
-        wx.navigateTo({
-          url: '/pages/sysnotice/sysnotice'
-        })
-        that.setData({
-          noticeUnreadCount: 0
-        })
-      }
-    
+
+    if (!userInfo.nickName) {
+      that.setData({
+        showDialog: true
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/sysnotice/sysnotice'
+      })
+      that.setData({
+        noticeUnreadCount: 0
+      })
+    }
+
   },
   gotoFeed () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-      
-      if (!userInfo.nickName) {
-        that.setData({
-          showDialog: true
-        })
-      } else {
-        wx.navigateTo({
-          url: '/pages/feedback/feedback'
-        })
-      }
+
+    if (!userInfo.nickName) {
+      that.setData({
+        showDialog: true
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/feedback/feedback'
+      })
+    }
   },
   gotoUser () {
     wx.navigateTo({

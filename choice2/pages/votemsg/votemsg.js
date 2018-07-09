@@ -2,7 +2,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 
 Page({
   data: {
@@ -11,12 +11,15 @@ Page({
     voteLists: [],
     noDatas: false,
     totalPage: '',
-    currPage: ''
+    currPage: '',
+    token: ''
   },
   onLoad: function (options) {
     let that = this;
-    setTimeout(()=> {
-      token = app.globalData.access_token;
+    // 获取token
+    backApi.getToken().then(function(response) {
+      let token = response;
+      that.setData({token: token});
       let voteMsgApi = backApi.voteMsg+token;
       wx.showLoading({
         title: '加载中',
@@ -44,28 +47,26 @@ Page({
           }
         }
       })
-      
-    }, 50)
-    wx.setNavigationBarColor({
-      frontColor:'#000000',
-       backgroundColor:'#F5F6F8'
-    })
-    setTimeout(()=>{
       let readVoteApi = backApi.readVoteApi+token;
       Api.wxRequest(readVoteApi,'PUT',{},(res)=> {
         console.log(res.data, 'read');
       })
-    },3000)
+    });
+    wx.setNavigationBarColor({
+      frontColor:'#000000',
+      backgroundColor:'#F5F6F8'
+    })
   },
   onReady: function () {},
   onShow: function () {},
   onHide: function () {
-    
+
   },
   onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
+    let token = that.data.token;
     let currPage = that.data.currPage*1+1;
     let voteLists = that.data.voteLists;
     let voteMsgApi = backApi.voteMsg+token;
@@ -91,7 +92,7 @@ Page({
     // })
     // wx.setNavigationBarColor({
     //   frontColor:'#ffffff',
-    //   backgroundColor:'#E64340'  
+    //   backgroundColor:'#E64340'
     // })
   },
   // 到他人中心
@@ -104,7 +105,6 @@ Page({
   },
   // 详情
   gotoDetail (e) {
-    // console.log(e, 'idd')
     let id = e.currentTarget.dataset.qid;
     let stat = e.currentTarget.dataset.stat;
     if (stat*1===4) {
@@ -115,6 +115,6 @@ Page({
       })
     }
     // let my = e.currentTarget.dataset.my;
-    
+
   }
 })

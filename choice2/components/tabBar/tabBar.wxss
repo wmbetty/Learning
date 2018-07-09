@@ -33,10 +33,10 @@
   .tabBartext{
     color:#E74C49;
   }
-  .msg-box{
+  .my-msg-box{
     position: relative;
   }
-  .msg-red-dot{
-    position: absolute;top:0;right: 68rpx;
+  .my-msg-red-dot{
+    position: absolute;top:0;right: 100rpx;
     width: 20rpx;height: 20rpx;border-radius: 50%;background: #E74C49;
   }

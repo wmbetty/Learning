@@ -3,9 +3,9 @@
 <view class="vote-list-group" wx:if="{{voteLists.length>0}}" wx:for="{{voteLists}}" wx:key="{{index}}">
     <view class="{{item.question.status===4?'vote-list-item delete-bg':'vote-list-item'}}" data-qid="{{item.question.id}}" data-stat="{{item.question.status}}" catchtap="gotoDetail">
         <view class="list-head">
-            <image src="{{item.frommember.avatar}}" class="voter-avatar" data-fromid="{{item.fromid}}" catchtap="gotoOthers"/>
+            <image src="{{item.frommember.avatar||'../../images/avatarDefault.png'}}" class="voter-avatar" data-fromid="{{item.fromid}}" catchtap="gotoOthers"/>
             <view>
-                <view>{{item.frommember.nickname}}</view>
+                <view>{{item.frommember.nickname||'无名氏'}}</view>
                 <view class="time-text">{{item.created_time}}</view>
             </view>
         </view>

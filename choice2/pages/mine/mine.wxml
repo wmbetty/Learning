@@ -97,4 +97,4 @@
 
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 
-<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount}}"/>
+<template is="tabBar" data="{{tabBar:bindData.tabBar,myvotecount,myvotecount}}"/>

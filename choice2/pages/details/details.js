@@ -1,7 +1,7 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-let token = '';
+// let token = '';
 let qid = '';
 
 Page({
@@ -33,7 +33,12 @@ Page({
     qrcodeImg: '',
     showPosterView: false,
     viewWidth: 0,
-    myAvatar: ''
+    myAvatar: '',
+    showHomebtn: false,
+    showThumb: false,
+    token: '',
+    openType: 'getUserInfo',
+    authInfo: '需要微信授权登录才能更多操作哦'
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -54,94 +59,56 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
+    let token = that.data.token;
     let userInfoApi = backApi.userInfo+token;
+    let openType = that.data.openType;
     that.setData({
       showDialog: false
     });
-    wx.getUserInfo({
-      success: (res)=>{
-        let userInfo = res.userInfo;
-        if (userInfo.nickName) {
-          that.setData({
-            uavatar: userInfo.avatarUrl
-          })
-          wx.setStorageSync('userInfo', userInfo);
-          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            if (res.data.status*1===200) {
-              
+    if (openType==='getUserInfo') {
+      wx.getUserInfo({
+        success: (res)=>{
+          let userInfo = res.userInfo;
+          if (userInfo.nickName) {
+            wx.setStorageSync('userInfo', userInfo);
+            Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+              console.log(res.data.status, 'sssssssss')
+            })
+          }
+        },
+        fail: (res)=>{
+          wx.openSetting({
+            success(settingdata) {
+              if (settingdata.authSetting["scope.userInfo"]) {
+                Api.wxShowToast("获取权限成功")
+              } else {
+                Api.wxShowToast("获取权限失败")
+              }
             }
           })
         }
-      }
-    })
+      })
+    } else {
+    }
   },
   onLoad: function (options) {
-    console.log(options, 'sss')
+    let that = this;
     let sec = options.scene || '';
     if (sec) {
       qid = sec;
+      // setTimeout(()=>{
+      //   that.setData({showHomebtn: true})
+      // },2800)
     } else {
       qid = options.id;
     }
     
-    let that = this;
+
     let myTag = options.my;
+    console.log(myTag,'我')
     if (myTag*1===1) {
       that.setData({isMy: true})
     }
-    setTimeout(()=>{
-      token = app.globalData.access_token;
-      let detailUrl = backApi.quesDetail+qid;
-      let myChooseTagApi = backApi.myChooseTagApi+token;
-      Api.wxRequest(detailUrl,'GET',{},(res)=>{
-        
-        if (res.data.data.id) {
-          if (res.data.data.status*1===4) {
-            Api.wxShowToast('该话题已被删', 'none', 3000);
-            setTimeout(()=>{
-              wx.reLaunch({
-                url: `/pages/main/main`
-              })
-            },1500)
-          } else {
-            that.setData({
-              details: res.data.data,
-              quesId: res.data.data.id,
-              hots: res.data.data.hots
-            })
-            if (res.data.data.member) {
-              that.setData({
-                userInfo: res.data.data.member
-              })
-            }
-          }
-        } else {
-          Api.wxShowToast('网络错误，请重试', 'none', 400);  
-        }
-      })
-      Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
-        
-        if (res.data === '') {
-          that.setData({
-            ismyVoted: false
-          })
-        }
-        if (res.data.status*1===200) {
-          that.setData({
-            ismyVoted: true
-          })
-          if (res.data.data.choose*1===1) {
-            that.setData({
-              isLeft: true
-            })
-          } else {
-            that.setData({
-              isRight: true
-            })
-          }
-        }
-      })
-    }, 400);
     
     // let leftText = that.textNumTest(that.data.details.option1);
     // let rightText = that.textNumTest(that.data.details.option2);
@@ -159,6 +126,9 @@ Page({
       frontColor:'#000000',
        backgroundColor:'#F5F6F8'
     })
+    setTimeout(()=>{
+      that.setData({showHomebtn: true})
+    },2800)
   },
   onReady: function () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -171,13 +141,69 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    // console.log(userInfo, '000')
     if (userInfo.language) {
-      that.setData({myAvatar: userInfo.avatarUrl})
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({
+          myAvatar: userInfo.avatarUrl,
+          token: token
+        });
+        let detailUrl = backApi.quesDetail+qid;
+        let myChooseTagApi = backApi.myChooseTagApi+token;
+        Api.wxRequest(detailUrl,'GET',{},(res)=>{
+
+          if (res.data.data.id) {
+            if (res.data.data.status*1===4) {
+              Api.wxShowToast('该话题已被删', 'none', 3000);
+              setTimeout(()=>{
+                wx.reLaunch({
+                  url: `/pages/main/main`
+                })
+              },1500)
+            } else {
+              that.setData({
+                details: res.data.data,
+                quesId: res.data.data.id,
+                hots: res.data.data.hots
+              })
+              if (res.data.data.member) {
+                that.setData({
+                  userInfo: res.data.data.member
+                })
+              }
+            }
+          } else {
+            Api.wxShowToast('网络错误，请重试', 'none', 400);
+          }
+        });
+        Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
+
+          if (res.data === '') {
+            that.setData({
+              ismyVoted: false
+            })
+          }
+          if (res.data.status*1===200) {
+            that.setData({
+              ismyVoted: true
+            })
+            if (res.data.data.choose*1===1) {
+              that.setData({
+                isLeft: true
+              })
+            } else {
+              that.setData({
+                isRight: true
+              })
+            }
+          }
+        })
+      });
     } else {
-      that.setData({
-        showDialog: true
-      })
+      backApi.getToken().then(function(response) {
+        let token = response;
+        that.setData({token: token,showDialog: true});
+      });
     }
   },
   onHide: function () {},
@@ -190,6 +216,7 @@ Page({
       console.log(res.target, 'button')
     }
     let that = this;
+    let token = that.data.token;
     let questId = that.data.quesId;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
     return {
@@ -235,6 +262,7 @@ Page({
   },
   deleteChoice () {
     let that = this;
+    let token = that.data.token;
     let deleMyQues = backApi.deleMyQues+`${qid}?access-token=${token}`;
     that.setData({
       showMask: false,
@@ -243,7 +271,7 @@ Page({
     Api.wxShowModal('', '删除后不可恢复，是否确认删除？', true, (res) => {
       if (res.confirm) {
         Api.wxRequest(deleMyQues,'DELETE',{},(res)=>{
-          console.log(res,' DELETE')
+          // console.log(res,' DELETE')
           if (res.data.status*1 === 200) {
             Api.wxShowToast('删除成功', 'none', 2000);
             setTimeout(()=> {
@@ -288,14 +316,14 @@ shareToMoment () {
   var question = that.data.details.question;
   downLoadImg(avatar, 'headerUrl');
   let path1 = '';
-  
+  let token = that.data.token;
   let posterApi = backApi.posterApi+token;
     let postData = {
       page:`pages/details/details`,
       scene: that.data.quesId
     }
     Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      console.log(res,'poster')
+      // console.log(res,'poster')
       if (res.data.status*1===200) {
         if (res.data.data.url) {
           let qrcodeImg = res.data.data.url
@@ -316,31 +344,13 @@ shareToMoment () {
     context.setFillStyle("#ffffff")
     context.fillRect(0, 0, 375, 667)
     var path = "../../images/posterBg.png";
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    //不知道是什么原因，手机环境能正常显示
     
     context.drawImage(path, 0, 0, 375, 154);
     // context.draw();
     
     let qrcodeImg = wx.getStorageSync('qrcodeImg');
     console.log(qrcodeImg,'imgggg')
-    // console.log(path1,"path1")
-    //将模板图片绘制到canvas,在开发工具中drawImage()函数有问题，不显示图片
-    // var path2 = "/images/tx_bg.jpg";
     var path3 = "/images/my_bg.jpg";
-    // var path4 = "/images/bg.png";
-    // var path5 = "/images/empty_img.png";
-    // context.drawImage(path2, 126, 186, 120, 120);
-    //不知道是什么原因，手机环境能正常显示
-    // context.save(); // 保存当前context的状态
-
-    // var name = that.data.name;
-    //绘制名字
-    // context.setFontSize(24);
-    // context.setFillStyle('#333333');
-    // context.setTextAlign('center');
-    // context.fillText(that.data.details.member.nickname||'', 185, 340);
-    // context.stroke();
     //绘制一起吃面标语
     let chineseReg = /[\u4E00-\u9FA5]/g;
     if (chineseReg.test(question)) {
@@ -382,39 +392,11 @@ shareToMoment () {
       context.stroke();
       }
     }
-    
-    // //绘制验证码背景
-    // context.drawImage(path3, 48, 390, 280, 84);
-    // //绘制code码
-    // context.setFontSize(40);
-    // context.setFillStyle('#ffe200');
-    // context.setTextAlign('center');
-    // context.fillText('呵呵', 185, 435);
-    // context.stroke();
-    //绘制左下角文字背景图
-    // context.drawImage(path4, 25, 520, 184, 82);
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("有选象，不纠结", 60, 540);
-    // context.stroke();
-    // context.setFontSize(18);
-    // context.setFillStyle('#888');
-    // context.setTextAlign('left');
-    // context.fillText("扫码给ta你的建议～", 60, 568);
-    // context.stroke();
     context.setFontSize(14);
       context.setFillStyle('#888888');
         context.setTextAlign('center');
         context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
         context.stroke();
-    // context.setFontSize(12);
-    // context.setFillStyle('#333');
-    // context.setTextAlign('left');
-    // context.fillText("优惠券1张哦~", 35, 580);
-    // context.stroke();
-    //绘制右下角扫码提示语
-    
     //绘制头像
     
       context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
@@ -465,15 +447,16 @@ showMaskHidden () {
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
-    console.log('save', 'sannnnn')
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
       duration: 3000
     });
+    let that = this;
+    let token = that.data.token;
     setTimeout(()=>{
       wx.saveImageToPhotosAlbum({
-        filePath: this.data.imagePath,
+        filePath: that.data.imagePath,
         success:(res)=>{
           // Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
           let shareMoment = backApi.shareMoment+token;
@@ -488,41 +471,20 @@ showMaskHidden () {
             }
           })
           
-          this.setData({
+          that.setData({
             maskHidden: false,
             showPosterView: false
           })
         },
         fail:(err)=>{
-          console.log(err, 'errMsg')
-          if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-            console.log('saveeee')
-            wx.openSetting({
-              success(settingdata) {
-                console.log(settingdata)
-                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                     } else {
-                      Api.wxShowToast("获取权限失败")
-                     }
-              }
-            }) 
-          }
-          if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-            wx.openSetting({
-              success(settingdata) {
-                console.log(settingdata)
-                     if (settingdata.authSetting["scope.writePhotosAlbum"]) {
-                      Api.wxShowToast("获取权限成功，再次点击保存到相册")
-                     } else {
-                      Api.wxShowToast("获取权限失败")
-                     }
-              }
-            })
-          }
+          that.setData({
+            showDialog: true,
+            openType: 'openSetting',
+            authInfo: '需要获取相册权限才能保存图片哦'
+          })
         }
       })
-      if (!this.data.imagePath){
+      if (!that.data.imagePath){
         wx.showModal({
           title: '提示',
           content: '图片绘制中，请稍后重试',
@@ -575,24 +537,37 @@ showMaskHidden () {
         })
 
         if (chooseItem === 'one') {
+          let showThumb = that.data.showThumb;
           answerData.choose = 1
-          that.setData({
-            leftRed: true
-          })
+          let rightRed = that.data.rightRed;
+          if (!rightRed) {
+            that.setData({
+              leftRed: true
+            })
+          }
+          
         }
         if (chooseItem === 'two') {
-          answerData.choose = 2
-          that.setData({
-            rightRed: true
-          })
+          let showThumb = that.data.showThumb;
+          answerData.choose = 2;
+          let leftRed = that.data.leftRed;
+          if (!leftRed) {
+            that.setData({
+              rightRed: true
+            })
+          }
         }
 
+        let token = that.data.token;
         let watchQuesApi = backApi.watchQuesApi+token;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
           console.log(res.data, 'choose')
           // 
           if (status === 201) {
+            if (!showThumb) {
+              that.setData({showThumb: true})
+            }
             that.setData({
               hasVoted: true
             })
@@ -673,8 +648,10 @@ showMaskHidden () {
                 Api.wxShowToast('网络错误，请重试', 'none', 2000);  
               }
             })
-            
           }
+          setTimeout(()=>{
+            that.setData({showThumb: false})
+          },3500)
         });
         
       }
@@ -686,10 +663,14 @@ showMaskHidden () {
     
   },
   gotoOthers (e) {
-    // console.log(e, 'iddd')
     let mid = e.currentTarget.dataset.mid;
     wx.navigateTo({
       url: `/pages/others/others?mid=${mid}`
+    })
+  },
+  goHome () {
+    wx.reLaunch({
+      url: `/pages/main/main`
     })
   }
 })

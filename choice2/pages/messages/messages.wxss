@@ -51,3 +51,6 @@ page{
 .list-hover{
     background: #ededed;
 }
+.userbase-tag{
+    width: 20rpx;height: 20rpx;border-radius: 50%;background: #E74C49;
+}

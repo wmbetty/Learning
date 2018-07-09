@@ -1,3 +1,5 @@
+const Api = require('../wxapi/wxApi');
+
 const formatTime = date => {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -44,7 +46,25 @@ const posterApi = `${http}v1/questions/share-code?access-token=`
 const uploadApi = `${http}v1/questions/upload-images?access-token=`
 const userBaseApi = `${http}v1/basis/user-basis?access-token=`
 const showBaseApi = `${http}v1/member/show-basis?access-token=`
-// const uploadApi = `${http}v1/questions/upload-images`
+
+function getToken(){
+  return new Promise(function(resolve,reject){
+    //ajax...
+    wx.login({
+      success: function(res) {
+        let reqData = {};
+        let code = res.code;
+        if (code) {
+          reqData.code = code;
+          Api.wxRequest(login,'POST',reqData,(res)=>{
+            resolve(res.data.data.access_token)
+          })
+        }
+      }
+    });
+    //如果有错的话就reject
+  })
+}
 
 module.exports = {
   formatTime: formatTime,
@@ -76,5 +96,6 @@ module.exports = {
   posterApi: posterApi,
   uploadApi: uploadApi,
   userBaseApi: userBaseApi,
-  showBaseApi: showBaseApi
+  showBaseApi: showBaseApi,
+  getToken: getToken
 }
