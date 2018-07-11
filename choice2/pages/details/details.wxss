@@ -255,15 +255,15 @@ page{
       /*z-index: 15;*/
   /*}*/
 .thumb2{
-    width: 268rpx;height: 266rpx;
-    position: absolute;left: 18%;top:21%;
+    width: 360rpx;height: 360rpx;
+    position: absolute;left: 6%;top:-2%;
     animation: thumb2 1s linear;opacity: 0;
     z-index: 15;
     animation-delay: 0.3s;
 }
 .vote-circle{
-    width: 268rpx;height: 266rpx;
-    position: absolute;left: 18%;top:21%;
+    width: 360rpx;height: 360rpx;
+    position: absolute;left: 5%;top:-4%;
     animation: circle 1s linear;opacity: 0;
 
 }

@@ -72,7 +72,7 @@ Page({
     let listItem = e.currentTarget.dataset.item;
     let index = e.currentTarget.dataset.index;
     let qList = that.data.questionList;
-    
+
     let noTopQuesApi = backApi.noTopQues+token;
     let page = that.data.page;
     let downList = that.data.downList;
@@ -184,8 +184,8 @@ Page({
     });
     that.animation = animation;
     that.animation.translateY((that.data.viewHeight+660)).translateX(15).step();
-      that.animation.opacity(0).step({duration: 1200});
-      var animationData = that.data.animationDownData;
+    that.animation.opacity(0).step({duration: 1200});
+    var animationData = that.data.animationDownData;
     animationData[index] = that.animation.export();
     that.setData({
       animationDownData: animationData,
@@ -194,7 +194,7 @@ Page({
   },
   //事件处理函数
   slidethis (index, qid, card) {
-    
+
     let that = this;
     let page = that.data.page;
     let notopPage = that.data.notopPage;
@@ -214,9 +214,9 @@ Page({
     //   that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
     //   that.animation.opacity(0).step({duration: 1200});
     // }
-    
-      that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
-      that.animation.opacity(0).step({duration: 1200});
+
+    that.animation.translateY(-(that.data.viewHeight-60)).translateX(15).step();
+    that.animation.opacity(0).step({duration: 1200});
 
     // that.animation.translateY(50).translateX(0).opacity(0).step();
     // that.animation.translateY(-200).translateX(15).opacity(0).step();
@@ -307,7 +307,7 @@ Page({
       that.setData({downList: downList})
     }, 200);
   },
-  
+
   onLoad: function () {
     let that = this;
     tabBar.tabbar("tabBar", 0, that);
@@ -489,25 +489,25 @@ Page({
       },
       fail() {},
       complete() {
-        
+
       }
     }
   },
   // 绘制圆角矩形
-  drawRoundRect(cxt, x, y, width, height, radius){   
-    cxt.beginPath();   
-    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);   
-    cxt.lineTo(width - radius + x, y);   
-    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);   
-    cxt.lineTo(width + x, height + y - radius);   
-    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);   
-    cxt.lineTo(radius + x, height +y);   
-    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);   
-    cxt.closePath();   
+  drawRoundRect(cxt, x, y, width, height, radius){
+    cxt.beginPath();
+    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
+    cxt.lineTo(width - radius + x, y);
+    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
+    cxt.lineTo(width + x, height + y - radius);
+    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
+    cxt.lineTo(radius + x, height +y);
+    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
+    cxt.closePath();
     cxt.fillStyle = 'rgba(231, 76, 73, 1)';
     cxt.fill();
 
-},
+  },
   shareToMoment () {
     wx.showToast({
       title: '海报生成中...',
@@ -517,113 +517,116 @@ Page({
     var that = this;
     let token = that.data.token;
     let posterApi = backApi.posterApi+token;
-      let postData = {
-        page:`pages/details/details`,
-        scene: that.data.quesId
-      }
-      Api.wxRequest(posterApi,'POST',postData,(res)=>{
-        console.log(res,'poster')
-        if (res.data.status*1===200) {
-          setTimeout(()=>{
-            if (res.data.data.url) {
-              let qrcodeImg = res.data.data.url;
-              that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
-              downLoadImg(qrcodeImg, 'qrcodeImg');
-            }
-          },200)
-        } else {
-          Api.wxShowToast('小程序码获取失败~', 'none', 2000)
-        }
-      })
-      setTimeout(()=>{
+    let postData = {
+      page:`pages/details/details`,
+      scene: that.data.quesId
+    }
+    Api.wxRequest(posterApi,'POST',postData,(res)=>{
+      console.log(res,'poster')
+      if (res.data.status * 1 === 200 && res.data.data.url) {
+        that.setData({qrcodeImg: res.data.data.url,showPosterView: true});
+
         that.setData({
           showShare: false,
           maskHidden: true
         })
         var context = wx.createCanvasContext('mycanvas');
-      var question = that.data.question;
-      
-      context.setFillStyle("#ffffff")
-      context.fillRect(0, 0, 375, 667)
-      var path = "../../images/posterBg.png";
-      context.drawImage(path, 0, 0, 375, 154);
-      let path1 = wx.getStorageSync('headerUrl');
-      let qrcodeImg = wx.getStorageSync('qrcodeImg');
-      //绘制一起吃面标语
-      let chineseReg = /[\u4E00-\u9FA5]/g;
-      if (chineseReg.test(question)) {
-        if (question.match(chineseReg).length >= 10) {  //返回中文的个数
-          context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question.substring(0,9), 185, 378);
-        context.stroke();
-        context.setFontSize(27);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question.substring(10,19)+'...', 185, 414);
-        context.stroke();
-        } else {
-          context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question, 185, 378);
-        context.stroke();
-        }
-      } else {
-        if (question.length>20) {
-          context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question.substring(0,9), 185, 378);
-        context.stroke();
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question.substring(10,question.length-1)+'...', 185, 414);
-        context.stroke();
-        } else {
-          context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(question, 185, 378);
-        context.stroke();
-        }
-      }
-      //绘制左下角文字背景图
-      // context.drawImage(path4, 25, 520, 184, 82);
-      context.setFontSize(14);
-      context.setFillStyle('#888888');
-        context.setTextAlign('center');
-        context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
-        context.stroke();
-      //绘制右下角扫码提示语
+        var question = that.data.question;
 
-      context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-      context.drawImage(qrcodeImg, 154, 582, 60, 60);
-      
-      //绘制头像
-      context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
-      context.strokeStyle = "#ffe200";
-      context.clip(); //裁剪上面的圆形
-      context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
-      context.draw();
+        context.setFillStyle("#ffffff")
+        context.fillRect(0, 0, 375, 667)
+        var path = "../../images/posterBg.png";
+        context.drawImage(path, 0, 0, 375, 154);
 
-      wx.canvasToTempFilePath({
-        canvasId: 'mycanvas',
-        success: function (res) {
-          var tempFilePath = res.tempFilePath;
-          that.setData({
-            imagePath: tempFilePath,
-            canvasHidden:true
+        that.downLoadImg(that.data.avatar, 'avatarImgPath');
+        that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
+
+        setTimeout(function(){
+          var path1 = that.data.avatarImgPath;
+          var qrcodeImg = that.data.qrcodeImgPath;
+          console.log(qrcodeImg)
+          return
+          //绘制一起吃面标语
+          let chineseReg = /[\u4E00-\u9FA5]/g;
+          if (chineseReg.test(question)) {
+            if (question.match(chineseReg).length >= 10) {  //返回中文的个数
+              context.setFontSize(26);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question.substring(0, 9), 185, 378);
+              context.stroke();
+              context.setFontSize(27);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question.substring(10, 19) + '...', 185, 414);
+              context.stroke();
+            } else {
+              context.setFontSize(26);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question, 185, 378);
+              context.stroke();
+            }
+          } else {
+            if (question.length > 20) {
+              context.setFontSize(26);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question.substring(0, 9), 185, 378);
+              context.stroke();
+              context.setFontSize(26);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question.substring(10, question.length - 1) + '...', 185, 414);
+              context.stroke();
+            } else {
+              context.setFontSize(26);
+              context.setFillStyle('#343434');
+              context.setTextAlign('center');
+              context.fillText(question, 185, 378);
+              context.stroke();
+            }
+          }
+          //绘制左下角文字背景图
+          // context.drawImage(path4, 25, 520, 184, 82);
+          context.setFontSize(14);
+          context.setFillStyle('#888888');
+          context.setTextAlign('center');
+          context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
+          context.stroke();
+          //绘制右下角扫码提示语
+
+          context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
+          context.drawImage(qrcodeImg, 154, 582, 60, 60);
+
+          //绘制头像
+          context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
+          context.strokeStyle = "#ffe200";
+          context.clip(); //裁剪上面的圆形
+          context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
+          context.draw();
+
+          wx.canvasToTempFilePath({
+            canvasId: 'mycanvas',
+            success: function (res) {
+              var tempFilePath = res.tempFilePath;
+              that.setData({
+                imagePath: tempFilePath,
+                canvasHidden: true
+              });
+            },
+            fail: function (res) {
+              console.log(res);
+            }
           });
-        },
-        fail: function (res) {
-          console.log(res);
-        }
-      });
-      },2000)
+
+        }, 200);
+      } else {
+        Api.wxShowToast('小程序码获取失败~', 'none', 2000)
+      }
+    })
   },
+
   //保存至相册
   saveImageToPhotosAlbum:function(){
     let that = this;
@@ -646,7 +649,7 @@ Page({
               Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
             }
           })
-          
+
           that.setData({
             maskHidden: false
           })
@@ -708,16 +711,16 @@ Page({
             success(settingdata) {
               if (settingdata.authSetting["scope.userInfo"]) {
                 Api.wxShowToast("获取权限成功",'none',2000)
-               } else {
+              } else {
                 Api.wxShowToast("获取权限失败",'none',2000)
-               }
+              }
             }
           })
         }
       })
     } else {
     }
-    
+
   },
   downGoVote (e) {
     let that = this;
@@ -956,10 +959,10 @@ Page({
       qid: 0,
       choose: ''
     };
-    
+
     // 判断是否授权
     if (language) {
-      
+
       let qList = that.data.questionList;
       let choose1_orgin = that.data.choose1_orgin;
       let choose2_orgin = that.data.choose2_orgin;
@@ -971,7 +974,7 @@ Page({
         // choose2 = e.currentTarget.dataset.item.choose2_per;
         qid = e.currentTarget.dataset.item.id;
       }
-      
+
       let answerApi = backApi.u_answer;
       let page = that.data.page;
       answerData.qid = qid;
@@ -998,7 +1001,7 @@ Page({
                   let timer1 = setInterval(()=>{
                     if (chse2 >= 20) {
                       choose2_orgin=choose2_orgin+2;
-                    } 
+                    }
                     if (chse2>30) {
                       choose2_orgin=choose2_orgin+3;
                     }
@@ -1017,11 +1020,11 @@ Page({
                   }, 10);
                 }
                 if (chse2 === 0) {
-                  
+
                   let timer1 = setInterval(()=>{
                     if (chse1 >= 20) {
                       choose1_orgin=choose1_orgin+2;
-                    } 
+                    }
                     if (chse1>30) {
                       choose1_orgin=choose1_orgin+3;
                     }
@@ -1037,7 +1040,7 @@ Page({
                         questionList: qList
                       })
                     }
-                    
+
                   }, 10);
                 }
                 if (chse1 !== 0 && chse2 !== 0) {
@@ -1066,7 +1069,7 @@ Page({
             Api.wxShowToast('投过票了', 'none', 300);
           }
         })
-        
+
       }
       if (direct === 'right') {
         answerData.choose = 2;
@@ -1089,7 +1092,7 @@ Page({
                   let timer1 = setInterval(()=>{
                     if (chse2 >= 20) {
                       choose2_orgin=choose2_orgin+2;
-                    } 
+                    }
                     if (chse2>30) {
                       choose2_orgin=choose2_orgin+3;
                     }
@@ -1108,11 +1111,11 @@ Page({
                   }, 10);
                 }
                 if (chse2 === 0) {
-                  
+
                   let timer1 = setInterval(()=>{
                     if (chse1 >= 20) {
                       choose1_orgin=choose1_orgin+2;
-                    } 
+                    }
                     if (chse1>30) {
                       choose1_orgin=choose1_orgin+3;
                     }
@@ -1128,7 +1131,7 @@ Page({
                         questionList: qList
                       })
                     }
-                    
+
                   }, 10);
                 }
                 if (chse1 !== 0 && chse2 !== 0) {
@@ -1170,7 +1173,7 @@ Page({
           that.setData({showUserbase: false})
         },2000)
       }
-      
+
       setTimeout(()=>{
         that.slidethis(idx,qid,e.currentTarget.dataset.item);
       },5200)
@@ -1228,8 +1231,7 @@ Page({
       } else {
         nname = '无名氏';
       }
-      
-      downLoadImg(avatar, 'headerUrl');
+
       that.setData({
         showShare: true,
         quesId: quesId,
@@ -1265,7 +1267,27 @@ Page({
         showDialog: true
       })
     }
+  },
+
+  downLoadImg:  function(url, name) {
+    var that = this;
+    wx.getImageInfo({
+      src: url,    //请求的网络图片路径
+      success: function (res) {
+        if (name == 'avatarImgPath') {
+          that.setData({
+            avatarImgPath: res.path,
+          });
+        } else if (name == 'qrcodeImgPath') {
+          that.setData({
+            qrcodeImgPath: res.path,
+          });
+        }
+
+      }
+    })
   }
+
 })
 
 //获得角度
@@ -1279,30 +1301,16 @@ function getDirection(startx, starty, endx, endy) {
   var result = 0;
   //如果滑动距离太短
   if (Math.abs(angx) < 2 && Math.abs(angy) < 2) {
-      return result;
+    return result;
   }
 
   var angle = getAngle(angx, angy);
   console.log(angy, 'angy')
   if (angle <= -50) {
-      result = 1;
+    result = 1;
   } else if (angle >= 50) {
-      result = 2;
+    result = 2;
   }
 
   return result;
-}
-
-function downLoadImg(netUrl, storageKeyAvatarUrl) {
-  wx.getImageInfo({
-    src: netUrl,    //请求的网络图片路径
-    success: function (res) {
-      //请求成功后将会生成一个本地路径即res.path,然后将该路径缓存到storageKeyUrl关键字中
-      wx.setStorage({
-        key: storageKeyAvatarUrl,
-        data: res.path,
-      });
-
-    }
-  })
 }

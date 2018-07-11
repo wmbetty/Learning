@@ -70,6 +70,7 @@ Page({
         success: (res)=>{
           let userInfo = res.userInfo;
           if (userInfo.nickName) {
+            that.setData({myAvatar: userInfo.avatarUrl});
             wx.setStorageSync('userInfo', userInfo);
             Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
               console.log(res.data.status, 'sssssssss')
@@ -320,9 +321,8 @@ shareToMoment () {
   });
 
   var that = this;
-  let avatar = that.data.details.member.avatar;
+  // let avatar = that.data.details.member.avatar;
   var question = that.data.details.question;
-  downLoadImg(avatar, 'headerUrl');
   let path1 = '';
   let token = that.data.token;
   let posterApi = backApi.posterApi+token;
@@ -336,7 +336,6 @@ shareToMoment () {
         if (res.data.data.url) {
           let qrcodeImg = res.data.data.url
           that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
-          downLoadImg(qrcodeImg, 'qrcodeImg');
         }
       } else {
         Api.wxShowToast('小程序码获取失败~', 'none', 2000)
@@ -354,7 +353,8 @@ shareToMoment () {
     var path = "../../images/posterBg.png";
     
     context.drawImage(path, 0, 0, 375, 154);
-    // context.draw();
+    that.downLoadImg(that.data.myAvatar, 'avatarImgPath');
+    that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
     
     let qrcodeImg = wx.getStorageSync('qrcodeImg');
     console.log(qrcodeImg,'imgggg')
@@ -681,19 +681,23 @@ showMaskHidden () {
     wx.reLaunch({
       url: `/pages/main/main`
     })
+  },
+  downLoadImg:  function(url, name) {
+    var that = this;
+    wx.getImageInfo({
+      src: url,    //请求的网络图片路径
+      success: function (res) {
+        if (name == 'avatarImgPath') {
+          that.setData({
+            avatarImgPath: res.path,
+          });
+        } else if (name == 'qrcodeImgPath') {
+          that.setData({
+            qrcodeImgPath: res.path,
+          });
+        }
+
+      }
+    })
   }
 })
-
-function downLoadImg(netUrl, storageKeyAvatarUrl) {
-  wx.getImageInfo({
-    src: netUrl,    //请求的网络图片路径
-    success: function (res) {
-      //请求成功后将会生成一个本地路径即res.path,然后将该路径缓存到storageKeyUrl关键字中
-      wx.setStorage({
-        key: storageKeyAvatarUrl,
-        data: res.path,
-      });
-
-    }
-  })
-}

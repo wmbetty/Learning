@@ -11,6 +11,8 @@ const device = wx.getSystemInfoSync();
 const width = device.windowWidth;
 const height = device.windowHeight - 50;
 const isIphone = wx.getSystemInfoSync('isIphone');
+let optionRtImage = '';
+let optionLtImage = '';
 
 Page({
   data: {
@@ -90,7 +92,7 @@ Page({
     that.wecropper.getCropperImage((src) => {
       if (src) {
         if (isLeftDirect) {
-          that.setData({leftImgTemp: src,showLeftDele: true})
+          that.setData({leftImgTemp: src,showLeftDele: true});
           wx.uploadFile({
             url: uploadApi,
             filePath: src,
@@ -101,7 +103,8 @@ Page({
               // console.log(data,'left img');
               let status = data.status*1;
               if (status===200) {
-                that.setData({optionLtImage: data.data.file_url});
+                // that.setData({optionLtImage: data.data.file_url});
+                optionLtImage = data.data.file_url
               } else {
                 Api.wxShowToast('图片上传失败~', 'none', 1400)
               }
@@ -119,7 +122,8 @@ Page({
               // console.log(data,'right img');
               let status = data.status*1;
               if (status===200) {
-                that.setData({optionRtImage: data.data.file_url});
+                // that.setData({optionRtImage: data.data.file_url});
+                optionRtImage = data.data.file_url
               } else {
                 Api.wxShowToast('图片上传失败~', 'none', 1400)
               }
@@ -133,6 +137,7 @@ Page({
       } else {
         console.log('获取图片地址失败，请稍后重试')
       }
+      console.log(that.data.optionLtImage,that.data.optionLtImage,'imgggggg')
     })
   },
   uploadTap () {
@@ -182,7 +187,7 @@ Page({
               uavatar: userInfo.avatarUrl,
               hasUserInfo: true
             });
-            downLoadImg(userInfo.avatarUrl, 'headerUrl');
+            // downLoadImg(userInfo.avatarUrl, 'headerUrl');
             backApi.getToken().then(function(response) {
               if (response.data.status*1===200) {
                 let token = response.data.data.access_token;
@@ -277,7 +282,7 @@ Page({
       that.setData({
         uavatar: userInfo.avatarUrl
       });
-      downLoadImg(userInfo.avatarUrl, 'headerUrl');
+      // downLoadImg(userInfo.avatarUrl, 'headerUrl');
       backApi.getToken().then(function(response) {
         if (response.data.status * 1 === 200) {
           let token = response.data.data.access_token;
@@ -403,7 +408,7 @@ Page({
         if (imgopt==='left') {
           that.setData({isLeftDirect:true})
         } else {
-          that.setData({rightImgTemp: tempFilePaths,showRightDele: true,isLeftDirect:false})
+          that.setData({isLeftDirect:false})
         }
         if (that.data.leftImgTemp && that.data.rightImgTemp && (that.data.titleText !== '点击输入标题' && that.data.titleText !== '')) {
           that.setData({
@@ -452,6 +457,10 @@ Page({
         option2: that.data.rightText.replace(/\s/g, "").substring(0,36),
         type: 1
       }
+
+      that.setData({
+        btnDis: true
+      })
 
       if (isPublish) {
         Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
@@ -569,14 +578,17 @@ Page({
         Api.wxShowToast('请上传右边图片', 'none', 2000);
         return false;
       }
-      let leftImg =  that.data.optionLtImage;
-      let rightImg =  that.data.optionRtImage;
+      // let leftImg =  that.data.optionLtImage;
+      // let rightImg =  that.data.optionRtImage;
       let postData = {
         question: that.data.titleText.replace(/\s/g, "").substring(0,30),
-        option1: leftImg,
-        option2: rightImg,
+        option1: optionLtImage,
+        option2: optionRtImage,
         type: 2
       }
+      that.setData({
+        btnDis: true
+      })
       if (isPublish) {
         Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
           // that.setData({
@@ -758,7 +770,6 @@ Page({
                     that.setData({
                       qrcode: qrcodeImg
                     })
-                    downLoadImg(qrcodeImg, 'qrcodeImg');
                   },200)
                   
                 }
@@ -782,6 +793,9 @@ Page({
     context.fillRect(0, 0, 375, 667)
     var path = "../../images/posterBg.png";
     context.drawImage(path, 0, 0, 375, 154);
+
+      that.downLoadImg(that.data.uavatar, 'avatarImgPath');
+      that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
 
     var path3 = "/images/my_bg.jpg";
     //绘制一起吃面标语
@@ -1020,27 +1034,6 @@ Page({
         pagePad: false
       })
     }
-    // console.log(e, 'blur')
-    // let direct = e.currentTarget.dataset.direct;
-    // let val = e.detail.value;
-    // if (direct === 'title' && val === '') {
-    //   that.setData({
-    //     titleText: '点击输入标题',
-    //     showTextarea: false
-    //   })
-    // }
-    // if (direct === 'left' && val === '') {
-    //   that.setData({
-    //     leftHolder: '点击输入左选项',
-    //     showLeft: false
-    //   })
-    // }
-    // if (direct === 'right' && val === '') {
-    //   that.setData({
-    //     rightHolder: '点击输入右选项',
-    //     showRight: false
-    //   })
-    // }
   },
   changeTab (e) {
     console.log(e,ImgLock,'2222')
@@ -1085,16 +1078,23 @@ Page({
     if (opt==='right') {
       that.setData({rightImgTemp: '',showRightDele: false,isPublish:false})
     }
+  },
+  downLoadImg:  function(url, name) {
+    var that = this;
+    wx.getImageInfo({
+      src: url,    //请求的网络图片路径
+      success: function (res) {
+        if (name == 'avatarImgPath') {
+          that.setData({
+            avatarImgPath: res.path,
+          });
+        } else if (name == 'qrcodeImgPath') {
+          that.setData({
+            qrcodeImgPath: res.path,
+          });
+        }
+
+      }
+    })
   }
 });
-
-function downLoadImg(netUrl, storageKeyAvatarUrl) {
-  wx.getImageInfo({
-    src: netUrl,    //请求的网络图片路径
-    success: function (res) {
-      //请求成功后将会生成一个本地路径即res.path,然后将该路径缓存到storageKeyUrl关键字中
-      wx.setStorageSync(storageKeyAvatarUrl,res.path);
-
-    }
-  })
-}
