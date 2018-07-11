@@ -167,7 +167,8 @@ Page({
                   details: res.data.data,
                   quesId: res.data.data.id,
                   hots: res.data.data.hots
-                })
+                });
+                that.downLoadImg(res.data.data.member.avatar, 'avatarImgPath');
                 if (res.data.data.member) {
                   that.setData({
                     userInfo: res.data.data.member
@@ -334,7 +335,8 @@ shareToMoment () {
       // console.log(res,'poster')
       if (res.data.status*1===200) {
         if (res.data.data.url) {
-          let qrcodeImg = res.data.data.url
+          let qrcodeImg = res.data.data.url;
+          that.downLoadImg(res.data.data.url, 'qrcodeImgPath');
           that.setData({qrcodeImg: qrcodeImg,showPosterView: true});
         }
       } else {
@@ -353,11 +355,9 @@ shareToMoment () {
     var path = "../../images/posterBg.png";
     
     context.drawImage(path, 0, 0, 375, 154);
-    that.downLoadImg(that.data.myAvatar, 'avatarImgPath');
-    that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
     
-    let qrcodeImg = wx.getStorageSync('qrcodeImg');
-    console.log(qrcodeImg,'imgggg')
+    let qrcodeImg = that.data.qrcodeImgPath;
+      path1 = that.data.avatarImgPath;
     var path3 = "/images/my_bg.jpg";
     //绘制一起吃面标语
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -409,7 +409,6 @@ shareToMoment () {
     
       context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
       context.drawImage(qrcodeImg, 154, 582, 60, 60);
-      path1 = wx.getStorageSync('headerUrl');
       context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
       context.strokeStyle = "#ffe200";
       context.clip(); //裁剪上面的圆形

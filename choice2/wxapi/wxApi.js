@@ -107,7 +107,7 @@ function wxRequest(url, method, data={}, callback) {
       callback(res)
     },
     fail: (res) => {
-      wxShowToast('网络出错了，请稍后再试哦','none',2000)
+      console.log(res)
     }
   })
 }

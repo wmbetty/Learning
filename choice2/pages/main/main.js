@@ -246,7 +246,7 @@ Page({
               Api.wxRequest(noTopQuesApi, 'GET', {page: notopPage}, (res)=>{
                 let datas = res.data.data || [];
                 let notopPageCount = res.header['X-Pagination-Page-Count'];
-                if (notopPage == notopPageCount) {
+                if (datas.length===0) {
                   that.setData({notopPage: 1});
                 } else {
                   that.setData({notopPage: notopPage+1});
@@ -521,6 +521,7 @@ Page({
       page:`pages/details/details`,
       scene: that.data.quesId
     }
+
     Api.wxRequest(posterApi,'POST',postData,(res)=>{
       console.log(res,'poster')
       if (res.data.status * 1 === 200 && res.data.data.url) {
@@ -544,8 +545,6 @@ Page({
         setTimeout(function(){
           var path1 = that.data.avatarImgPath;
           var qrcodeImg = that.data.qrcodeImgPath;
-          console.log(qrcodeImg)
-          return
           //绘制一起吃面标语
           let chineseReg = /[\u4E00-\u9FA5]/g;
           if (chineseReg.test(question)) {
@@ -609,6 +608,7 @@ Page({
           wx.canvasToTempFilePath({
             canvasId: 'mycanvas',
             success: function (res) {
+              console.log(res,'canvas')
               var tempFilePath = res.tempFilePath;
               that.setData({
                 imagePath: tempFilePath,

@@ -187,6 +187,7 @@ Page({
               uavatar: userInfo.avatarUrl,
               hasUserInfo: true
             });
+            that.downLoadImg(userInfo.avatarUrl, 'avatarImgPath');
             // downLoadImg(userInfo.avatarUrl, 'headerUrl');
             backApi.getToken().then(function(response) {
               if (response.data.status*1===200) {
@@ -282,7 +283,7 @@ Page({
       that.setData({
         uavatar: userInfo.avatarUrl
       });
-      // downLoadImg(userInfo.avatarUrl, 'headerUrl');
+      that.downLoadImg(userInfo.avatarUrl, 'avatarImgPath');
       backApi.getToken().then(function(response) {
         if (response.data.status * 1 === 200) {
           let token = response.data.data.access_token;
@@ -767,6 +768,7 @@ Page({
                 if (res.data.data.url) {
                   setTimeout(()=>{
                     let qrcodeImg = res.data.data.url;
+                    that.downLoadImg(res.data.data.url, 'qrcodeImgPath');
                     that.setData({
                       qrcode: qrcodeImg
                     })
@@ -777,6 +779,7 @@ Page({
                 Api.wxShowToast('小程序码获取失败~', 'none', 2000)
               }
             })
+
     //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
     setTimeout(function () {
       that.setData({
@@ -793,9 +796,6 @@ Page({
     context.fillRect(0, 0, 375, 667)
     var path = "../../images/posterBg.png";
     context.drawImage(path, 0, 0, 375, 154);
-
-      that.downLoadImg(that.data.uavatar, 'avatarImgPath');
-      that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
 
     var path3 = "/images/my_bg.jpg";
     //绘制一起吃面标语
@@ -866,9 +866,8 @@ Page({
         context.stroke();
     //绘制右下角扫码提示语
     context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-    let path1 = wx.getStorageSync('headerUrl');
-    let qrcodeImg = wx.getStorageSync('qrcodeImg');
-    console.log(qrcodeImg,path1,'imgggg qrcode');
+    let path1 = that.data.avatarImgPath;
+    let qrcodeImg = that.data.qrcodeImgPath;
       context.drawImage(qrcodeImg, 154, 582, 60, 60);
       // console.log(qrcodeImg,'qrcode')
     //绘制头像
@@ -877,10 +876,11 @@ Page({
       context.clip(); //裁剪上面的圆形
       context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
       context.draw();
+
       wx.canvasToTempFilePath({
         canvasId: 'mycanvas',
         success: function (res) {
-          // console.log(context, 'canvas')
+          console.log(res, 'index canvas')
           var tempFilePath = res.tempFilePath;
           that.setData({
             imagePath: tempFilePath,
