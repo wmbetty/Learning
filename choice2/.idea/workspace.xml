@@ -29,8 +29,8 @@
       <file leaf-file-name="details.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pages/details/details.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
-              <caret line="359" column="38" lean-forward="true" selection-start-line="359" selection-start-column="38" selection-end-line="359" selection-end-column="38" />
+            <state relative-caret-position="130">
+              <caret line="415" column="21" lean-forward="true" selection-start-line="351" selection-start-column="6" selection-end-line="415" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -65,8 +65,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pages/index/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="890" column="38" selection-start-line="890" selection-start-column="38" selection-end-line="890" selection-end-column="38" />
+            <state relative-caret-position="91">
+              <caret line="792" column="27" lean-forward="true" selection-start-line="792" selection-start-column="27" selection-end-line="792" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -118,8 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>leftImgTemp</find>
-      <find>rightImgTemp</find>
       <find>btnDis</find>
       <find>optionLtImage</find>
       <find>reques</find>
@@ -128,7 +126,6 @@
       <find>myAvatar</find>
       <find>绘制</find>
       <find>confir</find>
-      <find>uavatar</find>
       <find>avatarImgPath</find>
       <find>imagePath</find>
       <find>uavata</find>
@@ -136,7 +133,6 @@
       <find>user</find>
       <find>details</find>
       <find>notoppage</find>
-      <find>qrcode</find>
       <find>closePoster</find>
       <find>navigateBack</find>
       <find>down</find>
@@ -145,9 +141,13 @@
       <find>indexOf</find>
       <find>qrcodeImgPath</find>
       <find>length===0</find>
-      <find>qrcodeImg</find>
-      <find>fillRect</find>
       <find>downLoadImg</find>
+      <find>uavatar</find>
+      <find>qrcodeImg</find>
+      <find>qrcode</find>
+      <find>fillRect</find>
+      <find>path1</find>
+      <find>shareQues</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -336,12 +336,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1530956352724</updated>
-      <workItem from="1530956354694" duration="78316000" />
+      <workItem from="1530956354694" duration="81601000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78316000" />
+    <option name="totallyTimeSpent" value="81601000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="0" />
@@ -588,15 +588,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pages/details/details.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="359" column="38" lean-forward="true" selection-start-line="359" selection-start-column="38" selection-end-line="359" selection-end-column="38" />
+        <state relative-caret-position="130">
+          <caret line="415" column="21" lean-forward="true" selection-start-line="351" selection-start-column="6" selection-end-line="415" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pages/index/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="890" column="38" selection-start-line="890" selection-start-column="38" selection-end-line="890" selection-end-column="38" />
+        <state relative-caret-position="91">
+          <caret line="792" column="27" lean-forward="true" selection-start-line="792" selection-start-column="27" selection-end-line="792" selection-end-column="27" />
         </state>
       </provider>
     </entry>

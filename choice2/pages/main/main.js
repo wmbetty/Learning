@@ -251,7 +251,7 @@ Page({
                 } else {
                   that.setData({notopPage: notopPage+1});
                 }
-                if (datas.length===0) {
+                if (datas.length===0 && notopPage=== 1) {
                   wx.hideLoading();
                   that.setData({
                     isEmpty: true

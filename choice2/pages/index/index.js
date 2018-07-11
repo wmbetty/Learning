@@ -741,14 +741,17 @@ Page({
     this.setData({
       maskHidden: false
     })
-    // setTimeout(()=> {
-    //   wx.navigateBack({
-    //     delta: 1
-    //   })
-    // }, 3500)
+    setTimeout(()=> {
+      wx.navigateBack({
+        delta: 1
+      })
+    }, 3500)
   },
   shareTomoment () {
     let that = this;
+    let avatarimg = that.data.uavatar;
+    that.downLoadImg(avatarimg, 'avatarImgPath');
+
     wx.showToast({
       title: '海报生成中...',
       icon: 'loading',
@@ -764,134 +767,107 @@ Page({
               console.log(res,'poster')
               if (res.data.status*1===200) {
                 if (res.data.data.url) {
-                  setTimeout(()=>{
-                    let qrcodeImg = res.data.data.url;
+                  let qrcodeImg = res.data.data.url;
+                  that.downLoadImg(qrcodeImg, 'qrcodeImgPath');
+                  that.setData({
+                    qrcode: qrcodeImg
+                  })
+                  //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
+                  setTimeout(() => {
                     that.setData({
-                      qrcode: qrcodeImg
+                      maskHidden: true,
+                      isShare: false,
+                      showPosterView: true
                     })
-                  },200)
-                  
+
+                    let shareQues = that.data.shareTitle;
+                    var context = wx.createCanvasContext('mycanvas');
+                    context.setFillStyle("#ffffff")
+                    context.fillRect(0, 0, 375, 667);
+                    var path = "../../images/posterBg.png";
+
+                    context.drawImage(path, 0, 0, 375, 154);
+
+                    let qrImg = that.data.qrcodeImgPath;
+                    let path1 = that.data.avatarImgPath;
+                    var path3 = "/images/my_bg.jpg";
+                    //绘制一起吃面标语
+                    let chineseReg = /[\u4E00-\u9FA5]/g;
+                    if (chineseReg.test(shareQues)) {
+                      if (shareQues.match(chineseReg).length >= 10) {  //返回中文的个数
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(0, 9), 185, 378);
+                        context.stroke();
+                        context.setFontSize(27);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(10, 19) + '...', 185, 414);
+                        context.stroke();
+                      } else {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues, 185, 378);
+                        context.stroke();
+                      }
+                    } else {
+                      if (shareQues.length > 20) {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(0, 9), 185, 378);
+                        context.stroke();
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(10, question.length - 1) + '...', 185, 414);
+                        context.stroke();
+                      } else {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues, 185, 378);
+                        context.stroke();
+                      }
+                    }
+                    context.setFontSize(14);
+                    context.setFillStyle('#888888');
+                    context.setTextAlign('center');
+                    context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
+                    context.stroke();
+                    //绘制头像
+
+                    context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
+                    context.drawImage(qrImg, 154, 582, 60, 60);
+                    context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
+                    context.strokeStyle = "#ffe200";
+                    context.clip(); //裁剪上面的圆形
+                    context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
+                    context.draw();
+                  }, 2600);
+                  setTimeout(() => {
+                    wx.canvasToTempFilePath({
+                      canvasId: 'mycanvas',
+                      success: function (res) {
+                        console.log(res, 'index canvas')
+                        var tempFilePath = res.tempFilePath;
+                        that.setData({
+                          imagePath: tempFilePath,
+                          canvasHidden: true
+                        });
+                      },
+                      fail: function (res) {
+                        console.log(res, 'canvas fail');
+                      }
+                    });
+                  }, 3200)
                 }
               } else {
                 Api.wxShowToast('小程序码获取失败~', 'none', 2000)
               }
             })
-
-    //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
-    setTimeout(function () {
-      that.setData({
-        maskHidden: true,
-        isShare: false,
-        showPosterView: true
-      })
-      that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
-      that.downLoadImg(that.data.uavatar, 'avatarImgPath');
-
-      var context = wx.createCanvasContext('mycanvas');
-    
-    let shareQues = that.data.shareTitle;
-    let chineseReg = /[\u4E00-\u9FA5]/g;
-    context.setFillStyle("#ffffff");
-    context.fillRect(0, 0, 375, 667);
-    var path = "../../images/posterBg.png";
-    context.drawImage(path, 0, 0, 375, 154);
-
-      let path1 = that.data.avatarImgPath;
-      let qrcodeImg = that.data.qrcodeImgPath;
-
-    var path3 = "/images/my_bg.jpg";
-    //绘制一起吃面标语
-    if (chineseReg.test(shareQues)) {
-      if (shareQues.match(chineseReg).length <= 13) {  //返回中文的个数
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues, 185, 378);
-        context.stroke();
-      }
-      if (shareQues.match(chineseReg).length>13 && shareQues.match(chineseReg).length <= 26) {  //返回中文的个数
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues.substring(0,13), 185, 378);
-        context.stroke();
-        
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues.substring(13,shareQues.length-1), 185, 414);
-        context.stroke();
-      }
-      if (shareQues.match(chineseReg).length>26) {  //返回中文的个数
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues.substring(0,13), 185, 378);
-        context.stroke();
-        
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues.substring(13,26), 185, 414);
-
-        context.stroke();
-        context.setFontSize(26);
-        context.setFillStyle('#343434');
-        context.setTextAlign('center');
-        context.fillText(shareQues.substring(26,shareQues.length-1), 185, 450);
-        context.stroke();
-      }
-    } else {
-      if (shareQues.length>20) {
-        context.setFontSize(26);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues.substring(0,9), 185, 378);
-      context.stroke();
-      context.setFontSize(26);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues.substring(10,shareQues.length-1), 185, 414);
-      context.stroke();
-      } else {
-        context.setFontSize(26);
-      context.setFillStyle('#343434');
-      context.setTextAlign('center');
-      context.fillText(shareQues, 185, 378);
-      context.stroke();
-      }
-    }
-    context.setFontSize(14);
-      context.setFillStyle('#888888');
-        context.setTextAlign('center');
-        context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
-        context.stroke();
-    //绘制右下角扫码提示语
-    context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-      context.drawImage(qrcodeImg, 154, 582, 60, 60);
-      // console.log(qrcodeImg,'qrcode')
-    //绘制头像
-    context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
-      context.strokeStyle = "#ffe200";
-      context.clip(); //裁剪上面的圆形
-      context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
-      context.draw();
-
-      wx.canvasToTempFilePath({
-        canvasId: 'mycanvas',
-        success: function (res) {
-          console.log(res, 'index canvas')
-          var tempFilePath = res.tempFilePath;
-          that.setData({
-            imagePath: tempFilePath,
-            canvasHidden:true
-          });
-        },
-        fail: function (res) {
-          console.log(res,'canvas fail');
-        }
-      });
-    }, 3500);
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
@@ -1037,7 +1013,6 @@ Page({
     }
   },
   changeTab (e) {
-    console.log(e,ImgLock,'2222')
     let that = this;
     let tab = e.currentTarget.dataset.tab;
     let titleText = that.data.titleText;
@@ -1070,7 +1045,6 @@ Page({
   },
   // 删除图片
   deleImage (e) {
-    console.log(e, 'eee')
     let that = this;
     let opt = e.target.dataset.opt;
     if (opt==='left') {
