@@ -10,8 +10,7 @@
     "pages/details/details",
     "pages/feedback/feedback",
     "pages/notedetail/notedetail",
-    "pages/usercenter/usercenter",
-    "pages/mtest/mtest"
+    "pages/usercenter/usercenter"
   ],
   "window": {
     "backgroundTextStyle": "light",

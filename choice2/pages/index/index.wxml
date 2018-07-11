@@ -1,10 +1,10 @@
 <!--index.wxml-->
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 <import src="../../components/we-cropper/we-cropper.wxml"/>
-<view class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
+<view wx:if="{{hasUserInfo}}" class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
     <view class="tab-item-box">
-        <view class="{{txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="text" bindtap="changeTab"><image src="{{txtActive?'../../images/text_icon.png':'../../images/text_act_icon.png'}}" class="tab-item-img"></image></view>
-        <view class="{{!txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="image" bindtap="changeTab"><image src="{{!txtActive?'../../images/img_icon.png':'../../images/img_act_icon.png'}}" class="tab-item-img"></image></view>
+        <view class="{{txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="text" bindtouchend="changeTab"><image src="{{txtActive?'../../images/text_icon.png':'../../images/text_act_icon.png'}}" class="tab-item-img"></image></view>
+        <view class="{{!txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="image" bindtouchend="changeTab"><image src="{{!txtActive?'../../images/img_icon.png':'../../images/img_act_icon.png'}}" class="tab-item-img"></image></view>
     </view>
 </view>
 <view wx:if="{{hasUserInfo}}">

@@ -264,14 +264,18 @@ page{
     }
   }
   @keyframes thumb2{
-    50% {
-      transform: scale(0.8);
-      opacity: 1;
-    }
-    100%{
-      transform: scale(1.5);
-      opacity: 0;
-    }
+      15% {
+          transform: scale(0.4) rotate(-10deg);
+          opacity: 1;
+      }
+      30% {
+          transform: scale(0.8) rotate(-20deg);
+          opacity: 1;
+      }
+      100%{
+          transform: scale(1);
+          opacity: 1;
+      }
   }
   .dot {
     position: absolute;
@@ -285,104 +289,74 @@ page{
     /* background-color:#E74C49; 实心圆 ，如果没有这个就是一个小圆圈 */
     z-index: 12;
     }
-    /* 产生动画（向外扩散变大）的圆圈 第一个圆 */
-    .pulse {
+/* 产生动画（向外扩散变大）的圆圈 第一个圆 */
+.pulse {
     position: absolute;
     width: 220rpx;
     height: 220rpx;
     left: 48px;
     top: 50px;
-    border: 3px solid #E74C49;
+    border: 2px solid #E74C49;
     border-radius: 50%;
     z-index: 14;
     opacity: 0;
-    animation: warn 1.4 ease-out;
+    animation: warn 1s linear;
+    animation-delay: 0.4;
     /* box-shadow: 1px 1px 30px #E74C49;  */
-    
-    }
-    /* 产生动画（向外扩散变大）的圆圈 第二个圆 */
-    .pulse1 {
+
+}
+/* 产生动画（向外扩散变大）的圆圈 第二个圆 */
+.pulse1 {
     position: absolute;
     width: 300rpx;
     height: 300rpx;
-    left: 32px;
-    top: 33px;
+    left: 30px;
+    top: 32px;
+    border: 2px solid #E74C49;
+    border-radius: 50%;
+    z-index: 11;
+    opacity: 0;
+    animation: warn1 0.8s linear;
+    animation-delay: 1.2s;
+    /* animation-iteration-count: infinite; */
+}
+.pulse2{
+    position: absolute;
+    width: 380rpx;
+    height: 380rpx;
+    left: 10px;
+    top: 12px;
     border: 3px solid #E74C49;
     border-radius: 50%;
     z-index: 11;
     opacity: 0;
-    animation: warn1 1s ease-out;
-    animation-delay: 1.8s;
+    animation: warn1 1s linear;
+    animation-delay: 1.5s;
     /* animation-iteration-count: infinite; */
+}
+
+@keyframes warn {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
     }
-    .pulse2{
-      position: absolute;
-      width: 400rpx;
-      height: 400rpx;
-      left: 8px;
-      top: 8px;
-      border: 3px solid #E74C49;
-      border-radius: 50%;
-      z-index: 11;
-      opacity: 0;
-      animation: warn1 1s ease-out;
-      animation-delay: 2s;
-      /* animation-iteration-count: infinite; */
+
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
     }
-  
-    @keyframes warn {
-      /* 0% {
-      transform: scale(0.3);
-      opacity: 0.0;
-      }
-      
-      25% {
-      transform: scale(0.3);
-      opacity: 0.4;
-      } */
-      
-      50% {
-      transform: scale(0.5);
-      opacity: 1;
-      }
-      
-      75% {
-      transform: scale(0.8);
-      opacity: 1;
-      }
-      
-      100% {
-      transform: scale(1);
-      opacity: 1;
-      }
-      }
-      
-      @keyframes warn1 {
-      /* 0% {
-      transform: scale(0.3);
-      opacity: 0.0;
-      }
-      
-      25% {
-      transform: scale(0.3);
-      opacity: 0.4;
-      } */
-      
-      50% {
-      transform: scale(0.3);
-      opacity: 1;
-      }
-      
-      75% {
-      transform: scale(0.5);
-      opacity: 1;
-      }
-      
-      100% {
-      transform: scale(0.8);
-      opacity: 1;
-      }
-      }
+}
+
+@keyframes warn1 {
+    0%{
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    100%{
+        transform: scale(1.2);
+        opacity: 0;   /*圆形放大的同时，透明度逐渐减小为0*/
+    }
+}
       .voted-thumb-box{
         width: 440rpx;height: 440rpx;
         position: absolute;left: 23%;top: 160px;
@@ -392,7 +366,7 @@ page{
         /* background: red; */
       }
       .delay-img{
-        filter: blur(10px);width: 100%;height: 100%;
+        filter: blur(5px);width: 100%;height: 100%;
         position: absolute;left: 0;top: 0;
       }
       .hexie-img{

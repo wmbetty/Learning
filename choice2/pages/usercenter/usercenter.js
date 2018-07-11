@@ -2,7 +2,6 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
-// let token = '';
 
 Page({
 
@@ -14,7 +13,8 @@ Page({
     showDialog: false,
     openType: 'openSetting',
     authInfo: '需要获取相册权限才能保存图片哦',
-    token: ''
+    token: '',
+    isSave: 0
   },
   cancelDialog () {
     this.setData({showDialog:false})
@@ -53,37 +53,43 @@ Page({
   },
   savePhoto () {
     let that = this;
+    let isSave = that.data.isSave;
+    isSave++;
+    console.log(isSave)
     let IMG_URL = that.data.userBaseInfo.template_url;
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
       duration: 2800
     });
-    setTimeout(()=>{
-      wx.downloadFile({
-        url: IMG_URL,
-        success:function(res){
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success: function (res) {
-              Api.wxShowToast("保存成功~",'none',2200)
-            },
-            fail: function (err) {
-              if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-                that.setData({showDialog:true})
+    if (isSave===2) {
+      that.setData({isSave:isSave})
+      setTimeout(()=>{
+        wx.downloadFile({
+          url: IMG_URL,
+          success:function(res){
+            wx.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: function (res) {
+                Api.wxShowToast("保存成功~",'none',2200)
+              },
+              fail: function (err) {
+                if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+                  that.setData({showDialog:true})
+                }
+                if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
+                  that.setData({showDialog:true})
+                }
               }
-              if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied") {
-                that.setData({showDialog:true})
-              }
-            }
-          })
-        },
-        fail:function(){
-          console.log('fail')
-        }
-      })
-  
-    },2900)
+            })
+          },
+          fail:function(){
+            console.log('fail')
+          }
+        })
+
+      },2900)
+    }
   },
 
   /**
@@ -97,6 +103,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    let isSave = 1;
+    this.setData({isSave: 1})
     wx.setStorageSync('userbase',0);
   },
 

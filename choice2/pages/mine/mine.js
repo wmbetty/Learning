@@ -323,11 +323,9 @@ Page({
       msgCount: 0,
       voteUnreadCount: 0
     })
-    setTimeout(()=>{
-      wx.navigateTo({
-        url: `/pages/messages/messages`
-      })
-    },1200)
+    wx.navigateTo({
+      url: `/pages/messages/messages`
+    })
 
   }
 })

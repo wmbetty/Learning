@@ -560,9 +560,10 @@ showMaskHidden () {
 
         let token = that.data.token;
         let watchQuesApi = backApi.watchQuesApi+token;
+        let showThumb = that.data.showThumb;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          console.log(res.data, 'choose')
+          console.log(res.data, 'choose');
           // 
           if (status === 201) {
             if (!showThumb) {

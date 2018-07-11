@@ -98,9 +98,9 @@ Page({
             formData:{},
             success: function(res){
               let data = JSON.parse(res.data);
+              // console.log(data,'left img');
               let status = data.status*1;
               if (status===200) {
-                console.log(data.data.file_url,'llll')
                 that.setData({optionLtImage: data.data.file_url});
               } else {
                 Api.wxShowToast('图片上传失败~', 'none', 1400)
@@ -116,9 +116,9 @@ Page({
             formData:{},
             success: function(res){
               let data = JSON.parse(res.data);
+              // console.log(data,'right img');
               let status = data.status*1;
               if (status===200) {
-                console.log(data.data.file_url,'llllrrr')
                 that.setData({optionRtImage: data.data.file_url});
               } else {
                 Api.wxShowToast('图片上传失败~', 'none', 1400)
@@ -127,6 +127,9 @@ Page({
           })
         }
         that.setData({showCropper: false})
+        if (that.data.titleText && that.data.titleText!=='点击输入标题'&&that.data.showLeftDele&&that.data.showRightDele) {
+          that.setData({isPublish:true,btnDis:false})
+        }
       } else {
         console.log('获取图片地址失败，请稍后重试')
       }
@@ -134,7 +137,6 @@ Page({
   },
   uploadTap () {
     const self = this
-    console.log(11)
 
     wx.chooseImage({
       count: 1, // 默认9
@@ -179,21 +181,29 @@ Page({
             that.setData({
               uavatar: userInfo.avatarUrl,
               hasUserInfo: true
-            })
+            });
+            downLoadImg(userInfo.avatarUrl, 'headerUrl');
+            backApi.getToken().then(function(response) {
+              let token = response;
+              that.setData({token: token});
+              let myInfo = backApi.myInfo+token;
+              Api.wxRequest(myInfo,'GET',{},(res)=>{
+                if (res.data.status*1===200) {
+                  myPoint = res.data.data.points;
+                  ImgLock = res.data.data.release_img_lock*1;
+                }
+              })
+            });
             Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
               console.log(res.data.status, 'index update-user')
             })
           }
         },
         fail: (res)=>{
-          wx.openSetting({
-            success(settingdata) {
-              if (settingdata.authSetting["scope.userInfo"]) {
-                Api.wxShowToast("获取权限成功")
-              } else {
-                Api.wxShowToast("获取权限失败")
-              }
-            }
+          that.setData({
+            showDialog: true,
+            openType: 'openSetting',
+            authInfo: '授权失败，需要微信权限哦'
           })
         }
       })
@@ -319,51 +329,51 @@ Page({
     let that = this;
     let val = e.detail.value;
     let direct = e.target.dataset.direct;
-    let chineseReg = /[\u4E00-\u9FA5]/g;
-    let leftImg = that.data.optionLtImage;
-    let rightImg = that.data.optionRtImage;
-
-    if (direct === 'title') {
-      if (val && val !== '点击输入标题') {
+    // let chineseReg = /[\u4E00-\u9FA5]/g;
+    let leftImg = that.data.leftImgTemp;
+    let rightImg = that.data.rightImgTemp;
+    console.log(val,'text')
+    if (val==='') {
+      that.setData({isPublish: false})
+    } else {
+      if (direct === 'title' && val !== '点击输入标题') {
         that.setData({
           titleText: val,
           shareTitle: val
         })
-        if (leftImg && rightImg) {
-          that.setData({isPublish: true})
+        if (val.length>=30) {
+          Api.wxShowToast('标题不超过30个字', 'none', 2000);
         }
       }
-      
-      if (val.length>=30) {
-        Api.wxShowToast('标题不超过30个字', 'none', 2000);
+      if (!that.data.txtActive) {
+        if (leftImg && rightImg && val !== '点击输入标题' && val !== '') {
+          that.setData({isPublish: true,btnDis:false})
+        }
+      } else {
+        if (direct === 'left') {
+          that.setData({
+            leftText: val
+          })
+          if (val.length>=18) {
+            Api.wxShowToast('左选项不超过18个字', 'none', 2000);
+          }
+        }
+        if (direct === 'right') {
+          that.setData({
+            rightText: val
+          })
+          if (val.length>=18) {
+            Api.wxShowToast('右选项不超过18个字', 'none', 2000);
+          }
+        }
+        if (that.data.titleText !== '点击输入标题' && that.data.titleText.length>1 && that.data.leftText !== '' && that.data.rightText !== '') {
+          that.setData({
+            isPublish: true,btnDis:false
+          })
+        }
       }
     }
-    if (direct === 'left') {
-      that.setData({
-        leftText: val
-      })
-      if (val.length>=18) {
-        Api.wxShowToast('左选项不超过18个字', 'none', 2000);
-      }
-    }
-    if (direct === 'right') {
-      that.setData({
-        rightText: val
-      })
-      if (val.length>=18) {
-        Api.wxShowToast('右选项不超过18个字', 'none', 2000);
-      }
-    }
-    // 发布按钮样式
-    if (that.data.titleText !== '点击输入标题' && that.data.leftText !== '' && that.data.rightText !== '') {
-      that.setData({
-        isPublish: true
-      })
-    } else {
-      that.setData({
-        isPublish: false
-      })
-    }
+
   },
   // 上传图片
   chooseImg (e) {
@@ -372,6 +382,7 @@ Page({
     
     wx.chooseImage({
       sizeType: ['compressed'],
+      count: 1,
       success: function(res) {
         var tempFilePaths = res.tempFilePaths;
         that.setData({showCropper: true});
@@ -381,9 +392,9 @@ Page({
         } else {
           that.setData({rightImgTemp: tempFilePaths,showRightDele: true,isLeftDirect:false})
         }
-        if (that.data.leftImgTemp && that.data.rightImgTemp) {
+        if (that.data.leftImgTemp && that.data.rightImgTemp && (that.data.titleText !== '点击输入标题' && that.data.titleText !== '')) {
           that.setData({
-            isPublish: true
+            isPublish: true,btnDis:false
           })
         } else {
           that.setData({
@@ -402,13 +413,14 @@ Page({
     let leftImgTemp = that.data.leftImgTemp;
     let rightImgTemp = that.data.rightImgTemp;
     let token = that.data.token;
+    let isPublish = that.data.isPublish;
     
     if (txtActive) { //上传文字
       if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
         let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
         return false;
       }
-      if (that.data.titleText === '') {
+      if (that.data.titleText === '' || that.data.titleText === '点击输入标题') {
         let wxShowToast = Api.wxShowToast('请填写标题', 'none', 2000);
         return false;
       }
@@ -422,56 +434,26 @@ Page({
       }
       
       let postData = {
-        question: that.data.titleText.substring(0,30),
-        option1: that.data.leftText.substring(0,36),
-        option2: that.data.rightText.substring(0,36),
-        type: 1
+        question: that.data.titleText.replace(/\s/g, "").substring(0,30),
+        option1: that.data.leftText.replace(/\s/g, "").substring(0,36),
+        option2: that.data.rightText.replace(/\s/g, "").substring(0,36)
+        // ,
+        // type: 1
       }
-      that.setData({
-        btnDis: true
-      });
 
-      Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
-        that.setData({
-          isPublish: false
-        })
-        wx.showLoading({
-          title: '发布中',
-          mask: true
-        });
-        let status = res.data.status*1;
-        // console.log(res,'tsss')
-        if (status===200) {
-          Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
-          that.setData({
-            qid: res.data.data.id,
-            showToast: false,
-            leftHolder: '点击输入左选项',
-            rightHolder: '点击输入右选项',
-            titleText: '点击输入标题',
-            leftText: '',
-            rightText: '',
-            isPublish: false,
-            showTextarea: false,
-            showLeft: false,
-            showRight: false,
-            btnDis: false
+      if (isPublish) {
+        Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+          // that.setData({
+          //   isPublish: false
+          // })
+          wx.showLoading({
+            title: '发布中',
+            mask: true
           });
-          // 2s后消失
-          setTimeout(() => {
-            that.setData({
-              showToast: false,
-              hasUserInfo: false,
-              isShare: true
-            });
-          }, 1500)
-        }
-        if (status === 201) {
-          publishedPoint = res.data.data.member.points;
-          // console.log(publishedPoint,myPoint,'pointttt')
-          wx.hideLoading();
-          if (publishedPoint===myPoint) {
-            Api.wxShowToast('发布成功', 'success', 2000);
+          let status = res.data.status*1;
+          // console.log(res,'tsss')
+          if (status===200) {
+            Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
             that.setData({
               qid: res.data.data.id,
               showToast: false,
@@ -494,11 +476,16 @@ Page({
                 isShare: true
               });
             }, 1500)
-          } else {
-            setTimeout(()=> {
+          }
+          if (status === 201) {
+            publishedPoint = res.data.data.member.points;
+            // console.log(publishedPoint,myPoint,'pointttt')
+            wx.hideLoading();
+            if (publishedPoint===myPoint) {
+              Api.wxShowToast('发布成功', 'success', 2000);
               that.setData({
                 qid: res.data.data.id,
-                showToast: true,
+                showToast: false,
                 leftHolder: '点击输入左选项',
                 rightHolder: '点击输入右选项',
                 titleText: '点击输入标题',
@@ -510,22 +497,56 @@ Page({
                 showRight: false,
                 btnDis: false
               });
-    
-            }, 300)
-            // 2s后消失
-            setTimeout(() => {
-              that.setData({
-                showToast: false,
-                hasUserInfo: false,
-                isShare: true
-              });
-            }, 1500)
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true
+                });
+              }, 1500)
+            } else {
+              setTimeout(()=> {
+                that.setData({
+                  qid: res.data.data.id,
+                  showToast: true,
+                  leftHolder: '点击输入左选项',
+                  rightHolder: '点击输入右选项',
+                  titleText: '点击输入标题',
+                  leftText: '',
+                  rightText: '',
+                  isPublish: false,
+                  showTextarea: false,
+                  showLeft: false,
+                  showRight: false,
+                  btnDis: false
+                });
+
+              }, 300)
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true
+                });
+              }, 1500)
+            }
           }
-        }
-      })
+        })
+      } else {
+        that.setData({
+          btnDis: true
+        });
+        Api.wxShowToast('请填写完整哦', 'none', 2000);
+      }
     } else { //上传图片
       if (that.data.titleText === '点击输入标题' && leftImgTemp === '' && rightImgTemp === '') {
         let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
+        return false;
+      }
+      if (that.data.titleText === '' || that.data.titleText === '点击输入标题') {
+        let wxShowToast = Api.wxShowToast('请填写标题', 'none', 2000);
         return false;
       }
       if (leftImgTemp==='') {
@@ -539,46 +560,24 @@ Page({
       let leftImg =  that.data.optionLtImage;
       let rightImg =  that.data.optionRtImage;
       let postData = {
-        question: that.data.titleText.substring(0,30),
+        question: that.data.titleText.replace(/\s/g, "").substring(0,30),
         option1: leftImg,
         option2: rightImg,
         type: 2
       }
-      that.setData({
-        btnDis: true
-      })
-      Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
-        that.setData({
-          isPublish: false
-        })
-        wx.showLoading({
-          title: '发布中',
-          mask: true
-        });
-        let status = res.data.status*1;
-        // console.log(res,'tsss')
-        if (status===200) {
-          Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
-          that.setData({
-            qid: res.data.data.id,
-            showToast: false,
-            isPublish: false,
-            btnDis: false
+      if (isPublish) {
+        Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+          // that.setData({
+          //   isPublish: false
+          // })
+          wx.showLoading({
+            title: '发布中',
+            mask: true
           });
-          // 2s后消失
-          setTimeout(() => {
-            that.setData({
-              showToast: false,
-              hasUserInfo: false,
-              isShare: true
-            });
-          }, 1500)
-        }
-        if (status === 201) {
-          publishedPoint = res.data.data.member.points;
-          wx.hideLoading();
-          if (publishedPoint===myPoint) {
-            Api.wxShowToast('发布成功', 'success', 2000);
+          let status = res.data.status*1;
+          // console.log(res,'tsss')
+          if (status===200) {
+            Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
             that.setData({
               qid: res.data.data.id,
               showToast: false,
@@ -593,27 +592,53 @@ Page({
                 isShare: true
               });
             }, 1500)
-          } else {
-            setTimeout(()=> {
+          }
+          if (status === 201) {
+            publishedPoint = res.data.data.member.points;
+            wx.hideLoading();
+            if (publishedPoint===myPoint) {
+              Api.wxShowToast('发布成功', 'success', 2000);
               that.setData({
                 qid: res.data.data.id,
-                showToast: true,
+                showToast: false,
                 isPublish: false,
                 btnDis: false
               });
-    
-            }, 300)
-            // 2s后消失
-            setTimeout(() => {
-              that.setData({
-                showToast: false,
-                hasUserInfo: false,
-                isShare: true
-              });
-            }, 1500)
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true
+                });
+              }, 1500)
+            } else {
+              setTimeout(()=> {
+                that.setData({
+                  qid: res.data.data.id,
+                  showToast: true,
+                  isPublish: false,
+                  btnDis: false
+                });
+
+              }, 300)
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true
+                });
+              }, 1500)
+            }
           }
-        }
-      })
+        })
+      } else {
+        that.setData({
+          btnDis: true
+        })
+        Api.wxShowToast('请提交完整信息哦', 'none', 2000);
+      }
     }
   },
   showMaskHidden () {
@@ -697,7 +722,7 @@ Page({
       wx.navigateBack({
         delta: 1
       })
-    }, 1300)
+    }, 3500)
   },
   shareTomoment () {
     let that = this;
@@ -867,8 +892,18 @@ Page({
             let points = res.data.data.points || 0;
             if (points) {
               Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
+              setTimeout(()=> {
+                wx.navigateBack({
+                  delta: 1
+                })
+              }, 9500)
             } else {
               Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+              setTimeout(()=> {
+                wx.navigateBack({
+                  delta: 1
+                })
+              }, 9500)
             }
           })
           that.setData({
@@ -884,11 +919,6 @@ Page({
         } 
       })
     },3000)
-    setTimeout(()=> {
-      wx.navigateBack({
-        delta: 1
-      })
-    }, 9500)
   },
   
   shareToFriend () {
@@ -935,10 +965,18 @@ Page({
         showRight: false
       })
     }
-    if (title===''||leftText===''||rightText===''){
-      that.setData({
-        isPublish: false
-      })
+    console.log(title,leftText,rightText,'blur')
+    if (that.data.txtActive) {
+      if (title===''||leftText===''||rightText===''){
+        that.setData({
+          isPublish: false
+        })
+      }
+      if (leftText&&rightText&&title&&title!=='点击输入标题') {
+        that.setData({
+          isPublish: true
+        })
+      }
     }
 
   },
@@ -993,6 +1031,7 @@ Page({
     // }
   },
   changeTab (e) {
+    console.log(e,ImgLock,'2222')
     let that = this;
     let tab = e.currentTarget.dataset.tab;
     let titleText = that.data.titleText;
@@ -1002,8 +1041,9 @@ Page({
       that.setData({txtActive:true})
       if (titleText === '点击输入标题' || that.data.leftText === '' || that.data.rightText === '') {
         that.setData({isPublish:false})
-      } else {
-        that.setData({isPublish:true})
+      }
+      if ((titleText !== '点击输入标题' && titleText !== '') && that.data.leftText === '' && that.data.rightText === '') {
+        that.setData({isPublish:true,btnDis:false})
       }
 
     } else {
@@ -1015,8 +1055,8 @@ Page({
         if (titleText === '点击输入标题' || leftImgTemp === '' || rightImgTemp === '') {
           that.setData({isPublish:false})
         }
-        if ((titleText !== '点击输入标题' || titleText !== '') && leftImgTemp !== '' && rightImgTemp !== '') {
-          that.setData({isPublish:true})
+        if ((titleText !== '点击输入标题' && titleText !== '') && leftImgTemp !== '' && rightImgTemp !== '') {
+          that.setData({isPublish:true,btnDis:false})
         }
       }
       

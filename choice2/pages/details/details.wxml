@@ -38,7 +38,7 @@
                     </view>
                     <image class="{{details.option1_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type===2}}" src="{{details.option1}}" />
                     <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose1_per}}%</view>
-                    <image wx:if="{{details.option1_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
+                    <image wx:if="{{details.option1_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
                 </view>
             </view>
             <view class="choice-item-container">
@@ -48,7 +48,7 @@
                     </view>
                     <image class="{{details.option2_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type*1===2}}" src="{{details.option2}}" />
                     <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose2_per}}%</view>
-                    <image wx:if="{{details.option2_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
+                    <image wx:if="{{details.option2_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
                 </view>
             </view>
         </view>
@@ -59,10 +59,10 @@
 <view wx:if="{{showThumb}}" class="voted-thumb-box">
     <!-- <image src="../../images/thumb1.png" class="thumb1" /> -->
     <image src="../../images/thumb2.png" class="thumb2" />
-    <view class="dot"></view>
-    <view class="pulse"></view>
-    <view class="pulse1"></view>
-    <view class="pulse2"></view>
+    <!--<view class="dot"></view>-->
+    <!--<view class="pulse"></view>-->
+    <!--<view class="pulse1"></view>-->
+    <!--<view class="pulse2"></view>-->
 </view>
 
 <!-- 分享弹窗 -->

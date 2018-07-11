@@ -282,3 +282,7 @@ page{
     /* background-color: rgba(0, 0, 0, 0.8); */
 }
 .select-again-btn{color: #888;border-right: 1px solid #333;}
+/*button[disabled].publish-btn{*/
+    /*background: #B83C3A;*/
+    /*color: #fff;*/
+/*}*/
