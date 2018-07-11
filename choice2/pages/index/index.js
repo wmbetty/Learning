@@ -187,7 +187,6 @@ Page({
               uavatar: userInfo.avatarUrl,
               hasUserInfo: true
             });
-            that.downLoadImg(userInfo.avatarUrl, 'avatarImgPath');
             // downLoadImg(userInfo.avatarUrl, 'headerUrl');
             backApi.getToken().then(function(response) {
               if (response.data.status*1===200) {
@@ -283,7 +282,6 @@ Page({
       that.setData({
         uavatar: userInfo.avatarUrl
       });
-      that.downLoadImg(userInfo.avatarUrl, 'avatarImgPath');
       backApi.getToken().then(function(response) {
         if (response.data.status * 1 === 200) {
           let token = response.data.data.access_token;
@@ -743,11 +741,11 @@ Page({
     this.setData({
       maskHidden: false
     })
-    setTimeout(()=> {
-      wx.navigateBack({
-        delta: 1
-      })
-    }, 3500)
+    // setTimeout(()=> {
+    //   wx.navigateBack({
+    //     delta: 1
+    //   })
+    // }, 3500)
   },
   shareTomoment () {
     let that = this;
@@ -768,7 +766,6 @@ Page({
                 if (res.data.data.url) {
                   setTimeout(()=>{
                     let qrcodeImg = res.data.data.url;
-                    that.downLoadImg(res.data.data.url, 'qrcodeImgPath');
                     that.setData({
                       qrcode: qrcodeImg
                     })
@@ -787,15 +784,20 @@ Page({
         isShare: false,
         showPosterView: true
       })
+      that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
+      that.downLoadImg(that.data.uavatar, 'avatarImgPath');
 
       var context = wx.createCanvasContext('mycanvas');
     
     let shareQues = that.data.shareTitle;
     let chineseReg = /[\u4E00-\u9FA5]/g;
-    context.setFillStyle("#ffffff")
-    context.fillRect(0, 0, 375, 667)
+    context.setFillStyle("#ffffff");
+    context.fillRect(0, 0, 375, 667);
     var path = "../../images/posterBg.png";
     context.drawImage(path, 0, 0, 375, 154);
+
+      let path1 = that.data.avatarImgPath;
+      let qrcodeImg = that.data.qrcodeImgPath;
 
     var path3 = "/images/my_bg.jpg";
     //绘制一起吃面标语
@@ -866,8 +868,6 @@ Page({
         context.stroke();
     //绘制右下角扫码提示语
     context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-    let path1 = that.data.avatarImgPath;
-    let qrcodeImg = that.data.qrcodeImgPath;
       context.drawImage(qrcodeImg, 154, 582, 60, 60);
       // console.log(qrcodeImg,'qrcode')
     //绘制头像
@@ -888,17 +888,17 @@ Page({
           });
         },
         fail: function (res) {
-          console.log(res);
+          console.log(res,'canvas fail');
         }
       });
-    }, 2000);
+    }, 3500);
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
-      duration: 3000
+      duration: 3500
     });
     let that = this;
     let token = this.data.token;
@@ -937,6 +937,7 @@ Page({
           });
         },
         fail:(err)=>{
+          console.log(err)
           that.setData({
             showDialog: true,
             openType: 'openSetting',
@@ -944,7 +945,7 @@ Page({
           })
         } 
       })
-    },3000)
+    },4500)
   },
   
   shareToFriend () {

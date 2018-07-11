@@ -366,12 +366,11 @@ Page({
               // top=0时
               Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
                 let status = res.data.status*1;
-                let notopPageCount = res.header['X-Pagination-Page-Count'];
-                if (notopPage == notopPageCount) {
-                  that.setData({notopPage: 1});
-                } else {
+                // let notopPageCount = res.header['X-Pagination-Page-Count'];
+                // if (notopPage == notopPageCount) {
+                // } else {
                   that.setData({notopPage: notopPage+1});
-                }
+                // }
                 if (status===200) {
                   let notopDatas = res.data.data || [];
                   if (notopDatas.length>0) {
@@ -390,6 +389,11 @@ Page({
                     })
                   }
                   if (notopDatas.length===0) {
+                    that.setData({
+                      notopPage: 1
+                    })
+                  }
+                  if (notopDatas.length===0 && notopPage===1) {
                     that.setData({
                       isEmpty: true
                     })

@@ -76,7 +76,7 @@
     </view>
 </view>
 
-<view class='imagePathBox' bindtap="closePoster" hidden="{{maskHidden == false}}">
+<view class='imagePathBox' catchtap="closePoster" hidden="{{maskHidden == false}}">
       <image src="{{imagePath}}" class='shengcheng'></image>
       <view class="shengcheng poster-view" wx:show="{{showPosterView}}" catchtap="showMaskHidden">
           <image src="../../images/posterBg.png" class="poster-banner" style="height:{{viewWidth*0.33}}px;"></image>

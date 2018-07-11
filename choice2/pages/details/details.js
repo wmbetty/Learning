@@ -351,7 +351,7 @@ shareToMoment () {
       })
       var context = wx.createCanvasContext('mycanvas');
     context.setFillStyle("#ffffff")
-    context.fillRect(0, 0, 375, 667)
+    context.fillRect(0, 0, 375, 667);
     var path = "../../images/posterBg.png";
     
     context.drawImage(path, 0, 0, 375, 154);
