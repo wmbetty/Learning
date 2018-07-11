@@ -22,8 +22,12 @@ Page({
     });
     let that = this;
     backApi.getToken().then(function(response) {
-      let token = response;
-      that.setData({token: token});
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+      }
     })
   },
   onReady: function () {},

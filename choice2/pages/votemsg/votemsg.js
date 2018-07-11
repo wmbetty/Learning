@@ -18,39 +18,43 @@ Page({
     let that = this;
     // 获取token
     backApi.getToken().then(function(response) {
-      let token = response;
-      that.setData({token: token});
-      let voteMsgApi = backApi.voteMsg+token;
-      wx.showLoading({
-        title: '加载中',
-      });
-      Api.wxRequest(voteMsgApi,'GET',{},(res)=> {
-        // console.log(res, 'sssss')
-        if (res.data.status*1===200) {
-          wx.hideLoading();
-          let totalPage = res.header['X-Pagination-Page-Count'];
-          let currPage = res.header['X-Pagination-Current-Page'];
-          let totalCount = res.header['X-Pagination-Total-Count'];
-          that.setData({
-            totalPage: totalPage,
-            currPage: currPage
-          })
-          let datas = res.data.data || [];
-          if (datas.length>0) {
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
+        let voteMsgApi = backApi.voteMsg+token;
+        wx.showLoading({
+          title: '加载中',
+        });
+        Api.wxRequest(voteMsgApi,'GET',{},(res)=> {
+          // console.log(res, 'sssss')
+          if (res.data.status*1===200) {
+            wx.hideLoading();
+            let totalPage = res.header['X-Pagination-Page-Count'];
+            let currPage = res.header['X-Pagination-Current-Page'];
+            let totalCount = res.header['X-Pagination-Total-Count'];
             that.setData({
-              voteLists: datas
+              totalPage: totalPage,
+              currPage: currPage
             })
-          } else{
-            that.setData({
-              noDatas: true
-            })
+            let datas = res.data.data || [];
+            if (datas.length>0) {
+              that.setData({
+                voteLists: datas
+              })
+            } else{
+              that.setData({
+                noDatas: true
+              })
+            }
           }
-        }
-      })
-      let readVoteApi = backApi.readVoteApi+token;
-      Api.wxRequest(readVoteApi,'PUT',{},(res)=> {
-        console.log(res.data, 'read');
-      })
+        })
+        let readVoteApi = backApi.readVoteApi+token;
+        Api.wxRequest(readVoteApi,'PUT',{},(res)=> {
+          console.log(res.data, 'read');
+        })
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+      }
     });
     wx.setNavigationBarColor({
       frontColor:'#000000',

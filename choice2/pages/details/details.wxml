@@ -59,6 +59,7 @@
 <view wx:if="{{showThumb}}" class="voted-thumb-box">
     <!-- <image src="../../images/thumb1.png" class="thumb1" /> -->
     <image src="../../images/thumb2.png" class="thumb2" />
+    <image src="../../images/vote_circle.png" class="vote-circle" />
     <!--<view class="dot"></view>-->
     <!--<view class="pulse"></view>-->
     <!--<view class="pulse1"></view>-->

@@ -27,35 +27,39 @@ Page({
   onLoad: function (options) {
     let that = this;
     backApi.getToken().then(function(response) {
-      let token = response;
-      let infoApi = backApi.othersInfo+token;
-      let otherPublishQues = backApi.otherPublishQues+token;
-      let mid = options.mid;
-      that.setData({mid:mid,token:token});
-      Api.wxRequest(infoApi,'GET',{mid:mid},(res)=> {
-        let datas = res.data.data;
-        if (datas.id) {
-          that.setData({
-            userInfo: datas
-          });
-          Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
-            if (res.data.status*1===200 && res.data.data.length) {
-              let myPublish = res.data.data;
-              let totalPage = res.header['X-Pagination-Page-Count'];
-              let currPage = res.header['X-Pagination-Current-Page'];
-              let totalCount = res.header['X-Pagination-Total-Count'];
-              that.setData({
-                totalPage: totalPage,
-                currPage: currPage,
-                totalCount: totalCount,
-                myPublish: myPublish
-              })
-            }
-          })
-        } else {
-          Api.wxShowToast('获取信息失败', 'none', 2000);
-        }
-      })
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        let infoApi = backApi.othersInfo+token;
+        let otherPublishQues = backApi.otherPublishQues+token;
+        let mid = options.mid;
+        that.setData({mid:mid,token:token});
+        Api.wxRequest(infoApi,'GET',{mid:mid},(res)=> {
+          let datas = res.data.data;
+          if (datas.id) {
+            that.setData({
+              userInfo: datas
+            });
+            Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
+              if (res.data.status*1===200 && res.data.data.length) {
+                let myPublish = res.data.data;
+                let totalPage = res.header['X-Pagination-Page-Count'];
+                let currPage = res.header['X-Pagination-Current-Page'];
+                let totalCount = res.header['X-Pagination-Total-Count'];
+                that.setData({
+                  totalPage: totalPage,
+                  currPage: currPage,
+                  totalCount: totalCount,
+                  myPublish: myPublish
+                })
+              }
+            })
+          } else {
+            Api.wxShowToast('获取信息失败', 'none', 2000);
+          }
+        })
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+      }
     })
   },
   // 详情

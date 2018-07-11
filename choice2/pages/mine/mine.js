@@ -128,84 +128,92 @@ Page({
         userInfo: userInfo
       });
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({token: token});
-        let infoApi = backApi.myInfo+token;
-        Api.wxRequest(infoApi,'GET',{},(res)=> {
-          let datas = res.data.data;
-          that.setData({
-            points: datas.points || 0
-          })
-        });
-        let questionApi = backApi.my_question+token;
-        let joinApi = backApi.my_join+token;
-        that.setData({
-          myQuestionApi: questionApi,
-          joinApi: joinApi
-        });
-        wx.showLoading({
-          title: '加载中',
-        });
-        Api.wxRequest(questionApi, 'GET', {}, (res)=> {
-          if (res.data.status*1 === 200) {
-            wx.hideLoading();
-            let myPublish = res.data.data;
-            let myTotalPage = res.header['X-Pagination-Page-Count'];
-            let myCurrPage = res.header['X-Pagination-Current-Page'];
-            let myCount = res.header['X-Pagination-Total-Count'];
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token});
+          let infoApi = backApi.myInfo+token;
+          Api.wxRequest(infoApi,'GET',{},(res)=> {
+            let datas = res.data.data;
             that.setData({
-              myPublish: myPublish,
-              myTotalPage: myTotalPage,
-              myCurrPage: myCurrPage,
-              myTotalCount: myCount
+              points: datas.points || 0
             })
-          }
-        });
-        Api.wxRequest(joinApi, 'GET', {}, (res)=> {
-          if (res.data.status*1 === 200) {
-            let myJoin = res.data.data;
-            let joinTotalPage = res.header['X-Pagination-Page-Count'];
-            let joinCurrPage = res.header['X-Pagination-Current-Page'];
-            let joinCount = res.header['X-Pagination-Total-Count'];
-            if (myJoin.length > 0) {
+          });
+          let questionApi = backApi.my_question+token;
+          let joinApi = backApi.my_join+token;
+          that.setData({
+            myQuestionApi: questionApi,
+            joinApi: joinApi
+          });
+          wx.showLoading({
+            title: '加载中',
+          });
+          Api.wxRequest(questionApi, 'GET', {}, (res)=> {
+            if (res.data.status*1 === 200) {
+              wx.hideLoading();
+              let myPublish = res.data.data;
+              let myTotalPage = res.header['X-Pagination-Page-Count'];
+              let myCurrPage = res.header['X-Pagination-Current-Page'];
+              let myCount = res.header['X-Pagination-Total-Count'];
               that.setData({
-                myJoin: myJoin,
-                joinCurrPage: joinCurrPage,
-                joinTotalPage: joinTotalPage,
-                joinTotalCount: joinCount
+                myPublish: myPublish,
+                myTotalPage: myTotalPage,
+                myCurrPage: myCurrPage,
+                myTotalCount: myCount
               })
             }
-          }
-        });
-        let voteUnreadApi = backApi.voteUnreadApi+token;
-        let msgTotalApi = backApi.msgUnreadTotal+token;
-        setInterval(()=>{
-          // 获取投票信息
-          Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              if (res.data.data.vote) {
-                that.setData({voteUnreadCount: res.data.data.vote});
-              }
-            }
           });
-          // 获取通知数量
-          Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              let msgTotal = res.data.data.total;
-              if (msgTotal) {
-                Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-                  that.setData({msgCount: msgTotal});
+          Api.wxRequest(joinApi, 'GET', {}, (res)=> {
+            if (res.data.status*1 === 200) {
+              let myJoin = res.data.data;
+              let joinTotalPage = res.header['X-Pagination-Page-Count'];
+              let joinCurrPage = res.header['X-Pagination-Current-Page'];
+              let joinCount = res.header['X-Pagination-Total-Count'];
+              if (myJoin.length > 0) {
+                that.setData({
+                  myJoin: myJoin,
+                  joinCurrPage: joinCurrPage,
+                  joinTotalPage: joinTotalPage,
+                  joinTotalCount: joinCount
                 })
               }
             }
           });
-        },4000)
+          let voteUnreadApi = backApi.voteUnreadApi+token;
+          let msgTotalApi = backApi.msgUnreadTotal+token;
+          setInterval(()=>{
+            // 获取投票信息
+            Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                if (res.data.data.vote) {
+                  that.setData({voteUnreadCount: res.data.data.vote});
+                }
+              }
+            });
+            // 获取通知数量
+            Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                let msgTotal = res.data.data.total;
+                if (msgTotal) {
+                  Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+                    that.setData({msgCount: msgTotal});
+                  })
+                }
+              }
+            });
+          },4000)
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+        }
       });
 
     } else {
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({token: token,showDialog: true});
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token,showDialog: true});
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+        }
       });
     }
   },

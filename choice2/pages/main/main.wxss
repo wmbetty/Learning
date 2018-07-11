@@ -310,9 +310,15 @@ width: 100%;height: 240rpx;
 .thumb2{
   width: 268rpx;height: 266rpx;
   position: absolute;left: 18%;top:21%;
-  /* opacity: 0; */
-  animation: thumb2 1s linear;opacity: 1;
+  animation: thumb2 1s linear;opacity: 0;
   z-index: 15;
+  animation-delay: 0.3s;
+}
+.vote-circle{
+  width: 268rpx;height: 266rpx;
+  position: absolute;left: 18%;top:21%;
+  animation: circle 1s linear;opacity: 0;
+
 }
 /*@keyframes thumb1{*/
   /*50% {*/
@@ -325,16 +331,30 @@ width: 100%;height: 240rpx;
 /*}*/
 @keyframes thumb2{
   15% {
-    transform: scale(0.4) rotate(-10deg);
+    transform: scale(0.4);
     opacity: 1;
   }
   30% {
-    transform: scale(0.8) rotate(-20deg);
-    opacity: 1;
+    transform: scale(0.8);
+    opacity: 0.5;
   }
   100%{
     transform: scale(1);
+    opacity: 0;
+  }
+}
+@keyframes circle {
+  15% {
+    transform: rotate(120deg);
     opacity: 1;
+  }
+  30% {
+    transform: rotate(240deg);
+    opacity: 0.5;
+  }
+  100%{
+    transform: rotate(360deg);
+    opacity: 0;
   }
 }
 /*.no-show-thumb{opacity: 0;}*/

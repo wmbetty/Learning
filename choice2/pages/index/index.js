@@ -184,19 +184,24 @@ Page({
             });
             downLoadImg(userInfo.avatarUrl, 'headerUrl');
             backApi.getToken().then(function(response) {
-              let token = response;
-              that.setData({token: token});
-              let myInfo = backApi.myInfo+token;
-              Api.wxRequest(myInfo,'GET',{},(res)=>{
-                if (res.data.status*1===200) {
-                  myPoint = res.data.data.points;
-                  ImgLock = res.data.data.release_img_lock*1;
-                }
-              })
+              if (response.data.status*1===200) {
+                let token = response.data.data.access_token;
+                that.setData({token: token});
+                let myInfo = backApi.myInfo+token;
+                Api.wxRequest(myInfo,'GET',{},(res)=>{
+                  if (res.data.status*1===200) {
+                    myPoint = res.data.data.points;
+                    ImgLock = res.data.data.release_img_lock*1;
+                  }
+                });
+                Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+                  console.log(res.data.status, 'index update-user')
+                })
+              } else {
+                Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+              }
+
             });
-            Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-              console.log(res.data.status, 'index update-user')
-            })
           }
         },
         fail: (res)=>{
@@ -256,12 +261,16 @@ Page({
     let userInfo = wx.getStorageSync('userInfo');
     if (!userInfo.language) {
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({
-          showDialog: true,
-          hasUserInfo: false,
-          token: token
-        })
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({
+            showDialog: true,
+            hasUserInfo: false,
+            token: token
+          })
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+        }
       })
 
     } else {
@@ -270,15 +279,19 @@ Page({
       });
       downLoadImg(userInfo.avatarUrl, 'headerUrl');
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({token: token});
-        let myInfo = backApi.myInfo+token;
-        Api.wxRequest(myInfo,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            myPoint = res.data.data.points;
-            ImgLock = res.data.data.release_img_lock*1;
-          }
-        })
+        if (response.data.status * 1 === 200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token});
+          let myInfo = backApi.myInfo+token;
+          Api.wxRequest(myInfo,'GET',{},(res)=>{
+            if (res.data.status*1===200) {
+              myPoint = res.data.data.points;
+              ImgLock = res.data.data.release_img_lock*1;
+            }
+          })
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+        }
       })
     }
   },
@@ -436,9 +449,8 @@ Page({
       let postData = {
         question: that.data.titleText.replace(/\s/g, "").substring(0,30),
         option1: that.data.leftText.replace(/\s/g, "").substring(0,36),
-        option2: that.data.rightText.replace(/\s/g, "").substring(0,36)
-        // ,
-        // type: 1
+        option2: that.data.rightText.replace(/\s/g, "").substring(0,36),
+        type: 1
       }
 
       if (isPublish) {

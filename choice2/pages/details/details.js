@@ -143,66 +143,74 @@ Page({
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.language) {
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({
-          myAvatar: userInfo.avatarUrl,
-          token: token
-        });
-        let detailUrl = backApi.quesDetail+qid;
-        let myChooseTagApi = backApi.myChooseTagApi+token;
-        Api.wxRequest(detailUrl,'GET',{},(res)=>{
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({
+            myAvatar: userInfo.avatarUrl,
+            token: token
+          });
+          let detailUrl = backApi.quesDetail+qid;
+          let myChooseTagApi = backApi.myChooseTagApi+token;
+          Api.wxRequest(detailUrl,'GET',{},(res)=>{
 
-          if (res.data.data.id) {
-            if (res.data.data.status*1===4) {
-              Api.wxShowToast('该话题已被删', 'none', 3000);
-              setTimeout(()=>{
-                wx.reLaunch({
-                  url: `/pages/main/main`
-                })
-              },1500)
-            } else {
-              that.setData({
-                details: res.data.data,
-                quesId: res.data.data.id,
-                hots: res.data.data.hots
-              })
-              if (res.data.data.member) {
+            if (res.data.data.id) {
+              if (res.data.data.status*1===4) {
+                Api.wxShowToast('该话题已被删', 'none', 3000);
+                setTimeout(()=>{
+                  wx.reLaunch({
+                    url: `/pages/main/main`
+                  })
+                },1500)
+              } else {
                 that.setData({
-                  userInfo: res.data.data.member
+                  details: res.data.data,
+                  quesId: res.data.data.id,
+                  hots: res.data.data.hots
+                })
+                if (res.data.data.member) {
+                  that.setData({
+                    userInfo: res.data.data.member
+                  })
+                }
+              }
+            } else {
+              Api.wxShowToast('网络错误，请重试', 'none', 2000);
+            }
+          });
+          Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
+
+            if (res.data === '') {
+              that.setData({
+                ismyVoted: false
+              })
+            }
+            if (res.data.status*1===200) {
+              that.setData({
+                ismyVoted: true
+              })
+              if (res.data.data.choose*1===1) {
+                that.setData({
+                  isLeft: true
+                })
+              } else {
+                that.setData({
+                  isRight: true
                 })
               }
             }
-          } else {
-            Api.wxShowToast('网络错误，请重试', 'none', 400);
-          }
-        });
-        Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
-
-          if (res.data === '') {
-            that.setData({
-              ismyVoted: false
-            })
-          }
-          if (res.data.status*1===200) {
-            that.setData({
-              ismyVoted: true
-            })
-            if (res.data.data.choose*1===1) {
-              that.setData({
-                isLeft: true
-              })
-            } else {
-              that.setData({
-                isRight: true
-              })
-            }
-          }
-        })
+          })
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+        }
       });
     } else {
       backApi.getToken().then(function(response) {
-        let token = response;
-        that.setData({token: token,showDialog: true});
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token,showDialog: true});
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
+        }
       });
     }
   },

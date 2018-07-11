@@ -26,44 +26,48 @@ Page({
     let that = this;
     // 获取token
     backApi.getToken().then(function(response) {
-      let token = response;
-      that.setData({token: token});
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
 
-      let noticeMsg = backApi.noticeMsg+token;
-      wx.showLoading({
-        title: '加载中',
-      });
-      Api.wxRequest(noticeMsg,'GET',{},(res)=> {
-        if (res.data.status*1===200) {
-          wx.hideLoading();
-          let totalPage = res.header['X-Pagination-Page-Count'];
-          let currPage = res.header['X-Pagination-Current-Page'];
-          let totalCount = res.header['X-Pagination-Total-Count'];
-          that.setData({
-            totalPage: totalPage,
-            currPage: currPage
-          })
-          let datas = res.data.data || [];
-          if (datas.length>0) {
-            for (let item of datas) {
-              item.updated_time = item.updated_time;
+        let noticeMsg = backApi.noticeMsg+token;
+        wx.showLoading({
+          title: '加载中',
+        });
+        Api.wxRequest(noticeMsg,'GET',{},(res)=> {
+          if (res.data.status*1===200) {
+            wx.hideLoading();
+            let totalPage = res.header['X-Pagination-Page-Count'];
+            let currPage = res.header['X-Pagination-Current-Page'];
+            let totalCount = res.header['X-Pagination-Total-Count'];
+            that.setData({
+              totalPage: totalPage,
+              currPage: currPage
+            })
+            let datas = res.data.data || [];
+            if (datas.length>0) {
+              for (let item of datas) {
+                item.updated_time = item.updated_time;
+              }
+              that.setData({
+                noticeLists: datas
+              })
+            } else {
+              that.setData({
+                noData: true
+              })
             }
-            that.setData({
-              noticeLists: datas
-            })
-          } else {
-            that.setData({
-              noData: true
-            })
           }
-        }
 
-      })
+        })
 
-      let readNoticeApi = backApi.readNoticeApi+token;
-      Api.wxRequest(readNoticeApi,'PUT',{},(res)=> {
-        console.log(res.data, 'read');
-      })
+        let readNoticeApi = backApi.readNoticeApi+token;
+        Api.wxRequest(readNoticeApi,'PUT',{},(res)=> {
+          console.log(res.data, 'read');
+        })
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+      }
     })
   },
   onHide: function () {

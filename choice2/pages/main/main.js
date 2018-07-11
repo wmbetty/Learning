@@ -63,7 +63,6 @@ Page({
     let that = this;
     startx = e.touches[0].pageX;
     starty = e.touches[0].pageY;
-    that.setData({showThumb: false});
   },
   //手指离开屏幕
   touchend (e) {
@@ -246,7 +245,12 @@ Page({
               });
               Api.wxRequest(noTopQuesApi, 'GET', {page: notopPage}, (res)=>{
                 let datas = res.data.data || [];
-                that.setData({notopPage: notopPage+1});
+                let notopPageCount = res.header['X-Pagination-Page-Count'];
+                if (notopPage == notopPageCount) {
+                  that.setData({notopPage: 1});
+                } else {
+                  that.setData({notopPage: notopPage+1});
+                }
                 if (datas.length===0) {
                   wx.hideLoading();
                   that.setData({
@@ -319,96 +323,105 @@ Page({
 
     // 获取token
     backApi.getToken().then(function(response){
-      let token = response;
-      that.setData({token: token});
-      let userInfo = wx.getStorageSync('userInfo', userInfo);
-      let userInfoApi = backApi.userInfo+token;
-      if (userInfo) {
-        let userData = {
-          avatarUrl: userInfo.avatarUrl,
-          nickName: userInfo.nickName,
-          country: userInfo.country,
-          city: userInfo.city,
-          language: userInfo.language,
-          province: userInfo.province,
-          gender: userInfo.gender
-        };
+      // console.log(response,'seeeee')
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
+        let userInfo = wx.getStorageSync('userInfo', userInfo);
+        let userInfoApi = backApi.userInfo+token;
+        if (userInfo) {
+          let userData = {
+            avatarUrl: userInfo.avatarUrl,
+            nickName: userInfo.nickName,
+            country: userInfo.country,
+            city: userInfo.city,
+            language: userInfo.language,
+            province: userInfo.province,
+            gender: userInfo.gender
+          };
 
-        // 更新用户信息
-        Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-          console.log(res.data.status, 'update-userinfo')
-          baseLock = res.data.data.user_base_lock;
-          mid = res.data.data.id;
-        });
-      }
-
-      wx.showLoading({
-        title: '加载中',
-      });
-      let watchQuesApi = backApi.watchQuesApi+token;
-      let noTopQuesApi = backApi.noTopQues+token;
-      let page = that.data.page;
-      let notopPage = that.data.notopPage;
-
-      // 取首页数据
-      Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
-        let status = res.data.status*1;
-        if (status===200) {
-          wx.hideLoading();
-          let datas = res.data.data || [];
-          if (datas.length===0) {
-            // top=0时
-            Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
-              let status = res.data.status*1;
-              that.setData({notopPage: notopPage+1});
-              if (status===200) {
-                let notopDatas = res.data.data || [];
-                if (notopDatas.length>0) {
-                  for (let item of datas) {
-                    if (item.type*1===1) {
-                      item.option1 = item.option1.substring(0, 18);
-                      item.option2 = item.option2.substring(0, 18);
-                      item.question = item.question.substring(0, 30);
-                    }
-                  }
-                  that.setData({questionList: notopDatas});
-                  Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
-                    if (res.data.status*1===201) {
-                      console.log('watched');
-                    }
-                  })
-                }
-                if (notopDatas.length===0) {
-                  that.setData({
-                    isEmpty: true
-                  })
-                }
-              } else {
-                Api.wxShowToast('网络出错了', 'none', 2000);
-              }
-            })
-          }
-          if (datas.length>0) {
-            for (let item of datas) {
-              if (item.type*1===1) {
-                item.option1 = item.option1.substring(0, 18);
-                item.option2 = item.option2.substring(0, 18);
-                item.question = item.question.substring(0, 30);
-              }
-            }
-            that.setData({questionList: datas})
-            Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
-              if (res.data.status*1===201) {
-                console.log('watched')
-              }
-            })
-          }
-        } else {
-          wx.hideLoading();
-          Api.wxShowToast('网络出错了,请稍后再试', 'none', 2000);
+          // 更新用户信息
+          Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+            console.log(res.data.status, 'update-userinfo')
+            baseLock = res.data.data.user_base_lock;
+            mid = res.data.data.id;
+          });
         }
-      })
 
+        wx.showLoading({
+          title: '加载中',
+        });
+        let watchQuesApi = backApi.watchQuesApi+token;
+        let noTopQuesApi = backApi.noTopQues+token;
+        let page = that.data.page;
+        let notopPage = that.data.notopPage;
+
+        // 取首页数据
+        Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
+          let status = res.data.status*1;
+          if (status===200) {
+            wx.hideLoading();
+            let datas = res.data.data || [];
+            if (datas.length===0) {
+              // top=0时
+              Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
+                let status = res.data.status*1;
+                let notopPageCount = res.header['X-Pagination-Page-Count'];
+                if (notopPage == notopPageCount) {
+                  that.setData({notopPage: 1});
+                } else {
+                  that.setData({notopPage: notopPage+1});
+                }
+                if (status===200) {
+                  let notopDatas = res.data.data || [];
+                  if (notopDatas.length>0) {
+                    for (let item of datas) {
+                      if (item.type*1===1) {
+                        item.option1 = item.option1.substring(0, 18);
+                        item.option2 = item.option2.substring(0, 18);
+                        item.question = item.question.substring(0, 30);
+                      }
+                    }
+                    that.setData({questionList: notopDatas});
+                    Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
+                      if (res.data.status*1===201) {
+                        console.log('watched');
+                      }
+                    })
+                  }
+                  if (notopDatas.length===0) {
+                    that.setData({
+                      isEmpty: true
+                    })
+                  }
+                } else {
+                  Api.wxShowToast('网络出错了', 'none', 2000);
+                }
+              })
+            }
+            if (datas.length>0) {
+              for (let item of datas) {
+                if (item.type*1===1) {
+                  item.option1 = item.option1.substring(0, 18);
+                  item.option2 = item.option2.substring(0, 18);
+                  item.question = item.question.substring(0, 30);
+                }
+              }
+              that.setData({questionList: datas})
+              Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+                if (res.data.status*1===201) {
+                  console.log('watched')
+                }
+              })
+            }
+          } else {
+            wx.hideLoading();
+            Api.wxShowToast('网络出错了,请稍后再试', 'none', 2000);
+          }
+        })
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+      }
 
     }).catch(function(err){
       //错误处理
@@ -418,31 +431,36 @@ Page({
   },
   onShow () {
     let that = this;
+    // res.data.data.access_token
     backApi.getToken().then(function(response) {
-      let token = response;
-      let voteUnreadApi = backApi.voteUnreadApi+token;
-      let msgTotalApi = backApi.msgUnreadTotal+token;
-      setInterval(()=>{
-        // 获取投票信息
-        Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            if (res.data.data.vote) {
-              that.setData({voteUnreadCount: res.data.data.vote});
+      if (response.data.status*1===200) {
+        let token = response.data.data.access_token;
+        let voteUnreadApi = backApi.voteUnreadApi+token;
+        let msgTotalApi = backApi.msgUnreadTotal+token;
+        setInterval(()=>{
+          // 获取投票信息
+          Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
+            if (res.data.status*1===200) {
+              if (res.data.data.vote) {
+                that.setData({voteUnreadCount: res.data.data.vote});
+              }
             }
-          }
-        });
-        // 获取通知数量
-        Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            let msgTotal = res.data.data.total;
-            if (msgTotal) {
-              Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-                that.setData({msgCount: msgTotal});
-              })
+          });
+          // 获取通知数量
+          Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+            if (res.data.status*1===200) {
+              let msgTotal = res.data.data.total;
+              if (msgTotal) {
+                Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+                  that.setData({msgCount: msgTotal});
+                })
+              }
             }
-          }
-        });
-      },8000)
+          });
+        },8000)
+      } else {
+        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+      }
     })
 
   },
