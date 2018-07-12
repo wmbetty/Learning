@@ -221,25 +221,39 @@ Page({
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
-    if (res.from === 'button') {
-      // 来自页面内转发按钮
-      console.log(res.target, 'button')
-    }
     let that = this;
     let token = that.data.token;
     let questId = that.data.quesId;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
-    return {
-      title: that.data.details.question,
-      path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/posterBg.jpg',
-      success() {
-        Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          // console.log(res, 'friends')
-        })
-      },
-      fail() {},
-      complete() {}
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      return {
+        title: that.data.details.question,
+        path: `/pages/main/main?qid=${questId}`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            // console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {}
+      }
+    } else {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
     }
   },
   onPageScroll () {

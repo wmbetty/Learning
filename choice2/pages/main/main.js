@@ -393,7 +393,7 @@ Page({
                       notopPage: 1
                     })
                   }
-                  if (notopDatas.length===0 && notopPage===1) {
+                  if (notopDatas.length===0) {
                     that.setData({
                       isEmpty: true
                     })
@@ -477,23 +477,41 @@ Page({
       }
     })
   },
-  onShareAppMessage () {
+  onShareAppMessage (res) {
     let that = this;
     let questId = that.data.quesId;
     let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
-    return {
-      title: that.data.question,
-      path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/posterBg.jpg',
-      success() {
-        Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          console.log(res, 'friends')
-        })
-      },
-      fail() {},
-      complete() {
 
+    if (res.from === 'menu') {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
+    } else {
+      return {
+        title: that.data.question,
+        path: `/pages/main/main?qid=${questId}`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
       }
     }
   },
@@ -527,9 +545,9 @@ Page({
     }
 
     Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      console.log(res,'poster')
       if (res.data.status * 1 === 200 && res.data.data.url) {
         that.setData({qrcodeImg: res.data.data.url,showPosterView: true});
+        that.downLoadImg(res.data.data.url, 'qrcodeImgPath');
 
         that.setData({
           showShare: false,
@@ -543,8 +561,6 @@ Page({
         var path = "../../images/posterBg.png";
         context.drawImage(path, 0, 0, 375, 154);
 
-        that.downLoadImg(that.data.avatar, 'avatarImgPath');
-        that.downLoadImg(that.data.qrcodeImg, 'qrcodeImgPath');
 
         setTimeout(function(){
           var path1 = that.data.avatarImgPath;
@@ -624,7 +640,7 @@ Page({
             }
           });
 
-        }, 200);
+        }, 3000);
       } else {
         Api.wxShowToast('小程序码获取失败~', 'none', 2000)
       }
@@ -1243,6 +1259,7 @@ Page({
         nname: nname,
         avatar: avatar
       })
+      that.downLoadImg(avatar, 'avatarImgPath');
     } else {
       // 微信授权
       that.setData({

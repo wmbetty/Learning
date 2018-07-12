@@ -89,7 +89,27 @@ Page({
       Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
-  onShareAppMessage: function () {},
+  onShareAppMessage: function (res) {
+    let that = this;
+    let token = that.data.token;
+    let shareFriends = backApi.shareFriends+'?access-token='+token;
+    if (res.from === 'menu') {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
+    }
+  },
   onPageScroll () {
     // wx.setNavigationBarTitle({
     //   title: "消息"

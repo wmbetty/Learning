@@ -134,16 +134,34 @@ Page({
   },
 
   /**
-   * 页面上拉触底事件的处理函数
+   * 用户点击右上角分享
    */
-  onReachBottom: function () {
-  
+  onShareAppMessage: function (res) {
+    let that = this;
+    let token = that.data.token;
+    let shareFriends = backApi.shareFriends+'?access-token='+token;
+    if (res.from === 'menu') {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
+    }
   },
 
   /**
-   * 用户点击右上角分享
+   * 页面上拉触底事件的处理函数
    */
-  onShareAppMessage: function () {
-  
+  onReachBottom: function () {
+
   }
 })

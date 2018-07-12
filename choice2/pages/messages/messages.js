@@ -99,7 +99,27 @@ Page({
   onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
-  onShareAppMessage: function () {},
+  onShareAppMessage: function (res) {
+    let that = this;
+    let token = that.data.token;
+    let shareFriends = backApi.shareFriends+'?access-token='+token;
+    if (res.from === 'menu') {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
+    }
+  },
   onPageScroll () {
     // if (e.scrollTop*1>=this.data.viewHeight/3) {
     //   wx.setNavigationBarColor({

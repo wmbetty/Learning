@@ -695,23 +695,42 @@ Page({
       })
     },100)
   },
+
   onShareAppMessage () {
     let that = this;
     let questId = that.data.qid;
     let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
-    return {
-      title: that.data.shareTitle,
-      path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/posterBg.jpg',
-      success() {
-        Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          console.log(res, 'friends')
-        })
-      },
-      fail() {},
-      complete() { 
-        
+
+    if (res.from === 'menu') {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
+      }
+    } else {
+      return {
+        title: that.data.shareTitle,
+        path: `/pages/main/main?qid=${questId}`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
+
+        }
       }
     }
   },
@@ -913,7 +932,7 @@ Page({
           });
         },
         fail:(err)=>{
-          console.log(err)
+          console.log(err,'oooo')
           that.setData({
             showDialog: true,
             openType: 'openSetting',
