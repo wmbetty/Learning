@@ -37,7 +37,7 @@
                         {{details.option1 || ''}}
                     </view>
                     <image class="{{details.option1_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type===2}}" src="{{details.option1}}" />
-                    <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose1_per}}%</view>
+                    <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}"><text class="show-number">{{details.choose1_per}}%</text></view>
                     <image wx:if="{{details.option1_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
                 </view>
             </view>
@@ -47,7 +47,7 @@
                         {{details.option2 || ''}}
                     </view>
                     <image class="{{details.option2_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type*1===2}}" src="{{details.option2}}" />
-                    <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose2_per}}%</view>
+                    <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}"><text class="show-number">{{details.choose2_per}}%</text></view>
                     <image wx:if="{{details.option2_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
                 </view>
             </view>

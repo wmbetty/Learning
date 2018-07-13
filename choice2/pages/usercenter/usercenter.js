@@ -13,8 +13,7 @@ Page({
     showDialog: false,
     openType: 'openSetting',
     authInfo: '需要获取相册权限才能保存图片哦',
-    token: '',
-    isSave: 0
+    token: ''
   },
   cancelDialog () {
     this.setData({showDialog:false})
@@ -38,15 +37,16 @@ Page({
     wx.setNavigationBarColor({
       frontColor:'#000000',
        backgroundColor:'#F5F6F8'
-    })
+    });
     let that = this;
+
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
         let userBaseApi = backApi.userBaseApi+token;
+
         Api.wxRequest(userBaseApi,'GET',{},(res)=>{
-          console.log(res,'watch userbase');
           that.setData({userBaseInfo: res.data.data})
         })
       } else {
@@ -107,9 +107,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    let isSave = 1;
-    this.setData({isSave: 1})
-    wx.setStorageSync('userbase',0);
   },
 
   /**

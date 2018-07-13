@@ -37,7 +37,7 @@
             <view>用户基地</view>
         </view>
         <view class="list-item-side had-pad">
-            <view wx:if="{{showBaseTag}}" class="userbase-tag"></view>
+            <view wx:if="{{showRedDot}}" class="userbase-tag"></view>
             <!-- <view wx:if="{{noticeUnreadCount*1>0}}" class="{{msgNum*1 >= 10?'msg-num msg-num-wide':'msg-num'}}">{{noticeUnreadCount}}</view> -->
             <!-- <view wx:if="{{noticeUnreadCount*1>=100}}" class="msg-num msg-num-wider">{{noticeUnreadCount*1>999?'999+':noticeUnreadCount}}</view>
             <view wx:if="{{noticeUnreadCount*1<100&&noticeUnreadCount>=1}}" class="msg-num">{{noticeUnreadCount}}</view> -->
@@ -61,4 +61,3 @@
 </view>
 <!-- 授权弹窗 -->
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
-<!-- <template is="tabBar" data="{{tabBar:bindData.tabBar}}"/> -->

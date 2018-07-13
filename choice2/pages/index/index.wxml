@@ -66,9 +66,9 @@
             <view class="triangle-down"></view>
         </view>
         <view class="share-btn-box">
-            <image src="../../images/moment_icon.png" class="share-btn" bindtap="shareTomoment" />
+            <image src="../../images/moment_icon.png" class="share-btn" catchtap="shareTomoment" />
             <view class="btn-splie-line"></view>
-            <button class="share-btn-default" open-type="share" bindtap="shareToFriend">
+            <button class="share-btn-default" open-type="share" catchtap="shareToFriend">
                 <image src="../../images/wechat_icon.png" class="share-btn"/>
             </button>
             

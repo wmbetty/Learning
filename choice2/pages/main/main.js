@@ -56,7 +56,8 @@ Page({
     down_times: 1,
     showThumb: false,
     token: '',
-    noShowThumb: false
+    noShowThumb: false,
+    baseRedDot: 0
   },
   //手指接触屏幕
   touchstart (e) {
@@ -229,6 +230,7 @@ Page({
     });
     setTimeout(function() {
       var questionList = that.data.questionList;
+      console.log(index,questionList.length-1,'111111')
 
       if (index===questionList.length-1) {
         wx.showLoading({
@@ -251,7 +253,7 @@ Page({
                 } else {
                   that.setData({notopPage: notopPage+1});
                 }
-                if (datas.length===0 && notopPage=== 1) {
+                if (datas.length===0) {
                   wx.hideLoading();
                   that.setData({
                     isEmpty: true
@@ -299,9 +301,18 @@ Page({
 
       let user_random = parseInt(Math.random()*(20-10+1)+10,10);
       let showBaseApi = backApi.showBaseApi+token;
+      let myinfoApi = backApi.myInfo+token;
       if (user_random-index>1 && user_random-index<=3 && baseLock*1===2) {
         that.setData({showUserbase: true});
-        Api.wxRequest(showBaseApi,'GET',{},(res)=>{console.log(res,'base')})
+        Api.wxRequest(showBaseApi,'GET',{},(res)=>{console.log(res,'base')});
+
+        // 更新基地状态
+        setTimeout(()=>{
+          Api.wxRequest(myinfoApi,'GET',{},(res)=>{
+            baseLock = res.data.data.user_base_lock;
+            that.setData({baseRedDot: 0})
+          });
+        },200)
       }
       downList = downList.concat(card);
       that.setData({downList: downList})
@@ -341,9 +352,13 @@ Page({
           };
 
           // 更新用户信息
+
           Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
             console.log(res.data.status, 'update-userinfo')
             baseLock = res.data.data.user_base_lock;
+            if (baseLock*1===2) {
+              that.setData({baseRedDot: 1});
+            }
             mid = res.data.data.id;
           });
         }
@@ -722,7 +737,10 @@ Page({
           if (userInfo.nickName) {
             wx.setStorageSync('userInfo', userInfo);
             Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-              console.log(res.data.status, 'sssssssss')
+              baseLock = res.data.data.user_base_lock;
+              if (baseLock*1===2) {
+                that.setData({baseRedDot: 1});
+              }
             })
           }
         },
@@ -990,8 +1008,6 @@ Page({
       let idx = e.currentTarget.dataset.index;
       let qid = '';
       if (e.currentTarget.dataset.item) {
-        // choose1 = e.currentTarget.dataset.item.choose1_per;
-        // choose2 = e.currentTarget.dataset.item.choose2_per;
         qid = e.currentTarget.dataset.item.id;
       }
 
@@ -1010,78 +1026,20 @@ Page({
               that.setData({showThumb: true})
             }
             let afterChoose = res.data.data;
-            let chse1 = afterChoose.choose1_per;
-            let chse2 = afterChoose.choose2_per;
+            // let chse1 = afterChoose.choose1_per;
+            // let chse2 = afterChoose.choose2_per;
             for (let i=0;i<qList.length;i++) {
               if (idx===i) {
                 qList[i].choose_left = true;
                 qList[i].showMask = true;
                 qList[i].hots = afterChoose.hots;
-                if (chse1 === 0) {
-                  let timer1 = setInterval(()=>{
-                    if (chse2 >= 20) {
-                      choose2_orgin=choose2_orgin+2;
-                    }
-                    if (chse2>30) {
-                      choose2_orgin=choose2_orgin+3;
-                    }
-                    qList[i].choose1_per = chse1;
-                    qList[i].choose2_per = choose2_orgin;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose2_orgin >= chse2){
-                      clearInterval(timer1);
-                      qList[i].choose2_per = chse2;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-                  }, 10);
-                }
-                if (chse2 === 0) {
-
-                  let timer1 = setInterval(()=>{
-                    if (chse1 >= 20) {
-                      choose1_orgin=choose1_orgin+2;
-                    }
-                    if (chse1>30) {
-                      choose1_orgin=choose1_orgin+3;
-                    }
-                    qList[i].choose1_per = choose1_orgin;
-                    qList[i].choose2_per = chse2;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose1_orgin >= chse1){
-                      clearInterval(timer1);
-                      qList[i].choose1_per = chse1;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-
-                  }, 10);
-                }
-                if (chse1 !== 0 && chse2 !== 0) {
-                  let timer1 = setInterval(()=>{
-                    choose1_orgin=choose1_orgin+2;
-                    choose2_orgin=choose2_orgin+2;
-                    qList[i].choose1_per = choose1_orgin;
-                    qList[i].choose2_per = choose2_orgin;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose1_orgin >= chse1 || choose2_orgin>=chse2){
-                      clearInterval(timer1);
-                      qList[i].choose1_per = chse1;
-                      qList[i].choose2_per = chse2;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-                  }, 10);
-                }
+                qList[i].choose1_per = afterChoose.choose1_per;
+                qList[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    questionList: qList
+                  })
+                },600)
               }
             }
           } else {
@@ -1101,78 +1059,20 @@ Page({
               that.setData({showThumb: true})
             }
             let afterChoose = res.data.data;
-            let chse1 = afterChoose.choose1_per;
-            let chse2 = afterChoose.choose2_per;
+            // let chse1 = afterChoose.choose1_per;
+            // let chse2 = afterChoose.choose2_per;
             for (let i=0;i<qList.length;i++) {
-              if (idx===i) {
+              if (idx === i) {
                 qList[i].choose_right = true;
                 qList[i].showMask = true;
                 qList[i].hots = afterChoose.hots;
-                if (chse1 === 0) {
-                  let timer1 = setInterval(()=>{
-                    if (chse2 >= 20) {
-                      choose2_orgin=choose2_orgin+2;
-                    }
-                    if (chse2>30) {
-                      choose2_orgin=choose2_orgin+3;
-                    }
-                    qList[i].choose1_per = chse1;
-                    qList[i].choose2_per = choose2_orgin;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose2_orgin >= chse2){
-                      clearInterval(timer1);
-                      qList[i].choose2_per = chse2;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-                  }, 10);
-                }
-                if (chse2 === 0) {
-
-                  let timer1 = setInterval(()=>{
-                    if (chse1 >= 20) {
-                      choose1_orgin=choose1_orgin+2;
-                    }
-                    if (chse1>30) {
-                      choose1_orgin=choose1_orgin+3;
-                    }
-                    qList[i].choose1_per = choose1_orgin;
-                    qList[i].choose2_per = chse2;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose1_orgin >= chse1){
-                      clearInterval(timer1);
-                      qList[i].choose1_per = chse1;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-
-                  }, 10);
-                }
-                if (chse1 !== 0 && chse2 !== 0) {
-                  let timer1 = setInterval(()=>{
-                    choose1_orgin=choose1_orgin+2;
-                    choose2_orgin=choose2_orgin+2;
-                    qList[i].choose1_per = choose1_orgin;
-                    qList[i].choose2_per = choose2_orgin;
-                    that.setData({
-                      questionList: qList
-                    })
-                    if(choose1_orgin >= chse1 || choose2_orgin>=chse2){
-                      clearInterval(timer1);
-                      qList[i].choose1_per = chse1;
-                      qList[i].choose2_per = chse2;
-                      that.setData({
-                        questionList: qList
-                      })
-                    }
-                  }, 10);
-                }
+                qList[i].choose1_per = afterChoose.choose1_per;
+                qList[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    questionList: qList
+                  })
+                },600)
               }
             }
           } else {
@@ -1196,7 +1096,7 @@ Page({
 
       setTimeout(()=>{
         that.slidethis(idx,qid,e.currentTarget.dataset.item);
-      },5200)
+      },4000)
 
     } else {
       // 微信授权

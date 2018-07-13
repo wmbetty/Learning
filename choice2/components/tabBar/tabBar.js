@@ -11,6 +11,10 @@ Component({
     voteUnreadCount: {
       type: Number,
       value: 0
+    },
+    baseRedDot: {
+      type: Number,
+      value: 0
     }
   }
 })

@@ -2,8 +2,6 @@
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-// const app = getApp();
-// let token = '';
 
 Page({
 
@@ -17,7 +15,8 @@ Page({
     showDialog: false,
     msgCount: 0,
     viewHeight: 0,
-    token: ''
+    token: '',
+    showRedDot: false
 
   },
   cancelDialog () {
@@ -39,7 +38,9 @@ Page({
         if (userInfo.nickName) {
           wx.setStorageSync('userInfo', userInfo);
           Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            console.log(res.data.status, 'sssssssss')
+            if (res.data.data.user_base_lock*1===2) {
+              that.setData({showRedDot: true})
+            }
           })
         }
       }
@@ -68,13 +69,21 @@ Page({
 
     if (!userInfo.language) {
       backApi.getToken().then(function(response) {
-        let token = response;
+        let token = response.data.data.access_token;
         that.setData({token: token,showDialog: true});
       })
     } else {
       backApi.getToken().then(function(response) {
-        let token = response;
+        let token = response.data.data.access_token;
         that.setData({token: token});
+        let myInfoApi = backApi.myInfo+token;
+        Api.wxRequest(myInfoApi,'GET',{},(res)=>{
+          if (res.data.data.user_base_lock*1===2) {
+            that.setData({showRedDot: true})
+          } else {
+            that.setData({showRedDot: false})
+          }
+        });
         let voteUnreadApi = backApi.voteUnreadApi+token;
         let noticeUnreadApi = backApi.noticeUnreadApi+token;
         wx.setStorageSync('msgTotal', 0);
@@ -84,13 +93,13 @@ Page({
           that.setData({
             voteUnreadCount: vcount
           })
-        })
+        });
         Api.wxRequest(noticeUnreadApi,'GET',{},(res)=> {
           let ncount = res.data.data.notice
           that.setData({
             noticeUnreadCount:ncount
           })
-        })
+        });
       })
     }
 
@@ -190,6 +199,8 @@ Page({
     }
   },
   gotoUser () {
+    let showBaseApi = backApi.showBaseApi+this.data.token;
+    Api.wxRequest(showBaseApi,'GET',{},(res)=>{console.log(res,'base')});
     wx.navigateTo({
       url: '/pages/usercenter/usercenter'
     })
