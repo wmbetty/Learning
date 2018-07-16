@@ -8,18 +8,27 @@
     </view>
 </view>
 <view wx:if="{{hasUserInfo}}">
+    <view wx:if="{{showTitleNum}}" class="idx-text-num">
+        <text>{{hadTitleNum}}</text>/<text>60</text>
+    </view>
     <view wx:if="{{!showCropper}}" class="{{pagePad?'title-box title-box-sm':'title-box'}}">
         
-        <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" maxlength="32" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
+        <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
         
         </view>
     <view hidden="{{!txtActive}}">
         <view class="pub-cont">
             <view class="pub-cont-box" data-txt="left" bindtouchend="textFocus">
-                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" maxlength="20" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
+                <view wx:if="{{showLeftNum}}" class="idx-text-num">
+                    <text>{{leftHadWrite}}</text>/<text>36</text>
+                </view>
+                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
             </view>
             <view class="pub-cont-box" data-txt="right" bindtouchend="textFocus">
-                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" maxlength="20" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
+                <view wx:if="{{showRightNum}}" class="idx-text-num">
+                    <text>{{rightHadWrite}}</text>/<text>36</text>
+                </view>
+                <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
             </view>
         </view>
     </view>
@@ -43,7 +52,9 @@
             </view>
         </view>
     </view>
-    <button class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" disabled="{{btnDis}}" bindtap="goPublish">发布</button>
+    <button wx:if="{{!showClickBtn}}" class="{{isPublish?'publish-btn publish-btn-active':'publish-btn'}}" disabled="{{btnDis}}" bindtap="goPublish">发布</button>
+    <button wx:if="{{showClickBtn}}" class="publish-btn click-btn">发布</button>
+
 </view>
 <!-- 加积分提示 -->
 <view class="gc-toast" wx:if="{{showToast}}">
