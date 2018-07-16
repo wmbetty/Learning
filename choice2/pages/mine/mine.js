@@ -57,10 +57,13 @@ Page({
             userInfo: userInfo
           });
           Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            console.log('mine update-user')
+            // console.log('mine update-user',res)
             if (res.data.data.user_base_lock*1===2) {
               that.setData({baseRedDot: 1})
             }
+            that.setData({
+              points: res.data.data.points || 0
+            });
           });
 
           let questionApi = backApi.my_question+token;

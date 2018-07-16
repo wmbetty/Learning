@@ -5,9 +5,9 @@
         <view class="mine-banner">
             <view class="nums-box">
                 <image src="../../images/grey_gold.png" class="gold-coin" />
-                <view wx:if="{{userInfo.nickName}}" class="point-box">{{points}}</view>
+                <view class="point-box">{{points || 0}}</view>
             </view>
-            <image class="my-avatar" src="{{userInfo.avatarUrl || ''}}" />
+            <image class="my-avatar" src="{{userInfo.avatarUrl || '../../images/avatarDefault.png'}}" />
             <image src="../../images/my_bg.png" class="my-bg"/>
         </view>
     </view>
