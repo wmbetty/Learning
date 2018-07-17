@@ -1,9 +1,10 @@
 /* pages/details/details.wxss */
 page{
-    background: #F5F6F8;position: relative;height: 100%;
+    position: relative;height: 100%;background: #fff;
     /* overflow-y: hidden; */
 }
 .page-head{
+    background: #F5F6F8;
     padding: 20rpx 30rpx 26rpx;color: #343434;font-size: 60rpx;background: #F5F6F8;
 }
 .main-head{
@@ -38,7 +39,7 @@ page{
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAdVBMVEUAAAD6cXHuaWjuaWjzbmz/fHzuamjtamjuaWjuaWjuamjva2nva2nwa2nta2fuamjtamjua2nxbGnybmvuaWjtamjuamjuamjtaWnuamjvaWnybGruaWftamfuaWjuaWjuamfuaWfvamruaWjva2nwbGztaWdNxpRkAAAAJnRSTlMADtV2Gwb26M3AsGxcQZ6Fc0c2EtyrmHlyaVIl6+PHpaOUMJZ8IbNsieoAAAEKSURBVEjHpdTZboMwEIVhY7PbUCBhCWRp03be/xGrqIqUOGcGo/zXnxA6I1DvFlW2MY2togBblXSvrNaeW9NjdSTinJ47S7wgv4LHDb1mObxLgT5G7KNRB0bnUJ+ZQQiWJlC3hOugPjDaQf3BaAP1J6O/mEPiSqj3jM6hThmdwbsTFxq8Y/UCtGW1wwNKE8qTyKP8Et8O3J1v8nGSCXrvbziSlPV07AbNUP09x+ia7Vgen4/eG/EHlxQPuEzUSqP0uYtLmlWdS781+Ug/Er0a7a9nrlDG7oLPmV2cN3c7aJLSQ6vudR6F6e4fzxTWfMNxGqjT2+vXFFqt1ELhLWraoCfVb9C9Om3Qpz8I2qGEjYffIwAAAABJRU5ErkJggg==') no-repeat;
     background-size: 100% 100%;
 }
-.main-container{background: #fff;padding-bottom: 40rpx;}
+.main-container{background: #fff;padding-bottom: 32rpx;}
 .ellipse-icon{
     width: 44rpx;height: 44rpx;
     /* background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUAAACFhYWIiIiHh4eHh4eHh4eIiIiIiIjVjsWQAAAACHRSTlMAGtnAnZNLR+MnSTAAAAAbSURBVAjXY6AUCBWwOLArAhnCCawBbIaUGgcAi1wB7qq3PpEAAAAASUVORK5CYII=') no-repeat;
@@ -244,7 +245,8 @@ page{
 }
 .vote-selected{color: #E74C49;}
 .back-home-btn{
-    display: block;margin: 40rpx auto 0;
+    position:absolute;bottom:0;left:50%;
+    display: block;margin: 40rpx 0 0 -120rpx;
     width: 240rpx;height: 100rpx;
     animation: btn 1s;
 }
@@ -258,18 +260,6 @@ page{
         /* transform:scale(0.6) */
       }
 }
-.thumb1{
-    width: 268rpx;height: 266rpx;
-    position: absolute;left: 19%;top:24%;opacity: 0;
-    animation: thumb1 1s;
-  }
-  /*.thumb2{*/
-    /*width: 268rpx;height: 266rpx;*/
-    /*position: absolute;left: 18%;top:21%;*/
-    /*!* opacity: 0; *!*/
-    /*animation: thumb2 1s ease-out;*/
-      /*z-index: 15;*/
-  /*}*/
 .thumb2{
     width: 360rpx;height: 360rpx;
     position: absolute;left: 6%;top:-2%;
@@ -283,15 +273,6 @@ page{
     animation: circle 1s linear;opacity: 0;
 
 }
-  @keyframes thumb1{
-    50% {
-      transform: scale(1);
-    }
-    100%{
-      transform: scale(0);
-      opacity: 0;
-    }
-  }
   @keyframes thumb2{
       15% {
           transform: scale(0.4);
@@ -318,86 +299,6 @@ page{
     100%{
         transform: rotate(360deg);
         opacity: 0;
-    }
-}
-  .dot {
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    left: 105px;
-    top: 108px;
-    /* border: 1px solid #E74C49; */
-    border-radius: 50%;
-    background: transparent;
-    /* background-color:#E74C49; 实心圆 ，如果没有这个就是一个小圆圈 */
-    z-index: 12;
-    }
-/* 产生动画（向外扩散变大）的圆圈 第一个圆 */
-.pulse {
-    position: absolute;
-    width: 220rpx;
-    height: 220rpx;
-    left: 48px;
-    top: 50px;
-    border: 2px solid #E74C49;
-    border-radius: 50%;
-    z-index: 14;
-    opacity: 0;
-    animation: warn 1s linear;
-    animation-delay: 0.4;
-    /* box-shadow: 1px 1px 30px #E74C49;  */
-
-}
-/* 产生动画（向外扩散变大）的圆圈 第二个圆 */
-.pulse1 {
-    position: absolute;
-    width: 300rpx;
-    height: 300rpx;
-    left: 30px;
-    top: 32px;
-    border: 2px solid #E74C49;
-    border-radius: 50%;
-    z-index: 11;
-    opacity: 0;
-    animation: warn1 0.8s linear;
-    animation-delay: 1.2s;
-    /* animation-iteration-count: infinite; */
-}
-.pulse2{
-    position: absolute;
-    width: 380rpx;
-    height: 380rpx;
-    left: 10px;
-    top: 12px;
-    border: 3px solid #E74C49;
-    border-radius: 50%;
-    z-index: 11;
-    opacity: 0;
-    animation: warn1 1s linear;
-    animation-delay: 1.5s;
-    /* animation-iteration-count: infinite; */
-}
-
-@keyframes warn {
-    0% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    100% {
-        transform: scale(1.2);
-        opacity: 0;
-    }
-}
-
-@keyframes warn1 {
-    0%{
-        transform: scale(1);
-        opacity: 0.5;
-    }
-    100%{
-        transform: scale(1.2);
-        opacity: 0;   /*圆形放大的同时，透明度逐渐减小为0*/
     }
 }
       .voted-thumb-box{
@@ -427,4 +328,52 @@ page{
     30%,50%,70%,90%{transform:scale(1) rotate(3deg);}
     40%,60%,80%{transform:scale(1.2) rotate(-3deg);}
     100%{transform:scale(1) rotate(0);}
+}
+
+.comment-empty-view{
+    width: 100%;height: 20rpx;background: #F5F6F8;
+}
+.comment-container{
+    padding: 0 40rpx;
+}
+.comment-head{
+    font-size: 40rpx;color: #343434;
+    padding: 30rpx 0;
+}
+.comment-list-item{margin-bottom: 60rpx;}
+.comment-list-item:last-child{padding-bottom: 20rpx;}
+.list-first-comment{
+    display: flex;
+    margin: 12rpx 0 32rpx 68rpx;color: #343434;font-size: 32rpx;
+}
+.list-other-comment{
+    padding: 30rpx;font-size: 28rpx;margin-bottom: 20rpx;
+    background: rgba(98, 85, 157,.3);margin-left: 68rpx;color: #666;
+}
+.list-comment-info{
+    margin-left: 68rpx;font-size: 28rpx;color: #888;
+    display: flex;justify-content: space-between;
+}
+.comment-operate{
+    display: flex;justify-content: space-between;
+}
+.list-user{display: flex;font-size: 28rpx;color: #888;}
+.comm-user-avatar{
+    display: block;width: 48rpx;height: 48rpx;border-radius: 50%;margin-right: 20rpx;
+}
+.comm-user-name{margin-top: 4rpx;}
+.comment-time{font-size: 24rpx;}
+.comment-icon{
+    width: 34rpx;height: 32rpx;display: inline-block;
+    background: #000;margin-right: 12rpx;
+}
+.good-icon{
+    width: 30rpx;height: 30rpx;display: inline-block;
+    background: #333;margin-right: 12rpx;
+}
+.comment-icon-area{margin-right: 40rpx;}
+.comment-owner{
+    width: 60rpx;height: 32rpx;border-radius: 28rpx;
+    background: linear-gradient(to right, #564EF1, #C54BF8);
+    font-size: 20rpx;color: #fff;text-align: center;margin-left: 20rpx;margin-top: 6rpx;
 }

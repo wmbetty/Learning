@@ -97,9 +97,9 @@ Page({
     let sec = options.scene || '';
     if (sec) {
       qid = sec;
-      // setTimeout(()=>{
-      //   that.setData({showHomebtn: true})
-      // },2800)
+      setTimeout(()=>{
+        that.setData({showHomebtn: true})
+      },2800)
     } else {
       qid = options.id;
     }
@@ -127,9 +127,6 @@ Page({
       frontColor:'#000000',
        backgroundColor:'#F5F6F8'
     })
-    setTimeout(()=>{
-      that.setData({showHomebtn: true})
-    },2800)
   },
   onReady: function () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();

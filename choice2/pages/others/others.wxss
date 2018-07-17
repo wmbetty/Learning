@@ -36,7 +36,7 @@ page{background: #F4F4F8;}
     width: 80rpx;height: 10rpx;background: #343434;margin: 12rpx 23rpx;
 }
 .blue-line{background: #576B95;}
-.my-publish-item{margin-right: 60rpx;}
+.my-publish-item{margin-right: 60rpx;font-weight: bold;}
 .tab-content{padding-bottom: 100rpx;}
 .tab-list-item{background: #fff;padding: 36rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;}
 .item-title{color: #343434;font-size: 32rpx;margin-bottom: 18rpx;}
