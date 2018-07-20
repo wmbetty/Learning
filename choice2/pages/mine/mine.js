@@ -32,8 +32,7 @@ Page({
     viewHeight: 0,
     isIphone: false,
     token: '',
-    myvotecount: 0,
-    baseRedDot: 0
+    myvotecount: 0
   },
   cancelDialog () {
     let that = this;
@@ -55,8 +54,9 @@ Page({
           wx.setStorageSync('userInfo', userInfo);
           that.setData({
             userInfo: userInfo
-          });
+          })
           Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+<<<<<<< HEAD
             // console.log('mine update-user',res)
             if (res.data.data.user_base_lock*1===2) {
               that.setData({baseRedDot: 1})
@@ -64,6 +64,9 @@ Page({
             that.setData({
               points: res.data.data.points || 0
             });
+=======
+            console.log('mine update-user')
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁
           });
 
           let questionApi = backApi.my_question+token;
@@ -102,27 +105,7 @@ Page({
                 })
               }
             }
-          });
-          let voteUnreadApi = backApi.voteUnreadApi+token;
-          let msgTotalApi = backApi.msgUnreadTotal+token;
-          Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              if (res.data.data.vote) {
-                that.setData({voteUnreadCount: res.data.data.vote});
-              }
-            }
-          });
-
-          Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              let msgTotal = res.data.data.total;
-              if (msgTotal) {
-                Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-                  that.setData({msgCount: msgTotal});
-                })
-              }
-            }
-          });
+          })
         }
       }
     })
@@ -163,12 +146,7 @@ Page({
             let datas = res.data.data;
             that.setData({
               points: datas.points || 0
-            });
-            if (datas.user_base_lock*1===2) {
-              that.setData({baseRedDot: 1})
-            } else {
-              that.setData({baseRedDot: 0})
-            }
+            })
           });
           let questionApi = backApi.my_question+token;
           let joinApi = backApi.my_join+token;
@@ -192,9 +170,6 @@ Page({
                 myCurrPage: myCurrPage,
                 myTotalCount: myCount
               })
-            } else {
-              wx.hideLoading();
-              Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
             }
           });
           Api.wxRequest(joinApi, 'GET', {}, (res)=> {
@@ -215,24 +190,27 @@ Page({
           });
           let voteUnreadApi = backApi.voteUnreadApi+token;
           let msgTotalApi = backApi.msgUnreadTotal+token;
-          Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              if (res.data.data.vote) {
-                that.setData({voteUnreadCount: res.data.data.vote});
+          setInterval(()=>{
+            // 获取投票信息
+            Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                if (res.data.data.vote) {
+                  that.setData({voteUnreadCount: res.data.data.vote});
+                }
               }
-            }
-          });
-
-          Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-            if (res.data.status*1===200) {
-              let msgTotal = res.data.data.total;
-              if (msgTotal) {
-                Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-                  that.setData({msgCount: msgTotal});
-                })
+            });
+            // 获取通知数量
+            Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                let msgTotal = res.data.data.total;
+                if (msgTotal) {
+                  Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+                    that.setData({msgCount: msgTotal});
+                  })
+                }
               }
-            }
-          });
+            });
+          },4000)
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
         }

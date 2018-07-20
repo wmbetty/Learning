@@ -51,6 +51,12 @@
                         <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}"><text class="show-number">{{details.choose2_per}}%</text></view>
                         <image wx:if="{{details.option2_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
                     </view>
+<<<<<<< HEAD
+=======
+                    <image class="{{details.option1_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type===2}}" src="{{details.option1}}" />
+                    <view wx:if="{{showVoteMsk}}" class="{{leftRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose1_per}}%</view>
+                    <image wx:if="{{details.option1_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁
                 </view>
             </view>
         </view>
@@ -86,6 +92,12 @@
                             <!--<image wx:if="{{item.isLike}}" class="comm-like-icon" src="../../images/good2.png"></image>-->
                         </view>
                     </view>
+<<<<<<< HEAD
+=======
+                    <image class="{{details.option2_check_status*1===3?'ques-img delay-img':'ques-img'}}" wx:if="{{details.type*1===2}}" src="{{details.option2}}" />
+                    <view wx:if="{{showVoteMsk}}" class="{{rightRed?'vate-mask vote-selected':'vate-mask'}}">{{details.choose2_per}}%</view>
+                    <image wx:if="{{details.option2_check_status*1===3 && details.type*1===2}}" src="../../images/hexie.png" class="hexie-img" />
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁
                 </view>
             </view>
         </view>

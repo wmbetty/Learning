@@ -233,18 +233,35 @@ Page({
     let token = that.data.token;
     let questId = that.data.quesId;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      return {
+        title: that.data.details.question,
+        path: `/pages/main/main?qid=${questId}`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            // console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {}
+      }
+    } else {
+      return {
+        title: '选象 让选择简单点',
+        path: `/pages/main/main`,
+        imageUrl:'/images/posterBg.jpg',
+        success() {
+          Api.wxRequest(shareFriends,'POST',{},(res)=>{
+            console.log(res, 'friends')
+          })
+        },
+        fail() {},
+        complete() {
 
-    return {
-      title: that.data.details.question,
-      path: `/pages/main/main?qid=${questId}`,
-      imageUrl:'/images/posterBg.jpg',
-      success() {
-        Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          // console.log(res, 'friends')
-        })
-      },
-      fail() {},
-      complete() {}
+        }
+      }
     }
   },
   onPageScroll () {
@@ -582,17 +599,11 @@ showMaskHidden () {
           // 
           if (status === 201) {
             if (!showThumb) {
-              details.hots = res.data.data.hots;
-              details.choose1_per = res.data.data.choose1_per;
-              details.choose2_per = res.data.data.choose2_per;
-              that.setData({
-                showThumb: true,
-                details: details
-              })
+              that.setData({showThumb: true})
             }
             that.setData({
               hasVoted: true
-            });
+            })
             Api.wxRequest(watchQuesApi,'POST',{qid: res.data.data.id}, (res)=> {
               console.log(res, 'ssss')
             })
@@ -609,7 +620,7 @@ showMaskHidden () {
               } else {
                 Api.wxShowToast('网络出错了', 'none', 2000);
               }
-            });
+            })
             // 请求投票消息
             let voteUnreadApi = backApi.voteUnreadApi+token
             Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
@@ -623,6 +634,56 @@ showMaskHidden () {
                 Api.wxShowToast('网络出错了', 'none', 2000);
               }
             })
+<<<<<<< HEAD
+=======
+            let detailUrl = backApi.quesDetail+qid;
+            // let myChooseTagApi = backApi.myChooseTagApi+token;
+            Api.wxRequest(detailUrl,'GET',{},(res)=>{
+              if (res.data.data.id) {
+                let choose2 = res.data.data.choose2_per;
+                let choose1 = res.data.data.choose1_per;
+                details.hots = res.data.data.hots;
+                let timer2 = setInterval(()=>{
+                  if (choose2 >= 20) {
+                    choose2_orgin=choose2_orgin+2;
+                  } else {
+                    choose2_orgin=choose2_orgin+3;
+                  }
+                  details.choose2_per = choose2_orgin;
+                  that.setData({
+                    details: details
+                  })
+                  if(choose2_orgin >= choose2){
+                    clearInterval(timer2);
+                    details.choose2_per = choose2;
+                    that.setData({
+                      details: details
+                    })
+                  }
+                }, 30);
+                let timer1 = setInterval(()=>{
+                  if (choose1 >= 20) {
+                    choose1_orgin=choose1_orgin+2;
+                  } else {
+                    choose1_orgin=choose1_orgin+3;
+                  }
+                  details.choose1_per = choose1_orgin;
+                  that.setData({
+                    details: details
+                  })
+                  if(choose1_orgin >= choose1){
+                    clearInterval(timer1);
+                    details.choose1_per = choose1;
+                    that.setData({
+                      details: details
+                    })
+                  }
+                }, 30);
+              } else {
+                Api.wxShowToast('网络错误，请重试', 'none', 2000);  
+              }
+            })
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁
           }
           setTimeout(()=>{
             that.setData({showThumb: false})
