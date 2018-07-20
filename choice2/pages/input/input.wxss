@@ -1,8 +1,0 @@
-/* pages/input/input.wxss */
-page{
-    position: relative;
-}
-.input{
-    position: absolute;left: 0;bottom: 0;
-    width: 100%;background: red;height: 20px;
-}

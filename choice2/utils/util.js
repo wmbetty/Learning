@@ -46,6 +46,8 @@ const posterApi = `${http}v1/questions/share-code?access-token=`
 const uploadApi = `${http}v1/questions/upload-images?access-token=`
 const userBaseApi = `${http}v1/basis/user-basis?access-token=`
 const showBaseApi = `${http}v1/member/show-basis?access-token=`
+const commentApi = `${http}v1/comment?access-token=`
+const praiseApi = `${http}v1/comment/praise?access-token=`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -97,5 +99,7 @@ module.exports = {
   uploadApi: uploadApi,
   userBaseApi: userBaseApi,
   showBaseApi: showBaseApi,
-  getToken: getToken
+  getToken: getToken,
+  commentApi: commentApi,
+  praiseApi: praiseApi
 }

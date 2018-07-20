@@ -1,4 +1,0 @@
-<!--pages/input/input.wxml-->
-<view style="height: {{height}}px;">
-    <input class="input" type="text" cursor-spacing="140" placeholder="111" cursor-spacing="-1"/>
-</view>
