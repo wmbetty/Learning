@@ -74,118 +74,14 @@ Page({
       that.slidethis(index,curr_id,listItem);
       that.setData({hadUp: true,showUserbase: false});
     }
-    // if (direction===2) {
-      // {
-        // 下滑事件
-
-        // let isDown = that.data.isDown;
-        // if (downList.length) {
-        //   if (!isDown) {
-        //     let list = [];
-        //     list.unshift(downList[downList.length-1]);
-        //     that.setData({isDown: true,downList:list});
-        //     Api.wxShowToast('已返回上一个', 'none', 2000);
-        //   }
-        // }
-
-        // let isDown = that.data.isDown;
-        // if (downList.length) {
-        //   if (!isDown) {
-        //     that.setData({isDown: true});
-        //   }
-        //   if (isDown) {
-        //     if (downList.length===1) {
-        //       Api.wxShowToast("前面已经没有了哦",'none',2000)
-        //     }
-        //     if (downList.length===2 && down_times < 2) {
-        //       that.slideDown(index,curr_id);
-        //       that.setData({down_times:down_times+1});
-        //     }
-        //     if (downList.length===2 && down_times >= 2) {
-        //       Api.wxShowToast("前面已经没有了哦",'none',2000)
-        //     }
-        //     if (downList.length>=3 && down_times < 3) {
-        //       that.slideDown(index,curr_id);
-        //       that.setData({down_times:down_times+1});
-        //     }
-        //     if (downList.length>=3 && down_times > 2) {
-        //       Api.wxShowToast("错过了就不要留恋哦",'none',2000)
-        //     }
-        //   }
-        // }
-
-        // let hadUp = that.data.hadUp;
-        // let down_times = that.data.down_times;
-        // console.log(down_times, 'tttt,timesss');
-
-        // if (downList.length) {
-        //   that.setData({isDown: true});
-        //   if (downList.length===1) {
-        //     that.slideDown(0, downList[0].id*1);
-        //     // down_times++;
-        //     if (down_times===2) {
-        //       Api.wxShowToast('前面已经没有了', 'none', 2000);
-        //     }
-        //   }
-        //   if (downList.length==2) {
-        //     if (down_times===1) {
-        //       that.slideDown(0, downList[0].id*1);
-        //       // down_times++;
-        //     }
-        //     if (down_times===2) {
-        //       that.slideDown(1, downList[1].id*1);
-        //       // down_times++;
-        //     }
-        //     if (down_times===3) {
-        //       Api.wxShowToast('前面已经没有了', 'none', 2000);
-        //     }
-        //   }
-        //   if (downList.length==3) {
-        //     if (down_times===1) {
-        //       that.slideDown(0, downList[0].id*1);
-        //       // down_times++;
-        //     }
-        //     if (down_times===2) {
-        //       that.slideDown(1, downList[1].id*1);
-        //       // down_times++;
-        //     }
-        //     if (down_times===3) {
-        //       that.slideDown(2, downList[2].id*1);
-        //       // down_times++;
-        //     }
-        //     if (down_times===3) {
-        //       Api.wxShowToast('前面已经没有了', 'none', 2000);
-        //     }
-        //   }
-        // }
-      // }
-    // }
   },
-  // slideDown (index, qid) {
-  //   let that = this;
-  //   let down_times = that.data.down_times+1;
-  //   // let isDown = that.data.isDown;
-  //   var animation = wx.createAnimation({
-  //     duration: 800,
-  //     timingFunction: 'cubic-bezier(.8,.2,.1,0.8)',
-  //   });
-  //   that.animation = animation;
-  //   that.animation.translateY((that.data.viewHeight+660)).translateX(15).step();
-  //   that.animation.opacity(0).step({duration: 1200});
-  //   var animationData = that.data.animationDownData;
-  //   animationData[index] = that.animation.export();
-  //   that.setData({
-  //     animationDownData: animationData,
-  //     down_times: down_times
-  //   });
-  // },
+
   //事件处理函数
   slidethis (index, qid, card) {
 
     let that = this;
     let page = that.data.page;
     let notopPage = that.data.notopPage;
-    // let isDown = that.data.isDown;
     let token = that.data.token;
     let watchQuesApi = backApi.watchQuesApi+token;
     let noTopQuesApi = backApi.noTopQues+token;
@@ -244,7 +140,7 @@ Page({
                     questionList = questionList.concat(datas);
                     that.setData({questionList: questionList});
                     Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
-                      console.log('watch')
+                      // console.log('watch')
                     })
                   } else {
                   }
@@ -261,14 +157,14 @@ Page({
               questionList = questionList.concat(topDatas);
               that.setData({questionList: questionList});
               Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
-                console.log('watch')
+                // console.log('watch')
               })
             }
           }
         })
       } else {
         Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
-          console.log('watch')
+          // console.log('watch')
         })
       }
 
@@ -277,7 +173,9 @@ Page({
       let myinfoApi = backApi.myInfo+token;
       if (user_random-index>1 && user_random-index<=3 && baseLock*1===2) {
         that.setData({showUserbase: true});
-        Api.wxRequest(showBaseApi,'GET',{},(res)=>{console.log(res,'base')});
+        Api.wxRequest(showBaseApi,'GET',{},(res)=>{
+          // console.log(res,'base')
+        });
 
         // 更新基地状态
         setTimeout(()=>{
@@ -307,7 +205,6 @@ Page({
 
     // 获取token
     backApi.getToken().then(function(response){
-      // console.log(response,'seeeee')
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
@@ -327,7 +224,6 @@ Page({
           // 更新用户信息
 
           Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-            console.log(res.data.status, 'update-userinfo')
             baseLock = res.data.data.user_base_lock;
             if (baseLock*1===2) {
               that.setData({baseRedDot: 1});
@@ -368,7 +264,7 @@ Page({
                     that.setData({questionList: notopDatas});
                     Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
                       if (res.data.status*1===201) {
-                        console.log('watched');
+                        // console.log('watched');
                       }
                     })
                   }
@@ -398,7 +294,7 @@ Page({
               that.setData({questionList: datas})
               Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
                 if (res.data.status*1===201) {
-                  console.log('watched')
+                  // console.log('watched')
                 }
               })
             }
@@ -418,23 +314,6 @@ Page({
   },
   onShow () {
     let that = this;
-    // let questionList = that.data.questionList;
-    // let cardItem = wx.getStorageSync('cardItem');
-    // if (cardItem.id) {
-    //   let detailUrl = backApi.quesDetail+cardItem.id;
-    //   Api.wxRequest(detailUrl,'GET',{},(res)=> {
-    //     if (res.data.data.id) {
-    //       cardItem = res.data.data;
-    //     }
-    //   });
-    //   for (let item of questionList) {
-    //     if (item.id = cardItem.id) {
-    //       item = cardItem;
-    //     }
-    //     that.setData({questionList:questionList});
-    //   }
-    //   console.log(questionList,cardItem,'item')
-    // }
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -506,7 +385,6 @@ Page({
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
-        console.log(res.windowHeight,'high')
         this.setData({viewHeight: res.windowHeight,viewWidth:res.windowWidth});
       }
     })
@@ -524,7 +402,7 @@ Page({
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            console.log(res, 'friends')
+            // console.log(res, 'friends')
           })
         },
         fail() {},
@@ -539,7 +417,7 @@ Page({
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            console.log(res, 'friends')
+            // console.log(res, 'friends')
           })
         },
         fail() {},
@@ -662,7 +540,7 @@ Page({
           wx.canvasToTempFilePath({
             canvasId: 'mycanvas',
             success: function (res) {
-              console.log(res,'canvas')
+              // console.log(res,'canvas')
               var tempFilePath = res.tempFilePath;
               that.setData({
                 imagePath: tempFilePath,
@@ -1019,7 +897,6 @@ function getDirection(startx, starty, endx, endy) {
   }
 
   var angle = getAngle(angx, angy);
-  console.log(angy, 'angy')
   if (angle <= -50) {
     result = 1;
   } else if (angle >= 50) {

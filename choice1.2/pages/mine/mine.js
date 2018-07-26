@@ -3,12 +3,9 @@
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-// let token = '';
 
 Page({
   data: {
-    leftPercent: 0.44,
     isMine: true,
     isBoy: true,
     showBlue: true,

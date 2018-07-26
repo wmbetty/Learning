@@ -2,8 +2,6 @@ const tabBar = require('../../components/tabBar/tabBar.js');
 import WeCropper from '../../components/we-cropper/we-cropper.js'
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-// let token = '';
 let publishedPoint = '';
 let myPoint = '';
 let ImgLock = '';
@@ -122,7 +120,6 @@ Page({
             formData:{},
             success: function(res){
               let data = JSON.parse(res.data);
-              // console.log(data,'right img');
               let status = data.status*1;
               if (status===200) {
                 // that.setData({optionRtImage: data.data.file_url});
@@ -140,7 +137,7 @@ Page({
       } else {
         console.log('获取图片地址失败，请稍后重试')
       }
-      console.log(that.data.optionLtImage,that.data.optionLtImage,'imgggggg')
+      // console.log(that.data.optionLtImage,that.data.optionLtImage,'imgggggg')
     })
   },
   uploadTap () {
@@ -203,7 +200,7 @@ Page({
                   }
                 });
                 Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-                  console.log(res.data.status, 'index update-user')
+                  // console.log(res.data.status, 'index update-user')
                 })
               } else {
                 Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
@@ -345,11 +342,11 @@ Page({
       })
     }
     if (direct==='left') {
-      console.log('left focusss')
+      // console.log('left focusss')
       that.setData({showLeftNum: true,showRightNum:false})
     }
     if (direct==='right') {
-      console.log('right focusss')
+      // console.log('right focusss')
       that.setData({showRightNum: true,showLeftNum:false})
     }
   },
@@ -685,7 +682,6 @@ Page({
             mask: true
           });
           let status = res.data.status*1;
-          // console.log(res,'tsss')
           if (status===200) {
             wx.hideLoading();
             Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
@@ -805,7 +801,7 @@ Page({
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            console.log(res, 'friends')
+            // console.log(res, 'friends')
           })
         },
         fail() {},
@@ -820,7 +816,7 @@ Page({
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            console.log(res, 'friends')
+            // console.log(res, 'friends')
           })
         },
         fail() {},
@@ -879,7 +875,6 @@ Page({
       scene: that.data.qid
     }
     Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      console.log(res,'poster')
       if (res.data.status*1===200) {
         if (res.data.data.url) {
           let qrcodeImg = res.data.data.url;
@@ -965,7 +960,6 @@ Page({
             wx.canvasToTempFilePath({
               canvasId: 'mycanvas',
               success: function (res) {
-                console.log(res, 'index canvas')
                 var tempFilePath = res.tempFilePath;
                 that.setData({
                   imagePath: tempFilePath,
@@ -1027,7 +1021,6 @@ Page({
           });
         },
         fail:(err)=>{
-          // console.log(err,'oooo')
           that.setData({
             showDialog: true,
             openType: 'openSetting',
@@ -1098,35 +1091,6 @@ Page({
       }
     }
 
-  },
-  // 输入框
-  textTap (e) {
-    // let that = this;
-    // let title = that.data.titleText;
-    // let leftHolder = that.data.leftHolder;
-    // let direct = e.currentTarget.dataset.direct;
-    // let rightHolder = that.data.rightHolder;
-    // console.log(title, 'teee')
-    // if (title === '点击输入标题' && direct === 'title') {
-    //   that.setData({
-    //     titleText: '',
-    //     showTextarea: true
-    //   })
-    // }
-    // if (leftHolder === '点击输入左选项' && direct === 'left') {
-    //   that.setData({
-    //     leftHolder: '',
-    //     showLeft: true,
-    //     pagePad: false
-    //   })
-    // }
-    // if (rightHolder === '点击输入右选项' && direct === 'right') {
-    //   that.setData({
-    //     rightHolder: '',
-    //     showRight: true,
-    //     pagePad: false
-    //   })
-    // }
   },
   changeTab (e) {
     let that = this;
