@@ -8,7 +8,7 @@
                 <view class="msg-box">{{userInfo.points}}</view>
             </view>
             <image class="my-avatar" src="{{userInfo.avatar || '../../images/avatarDefault.png'}}" />
-            <image src="../../images/my_bg.png" class="my-bg"/>
+            <image src="../../images/my_bg2.png" class="my-bg"/>
         </view>
     </view>
     <view class="mine-infos">

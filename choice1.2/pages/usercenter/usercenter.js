@@ -13,7 +13,8 @@ Page({
     showDialog: false,
     openType: 'openSetting',
     authInfo: '需要获取相册权限才能保存图片哦',
-    token: ''
+    token: '',
+    isSave: 1
   },
   cancelDialog () {
     this.setData({showDialog:false})
@@ -57,9 +58,8 @@ Page({
   },
   savePhoto () {
     let that = this;
-    let isSave = that.data.isSave;
+    let isSave = that.data.isSave*1;
     isSave++;
-    console.log(isSave)
     let IMG_URL = that.data.userBaseInfo.template_url;
     wx.showToast({
       title: '保存中...',
@@ -67,7 +67,7 @@ Page({
       duration: 2800
     });
     if (isSave===2) {
-      that.setData({isSave:isSave})
+      that.setData({isSave:isSave});
       setTimeout(()=>{
         wx.downloadFile({
           url: IMG_URL,

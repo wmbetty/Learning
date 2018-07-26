@@ -262,65 +262,7 @@ Page({
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
-          that.setData({token: token});
-          let detailUrl = backApi.quesDetail+qid;
-          let myChooseTagApi = backApi.myChooseTagApi+token;
-          let commentApi = backApi.commentApi+token;
-          let page = that.data.page;
-
-          Api.wxRequest(detailUrl,'GET',{},(res)=>{
-
-            if (res.data.data.id) {
-              if (res.data.data.status*1===4) {
-                Api.wxShowToast('该话题已被删', 'none', 3000);
-                setTimeout(()=>{
-                  wx.reLaunch({
-                    url: `/pages/main/main`
-                  })
-                },1500)
-              } else {
-                that.setData({
-                  details: res.data.data,
-                  quesId: res.data.data.id,
-                  hots: res.data.data.hots
-                });
-                // wx.setStorageSync('cardItem', res.data.data);
-                that.downLoadImg(res.data.data.member.avatar, 'avatarImgPath');
-                if (res.data.data.member) {
-                  that.setData({
-                    userInfo: res.data.data.member
-                  })
-                }
-              }
-            } else {
-              Api.wxShowToast('网络错误，请重试', 'none', 2000);
-            }
-          });
-          // Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
-          //
-          //   if (res.data === '') {
-          //     that.setData({
-          //       ismyVoted: false
-          //     })
-          //   }
-          //   if (res.data.status*1===200) {
-          //     that.setData({
-          //       ismyVoted: true
-          //     })
-          //     if (res.data.data.choose*1===1) {
-          //       that.setData({
-          //         isLeft: true
-          //       })
-          //     } else {
-          //       that.setData({
-          //         isRight: true
-          //       })
-          //     }
-          //   }
-          // });
-          // 获取评论列表
-          getCommentList(commentApi,qid,page,that);
-
+          that.setData({token: token,showDialog: true});
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
         }
@@ -395,18 +337,12 @@ Page({
     }
   },
   gotoShare (e) {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      that.setData({
-        isShare: true,
-        isDelete: false,
-        showMask: true,
-        isSlidedown: false
-      })
-    } else {
-       that.setData({showDialog: true})
-    }
+    this.setData({
+      isShare: true,
+      isDelete: false,
+      showMask: true,
+      isSlidedown: false
+    })
   },
   cancelShare () {
     let that = this;
@@ -607,12 +543,10 @@ showMaskHidden () {
   },
   
   shareToFriends () {
-    setTimeout(()=>{
-      this.setData({
-        isShare: false,
-        showMask: false
-      })
-    },600)
+    // this.setData({
+    //   showMask: false,
+    //   maskHidden: true
+    // })
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
@@ -733,8 +667,7 @@ showMaskHidden () {
         let showThumb = that.data.showThumb;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          console.log(res.data, 'choose');
-          // 
+
           if (status === 201) {
             if (!showThumb) {
               details.hots = res.data.data.hots;
@@ -796,24 +729,17 @@ showMaskHidden () {
         
       }
     } else {
-      that.setData({showDialog: true})
+      that.setData({
+        showDialog: true
+      })
     }
     
   },
   gotoOthers (e) {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
-    if (language) {
-      let mid = e.currentTarget.dataset.mid;
-      that.setData({page:1});
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
-    } else {
-      that.setData({showDialog: true})
-    }
-
+    let mid = e.currentTarget.dataset.mid;
+    wx.navigateTo({
+      url: `/pages/others/others?mid=${mid}`
+    })
   },
   goHome () {
     wx.reLaunch({
@@ -868,7 +794,9 @@ showMaskHidden () {
       })
       // that.setData({isLike:true})
     } else {
-      that.setData({showDialog: true})
+      that.setData({
+        showDialog: true
+      })
     }
   },
   // 发表评论
@@ -999,13 +927,14 @@ showMaskHidden () {
     let language = userInfo.language || '';
     if (language) {
       let mid = e.currentTarget.dataset.mid;
-      that.setData({page:1});
       wx.navigateTo({
         url: `/pages/others/others?mid=${mid}`
       })
     } else {
       // 微信授权
-      that.setData({showDialog: true})
+      that.setData({
+        showDialog: true
+      })
     }
   }
 })

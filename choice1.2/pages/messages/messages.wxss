@@ -19,7 +19,7 @@ page{
     width: 40rpx;height: 40rpx;margin-right: 24rpx;margin-top: 10rpx;
 }
 .info-icon{
-    width: 40rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx;
+    width: 40rpx;height: 40rpx;margin-right: 26rpx;margin-top: 8rpx;
 }
 .suggest-icon{
     width: 40rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx; 

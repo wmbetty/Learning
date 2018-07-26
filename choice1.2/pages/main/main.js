@@ -42,8 +42,6 @@ Page({
     cardTop: 0,
     showScore: false,
     isDown: false,
-    frontIndex: 0,
-    frontId: 0,
     hadUp: false,
     showUserbase: false,
     openType: 'getUserInfo',
@@ -67,12 +65,6 @@ Page({
     let curr_id = e.currentTarget.dataset.item.id;
     let listItem = e.currentTarget.dataset.item;
     let index = e.currentTarget.dataset.index;
-    // let qList = that.data.questionList;
-    //
-    // let noTopQuesApi = backApi.noTopQues+token;
-    // let page = that.data.page;
-    // let downList = that.data.downList;
-    // let down_times = that.data.down_times;
     var endx, endy;
     endx = e.changedTouches[0].pageX;
     endy = e.changedTouches[0].pageY;
@@ -426,7 +418,23 @@ Page({
   },
   onShow () {
     let that = this;
-    // res.data.data.access_token
+    // let questionList = that.data.questionList;
+    // let cardItem = wx.getStorageSync('cardItem');
+    // if (cardItem.id) {
+    //   let detailUrl = backApi.quesDetail+cardItem.id;
+    //   Api.wxRequest(detailUrl,'GET',{},(res)=> {
+    //     if (res.data.data.id) {
+    //       cardItem = res.data.data;
+    //     }
+    //   });
+    //   for (let item of questionList) {
+    //     if (item.id = cardItem.id) {
+    //       item = cardItem;
+    //     }
+    //     that.setData({questionList:questionList});
+    //   }
+    //   console.log(questionList,cardItem,'item')
+    // }
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -562,7 +570,7 @@ Page({
       icon: 'loading',
       duration: 2000
     });
-    var that = this;
+    let that = this;
     let token = that.data.token;
     let posterApi = backApi.posterApi+token;
     let postData = {
@@ -723,9 +731,13 @@ Page({
     })
   },
   cancelShare () {
-    this.setData({
-      showShare: false
-    })
+    let that = this;
+    that.setData({isSlidedown:true});
+    setTimeout(()=>{
+      that.setData({
+        showShare: false
+      })
+    },280)
   },
   cancelDialog () {
     let that = this;
@@ -938,8 +950,9 @@ Page({
         quesId: quesId,
         question: question,
         nname: nname,
-        avatar: avatar
-      })
+        avatar: avatar,
+        isSlidedown: false
+      });
       that.downLoadImg(avatar, 'avatarImgPath');
     } else {
       // 微信授权
@@ -955,7 +968,7 @@ Page({
     if (language) {
       let id = e.currentTarget.dataset.id;
       let myid = e.currentTarget.dataset.mid;
-      let my = ''
+      let my = '';
       if (myid==mid) {
         my = 1;
       }

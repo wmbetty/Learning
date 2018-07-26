@@ -129,6 +129,7 @@ Page({
   gotoDetails (e) {
     let msg = e.currentTarget.dataset.msg;
     let item = JSON.stringify(e.currentTarget.dataset.item);
+    console.log(msg,item,'msggg')
     wx.navigateTo({
       url: `/pages/notedetail/notedetail?msg=${msg}&item=${item}`
     })

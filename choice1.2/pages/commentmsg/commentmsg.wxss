@@ -19,10 +19,11 @@ page{
 .time-text{color: #888;font-size: 24rpx;}
 .flex-space{
     display: flex;justify-content: space-between;
-    word-break: break-all;
+    word-break: break-all;position: relative;
 }
 .s-circle{
-    width: 16rpx;height: 16rpx;background: #FF4901;border-radius: 50%;margin-top: 12rpx;
+    width: 16rpx;height: 16rpx;background: #FF4901;border-radius: 50%;
+    position: absolute;right: 12rpx;bottom: 40rpx;
 }
 .voted-title{margin-bottom: 12rpx;}
 .green-font{color: #11B591;}

@@ -1,5 +1,5 @@
 <!--pages/details/details.wxml-->
-<view style="min-height: {{winHeight}}px;position: relative;" class="showCommarea">
+<view style="min-height: {{winHeight}}px;position: relative;">
     <view class="page-head">详情</view>
     <view class="main-container" wx:if="{{maskHidden==false}}">
         <view class="main-head">

@@ -5,9 +5,9 @@
         <view class="mine-banner">
             <view class="nums-box">
                 <image src="../../images/grey_gold.png" class="gold-coin" />
-                <view wx:if="{{userInfo.nickName}}" class="point-box">{{points}}</view>
+                <view class="point-box">{{points || 0}}</view>
             </view>
-            <image class="my-avatar" src="{{userInfo.avatarUrl || ''}}" />
+            <image class="my-avatar" src="{{userInfo.avatarUrl || '../../images/avatarDefault.png'}}" />
             <image src="../../images/my_bg.png" class="my-bg"/>
         </view>
     </view>
@@ -17,7 +17,7 @@
         <image wx:if="{{userInfo.gender===2}}" src="../../images/girl_icon.png" class="my-gender"/>
         <view class="msg-box" bindtap="gotoMsg">
             消息
-            <view class="msg-red-dot" wx:if="{{msgCount*1>0 || voteUnreadCount*1>0 || baseRedDot*1>0}}"></view>
+            <view class="msg-red-dot" wx:if="{{msgCount*1>0 || voteUnreadCount*1>0}}"></view>
         </view>
     </view>
     <view class="tab-container">
@@ -97,4 +97,4 @@
 
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 
-<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount,baseRedDot}}"/>
+<template is="tabBar" data="{{tabBar:bindData.tabBar,myvotecount,myvotecount}}"/>

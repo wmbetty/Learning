@@ -72,7 +72,7 @@ Page({
         }
       }
     }
-
+    
   },
   touchStart (e) {
     this.wecropper.touchStart(e)
@@ -223,11 +223,17 @@ Page({
   onLoad: function(option) {
     let that = this;
     tabBar.tabbar("tabBar", 2, that);//0表示第一个tabbar
-
+    
     let model = isIphone.model;
+<<<<<<< HEAD
     if (model.indexOf('iPhone') == -1) {
-      that.setData({adjustPosi:true,spacing:140})
+      that.setData({adjustPosi:true,spacing:90})
     }
+=======
+      if (model.indexOf('iPhone') == -1) {
+        that.setData({adjustPosi:true,spacing:140})
+      }
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁
 
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
@@ -302,7 +308,9 @@ Page({
   textFocus () {
     let that =this;
     let title = that.data.titleText;
-    if (title === '点击输入标题') {
+    console.log(title,'teeeeppp')
+    if (title=='点击输入标题' || title==='') {
+      console.log(22)
       that.setData({
         showTextarea: true,
         titleText: ''
@@ -349,17 +357,45 @@ Page({
     // let chineseReg = /[\u4E00-\u9FA5]/g;
     let leftImg = that.data.leftImgTemp;
     let rightImg = that.data.rightImgTemp;
-    console.log(val,'text')
+
     if (val==='') {
-      that.setData({isPublish: false})
-    } else {
-      if (direct === 'title' && val !== '点击输入标题') {
+      that.setData({isPublish: false});
+      if (direct === 'title') {
         that.setData({
+          showTitleNum: false,
           titleText: val,
           shareTitle: val
-        })
-        if (val.length>=30) {
-          Api.wxShowToast('标题不超过30个字', 'none', 2000);
+        });
+      }
+      if (direct === 'left') {
+        that.setData({
+          showLeftNum: false,
+          leftText: val
+        });
+      }
+      if (direct === 'right') {
+        that.setData({
+          showRightNum: false,
+          rightText: val
+        });
+      }
+    } else {
+      if (direct === 'title' && val !== '点击输入标题') {
+        let strlen = that.strlen(val);
+        that.setData({
+          showTitleNum: true,
+          titleText: val,
+          shareTitle: val
+        });
+        if (strlen<=60) {
+          that.setData({
+            disTitle: val,
+            hadTitleNum: strlen
+          });
+        } else  {
+          let titleTxt = that.data.disTitle;
+          that.setData({titleText: titleTxt});
+          Api.wxShowToast('标题不超过60个字符', 'none', 2000);
         }
       }
       if (!that.data.txtActive) {
@@ -369,18 +405,30 @@ Page({
       } else {
         if (direct === 'left') {
           that.setData({
+            showLeftNum: true,
             leftText: val
-          })
-          if (val.length>=18) {
-            Api.wxShowToast('左选项不超过18个字', 'none', 2000);
+          });
+          let strlen = that.strlen(val);
+          if (strlen<=36) {
+            that.setData({disLeft: val,leftHadWrite: strlen})
+          } else {
+            let leftTxt = that.data.disLeft;
+            that.setData({leftHolder: leftTxt});
+            Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
           }
         }
         if (direct === 'right') {
           that.setData({
+            showRightNum: true,
             rightText: val
-          })
-          if (val.length>=18) {
-            Api.wxShowToast('右选项不超过18个字', 'none', 2000);
+          });
+          let strlen = that.strlen(val);
+          if (strlen<=36) {
+            that.setData({disRight: val,rightHadWrite: strlen})
+          } else {
+            let rightTxt = that.data.disLeft;
+            that.setData({rightHolder: rightTxt});
+            Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
           }
         }
         if (that.data.titleText !== '点击输入标题' && that.data.titleText.length>1 && that.data.leftText !== '' && that.data.rightText !== '') {
@@ -396,7 +444,7 @@ Page({
   chooseImg (e) {
     let that = this;
     let imgopt = e.currentTarget.dataset.imgopt;
-
+    
     wx.chooseImage({
       sizeType: ['compressed'],
       count: 1,
@@ -418,7 +466,7 @@ Page({
             isPublish: false
           })
         }
-
+        
       }
     })
   },
@@ -431,7 +479,7 @@ Page({
     let rightImgTemp = that.data.rightImgTemp;
     let token = that.data.token;
     let isPublish = that.data.isPublish;
-
+    
     if (txtActive) { //上传文字
       if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
         let wxShowToast = Api.wxShowToast('请填写基本内容', 'none', 2000);
@@ -449,27 +497,31 @@ Page({
         let wxShowToast = Api.wxShowToast('请填写右选项', 'none', 2000);
         return false;
       }
-
+      
       let postData = {
         question: that.data.titleText.replace(/\s/g, "").substring(0,30),
         option1: that.data.leftText.replace(/\s/g, "").substring(0,36),
         option2: that.data.rightText.replace(/\s/g, "").substring(0,36),
         type: 1
-      }
+      };
 
       that.setData({
         btnDis: true
-      })
+      });
 
       if (isPublish) {
+        that.setData({showClickBtn: true});
         Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+          // that.setData({
+          //   isPublish: false
+          // })
           wx.showLoading({
             title: '发布中',
             mask: true
           });
           let status = res.data.status*1;
+          // console.log(res,'tsss')
           if (status===200) {
-            wx.hideLoading();
             Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
             that.setData({
               qid: res.data.data.id,
@@ -483,19 +535,23 @@ Page({
               showTextarea: false,
               showLeft: false,
               showRight: false,
-              btnDis: false
+              showTitleNum: false,
+              showLeftNum: false,
+              showRightNum: false
             });
             // 2s后消失
             setTimeout(() => {
               that.setData({
                 showToast: false,
                 hasUserInfo: false,
-                isShare: true
+                isShare: true,
+                btnDis: false
               });
-            }, 1500)
+            }, 2000)
           }
           if (status === 201) {
             publishedPoint = res.data.data.member.points;
+            // console.log(publishedPoint,myPoint,'pointttt')
             wx.hideLoading();
             if (publishedPoint===myPoint) {
               Api.wxShowToast('发布成功', 'success', 2000);
@@ -511,16 +567,19 @@ Page({
                 showTextarea: false,
                 showLeft: false,
                 showRight: false,
-                btnDis: false
+                showTitleNum: false,
+                showLeftNum: false,
+                showRightNum: false
               });
               // 2s后消失
               setTimeout(() => {
                 that.setData({
                   showToast: false,
                   hasUserInfo: false,
-                  isShare: true
+                  isShare: true,
+                  btnDis: false
                 });
-              }, 1500)
+              }, 2000)
             } else {
               setTimeout(()=> {
                 that.setData({
@@ -535,7 +594,9 @@ Page({
                   showTextarea: false,
                   showLeft: false,
                   showRight: false,
-                  btnDis: false
+                  showTitleNum: false,
+                  showLeftNum: false,
+                  showRightNum: false
                 });
 
               }, 300)
@@ -544,16 +605,17 @@ Page({
                 that.setData({
                   showToast: false,
                   hasUserInfo: false,
-                  isShare: true
+                  isShare: true,
+                  btnDis: false
                 });
-              }, 1500)
+              }, 2000)
             }
           }
         })
       } else {
-        that.setData({
-          btnDis: true
-        });
+        // that.setData({
+        //   btnDis: true
+        // });
         Api.wxShowToast('请填写完整哦', 'none', 2000);
       }
     } else { //上传图片
@@ -583,8 +645,9 @@ Page({
       }
       that.setData({
         btnDis: true
-      })
+      });
       if (isPublish) {
+        that.setData({showClickBtn: true});
         Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
           // that.setData({
           //   isPublish: false
@@ -596,22 +659,22 @@ Page({
           let status = res.data.status*1;
           // console.log(res,'tsss')
           if (status===200) {
-            wx.hideLoading();
             Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
             that.setData({
               qid: res.data.data.id,
               showToast: false,
               isPublish: false,
-              btnDis: false
+              showTitleNum: false
             });
             // 2s后消失
             setTimeout(() => {
               that.setData({
                 showToast: false,
                 hasUserInfo: false,
-                isShare: true
+                isShare: true,
+                btnDis: false
               });
-            }, 1500)
+            }, 2000)
           }
           if (status === 201) {
             publishedPoint = res.data.data.member.points;
@@ -622,23 +685,24 @@ Page({
                 qid: res.data.data.id,
                 showToast: false,
                 isPublish: false,
-                btnDis: false
+                showTitleNum: false
               });
               // 2s后消失
               setTimeout(() => {
                 that.setData({
                   showToast: false,
                   hasUserInfo: false,
-                  isShare: true
+                  isShare: true,
+                  btnDis: false
                 });
-              }, 1500)
+              }, 2000)
             } else {
               setTimeout(()=> {
                 that.setData({
                   qid: res.data.data.id,
                   showToast: true,
                   isPublish: false,
-                  btnDis: false
+                  showTitleNum: false
                 });
 
               }, 300)
@@ -647,20 +711,17 @@ Page({
                 that.setData({
                   showToast: false,
                   hasUserInfo: false,
-                  isShare: true
+                  isShare: true,
+                  btnDis: false
                 });
-              }, 1500)
+              }, 2000)
             }
-          }
-          if (status === 444) {
-            wx.hideLoading();
-            Api.wxShowToast('出错了，请稍后再试哦', 'none', 2000);
           }
         })
       } else {
-        that.setData({
-          btnDis: true
-        })
+        // that.setData({
+        //   btnDis: true
+        // })
         Api.wxShowToast('请提交完整信息哦', 'none', 2000);
       }
     }
@@ -697,7 +758,7 @@ Page({
     },100)
   },
 
-  onShareAppMessage (res) {
+  onShareAppMessage () {
     let that = this;
     let questId = that.data.qid;
     let token = that.data.token;
@@ -736,16 +797,16 @@ Page({
     }
   },
   // 绘制圆角矩形
-  drawRoundRect(cxt, x, y, width, height, radius){
-    cxt.beginPath();
-    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
-    cxt.lineTo(width - radius + x, y);
-    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
-    cxt.lineTo(width + x, height + y - radius);
-    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
-    cxt.lineTo(radius + x, height +y);
-    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
-    cxt.closePath();
+  drawRoundRect(cxt, x, y, width, height, radius){   
+    cxt.beginPath();   
+    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);   
+    cxt.lineTo(width - radius + x, y);   
+    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);   
+    cxt.lineTo(width + x, height + y - radius);   
+    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);   
+    cxt.lineTo(radius + x, height +y);   
+    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);   
+    cxt.closePath();   
     cxt.setFillStyle('#ffffff');
     cxt.fill();
 
@@ -779,115 +840,115 @@ Page({
     });
     let token = this.data.token;
     let posterApi = backApi.posterApi+token;
-    let postData = {
-      page:`pages/details/details`,
-      scene: that.data.qid
-    }
-    Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      console.log(res,'poster')
-      if (res.data.status*1===200) {
-        if (res.data.data.url) {
-          let qrcodeImg = res.data.data.url;
-          that.downLoadImg(qrcodeImg, 'qrcodeImgPath');
-          that.setData({
-            qrcode: qrcodeImg
-          })
-          //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
-          setTimeout(() => {
-            that.setData({
-              maskHidden: true,
-              isShare: false,
-              showPosterView: true
-            })
-
-            let shareQues = that.data.shareTitle;
-            var context = wx.createCanvasContext('mycanvas');
-            context.setFillStyle("#ffffff")
-            context.fillRect(0, 0, 375, 667);
-            var path = "../../images/posterBg.png";
-
-            context.drawImage(path, 0, 0, 375, 154);
-
-            let qrImg = that.data.qrcodeImgPath;
-            let path1 = that.data.avatarImgPath;
-            var path3 = "/images/my_bg.jpg";
-            //绘制一起吃面标语
-            let chineseReg = /[\u4E00-\u9FA5]/g;
-            if (chineseReg.test(shareQues)) {
-              if (shareQues.match(chineseReg).length >= 10) {  //返回中文的个数
-                context.setFontSize(26);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues.substring(0, 9), 185, 378);
-                context.stroke();
-                context.setFontSize(27);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues.substring(10, 19) + '...', 185, 414);
-                context.stroke();
-              } else {
-                context.setFontSize(26);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues, 185, 378);
-                context.stroke();
-              }
-            } else {
-              if (shareQues.length > 20) {
-                context.setFontSize(26);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues.substring(0, 9), 185, 378);
-                context.stroke();
-                context.setFontSize(26);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues.substring(10, question.length - 1) + '...', 185, 414);
-                context.stroke();
-              } else {
-                context.setFontSize(26);
-                context.setFillStyle('#343434');
-                context.setTextAlign('center');
-                context.fillText(shareQues, 185, 378);
-                context.stroke();
-              }
+            let postData = {
+              page:`pages/details/details`,
+              scene: that.data.qid
             }
-            context.setFontSize(14);
-            context.setFillStyle('#888888');
-            context.setTextAlign('center');
-            context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
-            context.stroke();
-            //绘制头像
+            Api.wxRequest(posterApi,'POST',postData,(res)=>{
+              console.log(res,'poster')
+              if (res.data.status*1===200) {
+                if (res.data.data.url) {
+                  let qrcodeImg = res.data.data.url;
+                  that.downLoadImg(qrcodeImg, 'qrcodeImgPath');
+                  that.setData({
+                    qrcode: qrcodeImg
+                  })
+                  //将生成好的图片保存到本地，需要延迟一会，绘制期间耗时
+                  setTimeout(() => {
+                    that.setData({
+                      maskHidden: true,
+                      isShare: false,
+                      showPosterView: true
+                    })
 
-            context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-            context.drawImage(qrImg, 154, 582, 60, 60);
-            context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
-            context.strokeStyle = "#ffe200";
-            context.clip(); //裁剪上面的圆形
-            context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
-            context.draw();
-          }, 2600);
-          setTimeout(() => {
-            wx.canvasToTempFilePath({
-              canvasId: 'mycanvas',
-              success: function (res) {
-                console.log(res, 'index canvas')
-                var tempFilePath = res.tempFilePath;
-                that.setData({
-                  imagePath: tempFilePath,
-                  canvasHidden: true
-                });
-              },
-              fail: function (res) {
-                console.log(res, 'canvas fail');
+                    let shareQues = that.data.shareTitle;
+                    var context = wx.createCanvasContext('mycanvas');
+                    context.setFillStyle("#ffffff")
+                    context.fillRect(0, 0, 375, 667);
+                    var path = "../../images/posterBg.png";
+
+                    context.drawImage(path, 0, 0, 375, 154);
+
+                    let qrImg = that.data.qrcodeImgPath;
+                    let path1 = that.data.avatarImgPath;
+                    var path3 = "/images/my_bg.jpg";
+                    //绘制一起吃面标语
+                    let chineseReg = /[\u4E00-\u9FA5]/g;
+                    if (chineseReg.test(shareQues)) {
+                      if (shareQues.match(chineseReg).length >= 10) {  //返回中文的个数
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(0, 9), 185, 378);
+                        context.stroke();
+                        context.setFontSize(27);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(10, 19) + '...', 185, 414);
+                        context.stroke();
+                      } else {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues, 185, 378);
+                        context.stroke();
+                      }
+                    } else {
+                      if (shareQues.length > 20) {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(0, 9), 185, 378);
+                        context.stroke();
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues.substring(10, question.length - 1) + '...', 185, 414);
+                        context.stroke();
+                      } else {
+                        context.setFontSize(26);
+                        context.setFillStyle('#343434');
+                        context.setTextAlign('center');
+                        context.fillText(shareQues, 185, 378);
+                        context.stroke();
+                      }
+                    }
+                    context.setFontSize(14);
+                    context.setFillStyle('#888888');
+                    context.setTextAlign('center');
+                    context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
+                    context.stroke();
+                    //绘制头像
+
+                    context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
+                    context.drawImage(qrImg, 154, 582, 60, 60);
+                    context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
+                    context.strokeStyle = "#ffe200";
+                    context.clip(); //裁剪上面的圆形
+                    context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
+                    context.draw();
+                  }, 2600);
+                  setTimeout(() => {
+                    wx.canvasToTempFilePath({
+                      canvasId: 'mycanvas',
+                      success: function (res) {
+                        console.log(res, 'index canvas')
+                        var tempFilePath = res.tempFilePath;
+                        that.setData({
+                          imagePath: tempFilePath,
+                          canvasHidden: true
+                        });
+                      },
+                      fail: function (res) {
+                        console.log(res, 'canvas fail');
+                      }
+                    });
+                  }, 3200)
+                }
+              } else {
+                Api.wxShowToast('小程序码获取失败~', 'none', 2000)
               }
-            });
-          }, 3200)
-        }
-      } else {
-        Api.wxShowToast('小程序码获取失败~', 'none', 2000)
-      }
-    })
+            })
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
@@ -933,17 +994,17 @@ Page({
           });
         },
         fail:(err)=>{
-          console.log(err,'oooo')
+          // console.log(err,'oooo')
           that.setData({
             showDialog: true,
             openType: 'openSetting',
             authInfo: '需要获取相册权限才能保存图片哦'
           })
-        }
+        } 
       })
     },4500)
   },
-
+  
   shareToFriend () {
     setTimeout(()=> {
       wx.navigateBack({
@@ -957,6 +1018,7 @@ Page({
     let leftText = that.data.leftText;
     let rightText = that.data.rightText;
     let direct = e.currentTarget.dataset.direct;
+    console.log(title,leftText,rightText,'blur blur')
     if (title==='' && direct === 'title') {
       that.setData({
         titleText: '点击输入标题',
@@ -973,7 +1035,7 @@ Page({
       that.setData({
         leftHolder: '点击输入左选项',
         showLeft: false,
-
+        
       })
     }
     if (rightText === '' && direct === 'right') {
@@ -988,7 +1050,7 @@ Page({
         showRight: false
       })
     }
-    console.log(title,leftText,rightText,'blur')
+
     if (that.data.txtActive) {
       if (title===''||leftText===''||rightText===''){
         that.setData({
@@ -1005,32 +1067,32 @@ Page({
   },
   // 输入框
   textTap (e) {
-    let that = this;
-    let title = that.data.titleText;
-    let leftHolder = that.data.leftHolder;
-    let direct = e.currentTarget.dataset.direct;
-    let rightHolder = that.data.rightHolder;
+    // let that = this;
+    // let title = that.data.titleText;
+    // let leftHolder = that.data.leftHolder;
+    // let direct = e.currentTarget.dataset.direct;
+    // let rightHolder = that.data.rightHolder;
     // console.log(title, 'teee')
-    if (title === '点击输入标题' && direct === 'title') {
-      that.setData({
-        titleText: '',
-        showTextarea: true
-      })
-    }
-    if (leftHolder === '点击输入左选项' && direct === 'left') {
-      that.setData({
-        leftHolder: '',
-        showLeft: true,
-        pagePad: false
-      })
-    }
-    if (rightHolder === '点击输入右选项' && direct === 'right') {
-      that.setData({
-        rightHolder: '',
-        showRight: true,
-        pagePad: false
-      })
-    }
+    // if (title === '点击输入标题' && direct === 'title') {
+    //   that.setData({
+    //     titleText: '',
+    //     showTextarea: true
+    //   })
+    // }
+    // if (leftHolder === '点击输入左选项' && direct === 'left') {
+    //   that.setData({
+    //     leftHolder: '',
+    //     showLeft: true,
+    //     pagePad: false
+    //   })
+    // }
+    // if (rightHolder === '点击输入右选项' && direct === 'right') {
+    //   that.setData({
+    //     rightHolder: '',
+    //     showRight: true,
+    //     pagePad: false
+    //   })
+    // }
   },
   changeTab (e) {
     let that = this;
@@ -1043,7 +1105,7 @@ Page({
       if (titleText === '点击输入标题' || that.data.leftText === '' || that.data.rightText === '') {
         that.setData({isPublish:false})
       }
-      if ((titleText !== '点击输入标题' && titleText !== '') && that.data.leftText === '' && that.data.rightText === '') {
+      if ((titleText !== '点击输入标题' && titleText !== '') && that.data.leftText !== '' && that.data.rightText !== '') {
         that.setData({isPublish:true,btnDis:false})
       }
 
@@ -1060,7 +1122,7 @@ Page({
           that.setData({isPublish:true,btnDis:false})
         }
       }
-
+      
     }
   },
   // 删除图片
@@ -1091,5 +1153,20 @@ Page({
 
       }
     })
+  },
+  // 统计中英文字节数
+  strlen(str) {
+  var len = 0;
+  for (var i=0; i<str.length; i++) {
+    let c = str.charCodeAt(i);
+    //单字节加1
+    if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+      len = len+1;
+    }
+    else {
+      len = len+2;
+    }
   }
+  return len;
+}
 });

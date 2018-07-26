@@ -1,6 +1,7 @@
 /* pages/details/details.wxss */
 page{
-    background: #F5F6F8;position: relative;height: 100%;
+    background: #F5F6F8;
+    position: relative;height: 100%;
     /* overflow-y: hidden; */
 }
 .page-head{
@@ -38,7 +39,7 @@ page{
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAdVBMVEUAAAD6cXHuaWjuaWjzbmz/fHzuamjtamjuaWjuaWjuamjva2nva2nwa2nta2fuamjtamjua2nxbGnybmvuaWjtamjuamjuamjtaWnuamjvaWnybGruaWftamfuaWjuaWjuamfuaWfvamruaWjva2nwbGztaWdNxpRkAAAAJnRSTlMADtV2Gwb26M3AsGxcQZ6Fc0c2EtyrmHlyaVIl6+PHpaOUMJZ8IbNsieoAAAEKSURBVEjHpdTZboMwEIVhY7PbUCBhCWRp03be/xGrqIqUOGcGo/zXnxA6I1DvFlW2MY2togBblXSvrNaeW9NjdSTinJ47S7wgv4LHDb1mObxLgT5G7KNRB0bnUJ+ZQQiWJlC3hOugPjDaQf3BaAP1J6O/mEPiSqj3jM6hThmdwbsTFxq8Y/UCtGW1wwNKE8qTyKP8Et8O3J1v8nGSCXrvbziSlPV07AbNUP09x+ia7Vgen4/eG/EHlxQPuEzUSqP0uYtLmlWdS781+Ug/Er0a7a9nrlDG7oLPmV2cN3c7aJLSQ6vudR6F6e4fzxTWfMNxGqjT2+vXFFqt1ELhLWraoCfVb9C9Om3Qpz8I2qGEjYffIwAAAABJRU5ErkJggg==') no-repeat;
     background-size: 100% 100%;
 }
-.main-container{background: #fff;padding-bottom: 40rpx;}
+.main-container{background: #fff;padding-bottom: 32rpx;}
 .ellipse-icon{
     width: 44rpx;height: 44rpx;
     /* background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUAAACFhYWIiIiHh4eHh4eHh4eIiIiIiIjVjsWQAAAACHRSTlMAGtnAnZNLR+MnSTAAAAAbSURBVAjXY6AUCBWwOLArAhnCCawBbIaUGgcAi1wB7qq3PpEAAAAASUVORK5CYII=') no-repeat;
@@ -225,26 +226,11 @@ page{
     position: absolute;top: 0;left: 0;width: 100%;height: 100%;
     background: rgba(0, 0, 0, 0.4);color: #fff;font-size: 80rpx;
     display: flex;justify-content: center;align-items: center;font-weight: bold;
-    animation: mask-in 1s ease-in;
-}
-@keyframes mask-in {
-    0% {
-        opacity: 0.9;
-    }
-    30% {
-        opacity: 0.5;
-    }
-    60% {
-        opacity: 0.7;
-    }
-    100%{
-        opacity: 0.9;
-    }
-
 }
 .vote-selected{color: #E74C49;}
 .back-home-btn{
-    display: block;margin: 40rpx auto 0;
+    position:absolute;bottom:0;left:50%;
+    display: block;margin: 40rpx 0 0 -120rpx;
     width: 240rpx;height: 100rpx;
     animation: btn 1s;
 }
@@ -258,18 +244,6 @@ page{
         /* transform:scale(0.6) */
       }
 }
-.thumb1{
-    width: 268rpx;height: 266rpx;
-    position: absolute;left: 19%;top:24%;opacity: 0;
-    animation: thumb1 1s;
-  }
-  /*.thumb2{*/
-    /*width: 268rpx;height: 266rpx;*/
-    /*position: absolute;left: 18%;top:21%;*/
-    /*!* opacity: 0; *!*/
-    /*animation: thumb2 1s ease-out;*/
-      /*z-index: 15;*/
-  /*}*/
 .thumb2{
     width: 360rpx;height: 360rpx;
     position: absolute;left: 6%;top:-2%;
@@ -283,15 +257,6 @@ page{
     animation: circle 1s linear;opacity: 0;
 
 }
-  @keyframes thumb1{
-    50% {
-      transform: scale(1);
-    }
-    100%{
-      transform: scale(0);
-      opacity: 0;
-    }
-  }
   @keyframes thumb2{
       15% {
           transform: scale(0.4);
@@ -320,86 +285,6 @@ page{
         opacity: 0;
     }
 }
-  .dot {
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    left: 105px;
-    top: 108px;
-    /* border: 1px solid #E74C49; */
-    border-radius: 50%;
-    background: transparent;
-    /* background-color:#E74C49; 实心圆 ，如果没有这个就是一个小圆圈 */
-    z-index: 12;
-    }
-/* 产生动画（向外扩散变大）的圆圈 第一个圆 */
-.pulse {
-    position: absolute;
-    width: 220rpx;
-    height: 220rpx;
-    left: 48px;
-    top: 50px;
-    border: 2px solid #E74C49;
-    border-radius: 50%;
-    z-index: 14;
-    opacity: 0;
-    animation: warn 1s linear;
-    animation-delay: 0.4;
-    /* box-shadow: 1px 1px 30px #E74C49;  */
-
-}
-/* 产生动画（向外扩散变大）的圆圈 第二个圆 */
-.pulse1 {
-    position: absolute;
-    width: 300rpx;
-    height: 300rpx;
-    left: 30px;
-    top: 32px;
-    border: 2px solid #E74C49;
-    border-radius: 50%;
-    z-index: 11;
-    opacity: 0;
-    animation: warn1 0.8s linear;
-    animation-delay: 1.2s;
-    /* animation-iteration-count: infinite; */
-}
-.pulse2{
-    position: absolute;
-    width: 380rpx;
-    height: 380rpx;
-    left: 10px;
-    top: 12px;
-    border: 3px solid #E74C49;
-    border-radius: 50%;
-    z-index: 11;
-    opacity: 0;
-    animation: warn1 1s linear;
-    animation-delay: 1.5s;
-    /* animation-iteration-count: infinite; */
-}
-
-@keyframes warn {
-    0% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-
-    100% {
-        transform: scale(1.2);
-        opacity: 0;
-    }
-}
-
-@keyframes warn1 {
-    0%{
-        transform: scale(1);
-        opacity: 0.5;
-    }
-    100%{
-        transform: scale(1.2);
-        opacity: 0;   /*圆形放大的同时，透明度逐渐减小为0*/
-    }
-}
       .voted-thumb-box{
         width: 440rpx;height: 440rpx;
         position: absolute;left: 23%;top: 160px;
@@ -415,6 +300,7 @@ page{
       .hexie-img{
         width: 100%;height: 100%;
         position: absolute;left: 0;top: 0;
+<<<<<<< HEAD
       }
 
 .show-number{
@@ -428,3 +314,105 @@ page{
     40%,60%,80%{transform:scale(1.2) rotate(-3deg);}
     100%{transform:scale(1) rotate(0);}
 }
+
+.comment-container{
+    margin-top: 20rpx;
+    padding-bottom: 200rpx;
+}
+.comment-head{
+    font-size: 40rpx;color: #343434;
+    padding: 30rpx 40rpx;background: #fff;
+    /*padding: 0 40rpx;*/
+}
+.comment-list-group{padding: 0 40rpx;background: #fff}
+.comment-list-item{margin-bottom: 60rpx;}
+.comment-list-item:last-child{padding-bottom: 20rpx;}
+.list-first-comment{
+    display: flex;
+    margin: 12rpx 0 32rpx 68rpx;color: #343434;font-size: 32rpx;
+}
+.list-other-comment{
+    padding: 30rpx;font-size: 28rpx;margin-bottom: 20rpx;
+    background: rgba(98, 85, 157,.3);margin-left: 68rpx;color: #666;
+}
+.list-comment-info{
+    margin-left: 68rpx;font-size: 28rpx;color: #888;
+    display: flex;justify-content: space-between;
+}
+.comment-operate{
+    display: flex;justify-content: space-between;position: relative;
+}
+.list-user{display: flex;font-size: 28rpx;color: #888;}
+.comm-user-avatar{
+    display: block;width: 48rpx;height: 48rpx;border-radius: 50%;margin-right: 20rpx;
+}
+.comm-user-name{margin-top: 4rpx;}
+.comment-time{font-size: 24rpx;}
+.comment-icon{
+    width: 34rpx;height: 32rpx;display: inline-block;margin-right: 12rpx;
+}
+.good-icon{
+    width: 30rpx;height: 30rpx;display: inline-block;margin-right: 12rpx;
+}
+.good-icon-active{
+    animation: gdscale 0.5s ease-out;opacity: 1;
+}
+.comm-like-icon{
+    position: absolute;top:2%;left: 60%;
+    width: 30rpx;height: 30rpx;
+    animation: gdscale 0.8s ease-out;opacity: 0;
+}
+@keyframes gdscale {
+    0% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+.comm-good-area{display: flex;}
+.comment-icon-area{margin-right: 40rpx;display: flex;}
+.comment-owner{
+    width: 60rpx;height: 32rpx;display: inline-block;
+    margin-left: 20rpx;margin-top: 6rpx;
+}
+.comment-fixed-area{
+    position: fixed;left: 0;bottom: 0;
+    padding: 14rpx 0;
+    background: #fff;width: 100%;overflow: hidden;
+    display: flex;justify-content: space-between;
+    border-top: 1px solid #E5E7ED;
+}
+.fade-input{
+    width: 482rpx;height: 72rpx;border-radius: 10rpx;padding-left: 30rpx;line-height: 72rpx;
+    background: rgba(229, 231, 237,0.3);color: #ccc;font-size: 28rpx;margin-left: 20rpx;
+}
+.input-box{
+    background: rgba(229, 231, 237,0.65);margin-left: 20rpx;
+    border-radius: 10rpx;width: 520rpx;padding-left: 30rpx;
+}
+.comment-input{
+    color: #343434;font-size: 28rpx;height: 72rpx;width: 100%;
+}
+.gohome-view{padding-right: 40rpx;color: #666;font-size: 20rpx;text-align: center;padding-top: 4rpx;}
+.comment-total-view{color: #666;font-size: 20rpx;text-align: center;padding-top: 4rpx;}
+.total-comm-icon{
+    display: block;width: 38rpx;height: 36rpx;margin-bottom: 6rpx;
+}
+.comm-gohome-icon{display: block;width: 38rpx;height: 36rpx;margin-bottom: 6rpx;}
+.other-comm-item{margin-bottom: 4rpx;}
+.comm-btn{
+    width: 118rpx;height: 72rpx;background: #E64340;color: #fff;font-size: 28rpx;
+    border-radius: 10rpx;line-height: 2.6;
+}
+.comm-btn:after{border: none;}
+.red-font{color: #E64340;}
+.click-btn{
+    background: #B83C3A;
+    color: #fff;
+}
+=======
+      }
+>>>>>>> parent of 8334911... 1.1基本完工，接入阿拉丁

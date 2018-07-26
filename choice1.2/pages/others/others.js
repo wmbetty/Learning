@@ -26,9 +26,17 @@ Page({
    */
   onLoad: function (options) {
     let that = this;
+
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
+        let localUserInfo = wx.getStorageSync('userInfo');
+        let userInfoApi = backApi.userInfo+token;
+        Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
+          let localuser_id = res.data.data.id;
+          that.setData({localuser_id:localuser_id});
+        });
+
         let infoApi = backApi.othersInfo+token;
         let otherPublishQues = backApi.otherPublishQues+token;
         let mid = options.mid;
@@ -64,15 +72,18 @@ Page({
   },
   // 详情
   gotoDetail (e) {
+    let that = this;
     let id = e.currentTarget.dataset.id;
-    let mid = this.data.mid;
+    // let mid = that.data.mid;
+    let localuser_id = that.data.localuser_id;
     let myid= e.currentTarget.dataset.mid;
+    let other = 'other';
     let my = '';
-    if (mid==myid) {
+    if (localuser_id==myid) {
       my = 1;
     }
     wx.navigateTo({
-      url: `/pages/details/details?id=${id}&my=${my}`
+      url: `/pages/otherDetails/otherDetails?id=${id}&my=${my}&other=${other}`
     })
   },
 
@@ -86,7 +97,7 @@ Page({
     } else {
       wx.setNavigationBarColor({
         frontColor:'#ffffff',
-        backgroundColor:'#d7d7d9'
+        backgroundColor:'#E2DCCE'
       })
     }
 
@@ -108,7 +119,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**

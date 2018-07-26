@@ -21,6 +21,13 @@ Page({
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
+
+        let localUserInfo = wx.getStorageSync('userInfo');
+        let userInfoApi = backApi.userInfo+token;
+        Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
+          let localuser_id = res.data.data.id;
+          that.setData({localuser_id:localuser_id});
+        });
         let voteMsgApi = backApi.voteMsg+token;
         wx.showLoading({
           title: '加载中',
@@ -121,11 +128,17 @@ Page({
   },
   // 到他人中心
   gotoOthers (e) {
-    // console.log(e, 'otherss')
+    let that = this;
     let mid = e.target.dataset.fromid;
-    wx.navigateTo({
-      url: `/pages/others/others?mid=${mid}`
-    })
+    if (that.data.localuser_id*1===mid*1) {
+      wx.reLaunch({
+        url: `/pages/mine/mine`
+      })
+    } else {
+      wx.navigateTo({
+        url: `/pages/others/others?mid=${mid}`
+      })
+    }
   },
   // 详情
   gotoDetail (e) {

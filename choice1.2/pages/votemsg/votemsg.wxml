@@ -11,7 +11,7 @@
         </view>
         <view class="flex-space voted-title">
             <view>{{item.question.question}}</view>
-            <view wx:if="{{item.question.status===0}}" class="s-circle"></view>
+            <view wx:if="{{item.status===0}}" class="s-circle"></view>
         </view>
         <view class="flex-space">
             <view class="{{item.choose===1?'green-font':'dark-red-font'}}">投了【{{item.choose===1?'左':'右'}}边】一票</view>

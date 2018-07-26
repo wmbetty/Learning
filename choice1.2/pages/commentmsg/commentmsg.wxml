@@ -11,13 +11,14 @@
         </view>
         <view class="flex-space voted-title">
             <view wx:if="{{item.type===1}}"># {{item.question}}</view>
-            <view wx:if="{{item.type!==1}}">{{item.content}}</view>
+            <view wx:if="{{item.type===2}}">{{item.content}}</view>
+            <view wx:if="{{item.type===3}}">{{item.reply}}</view>
             <view wx:if="{{item.status===2}}" class="s-circle"></view>
         </view>
         <view class="flex-space">
             <view wx:if="{{item.type===1}}" class="green-font">【评论】{{item.content}}</view>
             <view wx:if="{{item.type===2}}" class="dark-red-font">【赞】了你的评论</view>
-            <view wx:if="{{item.type===3}}" class="green-font">【回复】{{item.reply}}</view>
+            <view wx:if="{{item.type===3}}" class="green-font">【回复】{{item.content}}</view>
         </view>
         <image wx:if="{{item.question.status===4}}" src="../../images/dele_tag.png" class="delete-icon"/>
     </view>

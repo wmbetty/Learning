@@ -10,6 +10,7 @@ page{background: #F4F4F8;position: relative;}
 }
 .gold-coin{
     width: 52rpx;height: 52rpx;margin-top: 10rpx;
+    /*width: 58rpx;height: 58rpx;margin-top: 5rpx;*/
 }
 .point-box{margin-left: 20rpx;font-size: 52rpx;color: #fff;}
 .my-avatar{
@@ -30,7 +31,7 @@ page{background: #F4F4F8;position: relative;}
     padding: 0 0 0 36rpx;color: #999;
 }
 .blue-font{
-    color: #343434;
+    color: #343434;font-weight: bold;
 }
 .bottom-line{
     width: 80rpx;height: 10rpx;background: #343434;margin: 12rpx 23rpx;
@@ -39,7 +40,7 @@ page{background: #F4F4F8;position: relative;}
 .my-publish-item{margin-right: 60rpx;}
 /* .tab-container{} */
 .tab-content{margin-bottom: 120rpx;}
-.tab-list-item{background: #fff;padding: 20rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;position: relative;}
+.tab-list-item{background: #fff;padding: 36rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;position: relative;}
 .delete-icon{
     position: absolute;right: 0;top: 0;
     width: 68rpx;height: 68rpx;

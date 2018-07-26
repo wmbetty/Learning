@@ -6,16 +6,17 @@ page{background: #F4F4F8;}
 }
 .nums-box{
     position: absolute;right: 30rpx;bottom: 10px;z-index: 999;
-    display: flex;font-size: 26rpx;
+    display: flex;font-size: 26rpx;align-items: center;
 }
 .gold-coin{
-    width: 52rpx;height: 52rpx;margin-top: 10rpx;
+    width: 52rpx;height: 52rpx;
+    /*margin-top: 10rpx;*/
 }
 .msg-box{margin-left: 20rpx;font-size: 52rpx;color: #fff;}
 .my-avatar{
     position: absolute;left: 30rpx;bottom: -76rpx;z-index: 999;
     width: 172rpx;height: 172rpx;border-radius: 50%;
-    background: #000;
+    border: 4rpx solid #efefef;
 }
 .mine-infos{
     display: flex;padding: 100rpx 46rpx 40rpx;
@@ -49,8 +50,8 @@ page{background: #F4F4F8;}
 }
 .right-progress{height: 100%;background: #11B591;}
 .left-progress{height: 100%;background: #62559D;}
-.left-pg-text{color: #11B591;}
-.right-pg-text{color: #62559D;}
+.left-pg-text{color: #11B591;width: 74rpx;}
+.right-pg-text{color: #62559D;width: 74rpx;}
 .hot-cont-box{display: flex;color: #C7C7CC;}
 .hot-icon{
     width: 26rpx;height: 28rpx;margin-right: 12rpx;margin-top: 4rpx;

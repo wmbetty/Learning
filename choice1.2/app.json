@@ -8,6 +8,7 @@
     "pages/votemsg/votemsg",
     "pages/sysnotice/sysnotice",
     "pages/details/details",
+    "pages/otherDetails/otherDetails",
     "pages/feedback/feedback",
     "pages/notedetail/notedetail",
     "pages/usercenter/usercenter",

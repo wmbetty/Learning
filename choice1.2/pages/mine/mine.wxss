@@ -6,10 +6,11 @@ page{background: #F4F4F8;position: relative;}
 }
 .nums-box{
     position: absolute;right: 30rpx;bottom: 10px;z-index: 999;
-    display: flex;font-size: 26rpx;
+    display: flex;font-size: 26rpx;align-items: center;
 }
 .gold-coin{
-    width: 52rpx;height: 52rpx;margin-top: 10rpx;
+    width: 52rpx;height: 52rpx;
+    /*margin-top: 10rpx;*/
     /*width: 58rpx;height: 58rpx;margin-top: 5rpx;*/
 }
 .point-box{margin-left: 20rpx;font-size: 52rpx;color: #fff;}
@@ -30,7 +31,8 @@ page{background: #F4F4F8;position: relative;}
     display: flex;font-size: 36rpx;background: #fff;
     padding: 0 0 0 36rpx;color: #999;
 }
-.tab-head-fixed{position: fixed;top:0;left: 0;width: 100%;padding-top: 20rpx;z-index: 99;border-bottom: 1px solid #eee;}
+.tab-head-fixed{position: fixed;top:0;left: 0;width: 100%;padding-top: 20rpx;
+    z-index: 999;border-bottom: 1px solid #eee;}
 .blue-font{
     color: #343434;font-weight: bold;
 }
@@ -57,8 +59,8 @@ page{background: #F4F4F8;position: relative;}
 }
 .right-progress{height: 100%;background: #62559D;}
 .left-progress{height: 100%;background: #11B591;}
-.left-pg-text{color: #11B591;}
-.right-pg-text{color: #62559D;}
+.left-pg-text{color: #11B591;width: 74rpx;}
+.right-pg-text{color: #62559D;width: 74rpx;}
 .hot-cont-box{display: flex;color: #C7C7CC;}
 .hot-icon{
     width: 26rpx;height: 28rpx;margin-right: 12rpx;margin-top: 4rpx;

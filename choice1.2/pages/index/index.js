@@ -52,9 +52,15 @@ Page({
     optionRtImage: '',
     showCropper: false,
     adjustPosi: false,
+    andrToast: false,
+    hadTitleNum: 0,
+    leftHadWrite: 0,
+    rightHadWrite: 0,
     token: '',
+    isToastCancle: false,
     spacing: 0,
     openType: 'getUserInfo',
+    toastText:'字数超出限制',
     authInfo: '需要微信授权登录才能更多操作哦',
     cropperData: {
       cropperOpt: {
@@ -99,10 +105,8 @@ Page({
             formData:{},
             success: function(res){
               let data = JSON.parse(res.data);
-              // console.log(data,'left img');
               let status = data.status*1;
               if (status===200) {
-                // that.setData({optionLtImage: data.data.file_url});
                 optionLtImage = data.data.file_url
               } else {
                 Api.wxShowToast('图片上传失败~', 'none', 1400)
@@ -225,7 +229,7 @@ Page({
 
     let model = isIphone.model;
     if (model.indexOf('iPhone') == -1) {
-      that.setData({adjustPosi:true,spacing:90})
+      that.setData({adjustPosi:true,spacing:40,andrToast:true});
     }
 
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -301,9 +305,8 @@ Page({
   textFocus () {
     let that =this;
     let title = that.data.titleText;
-    console.log(title,'teeeeppp')
+    that.setData({showTitleNum: true});
     if (title=='点击输入标题' || title==='') {
-      console.log(22)
       that.setData({
         showTextarea: true,
         titleText: ''
@@ -316,6 +319,7 @@ Page({
     let direct = e.target.dataset.direct;
     let leftHolder = that.data.leftHolder;
     let rightHolder = that.data.rightHolder;
+    that.setData({pagePad: true});
     if (direct === 'left' && leftHolder === '点击输入左选项') {
       if (title==='') {
         that.setData({
@@ -325,8 +329,7 @@ Page({
       }
       that.setData({
         showLeft: true,
-        leftHolder: '',
-        pagePad: true
+        leftHolder: ''
       })
     }
     if (direct === 'right' && rightHolder === '点击输入右选项') {
@@ -338,9 +341,16 @@ Page({
       }
       that.setData({
         showRight: true,
-        rightHolder: '',
-        pagePad: true
+        rightHolder: ''
       })
+    }
+    if (direct==='left') {
+      console.log('left focusss')
+      that.setData({showLeftNum: true,showRightNum:false})
+    }
+    if (direct==='right') {
+      console.log('right focusss')
+      that.setData({showRightNum: true,showLeftNum:false})
     }
   },
   titlePut (e) {
@@ -383,13 +393,24 @@ Page({
         if (strlen<=60) {
           that.setData({
             disTitle: val,
-            hadTitleNum: strlen
+            hadTitleNum: strlen,
+            isWeToast:false
           });
         } else  {
           let titleTxt = that.data.disTitle;
-          that.setData({titleText: titleTxt});
-          Api.wxShowToast('标题不超过60个字符', 'none', 2000);
+          let toasTop = that.data.andrToast;
+          if (toasTop) {
+            that.setData({andrToastTop:true});
+          } else {
+            that.setData({andrToastTop:false});
+          }
+          that.setData({titleText: titleTxt,isWeToast:true,toastText:'标题不超过60个字符'});
+          setTimeout(()=>{
+            that.setData({isWeToast:false});
+          },2000)
+          // Api.wxShowToast('标题不超过60个字符', 'none', 2000);
         }
+        that.setData({})
       }
       if (!that.data.txtActive) {
         if (leftImg && rightImg && val !== '点击输入标题' && val !== '') {
@@ -403,11 +424,20 @@ Page({
           });
           let strlen = that.strlen(val);
           if (strlen<=36) {
-            that.setData({disLeft: val,leftHadWrite: strlen})
+            that.setData({disLeft: val,leftHadWrite: strlen,isWeToast:false})
           } else {
             let leftTxt = that.data.disLeft;
-            that.setData({leftHolder: leftTxt});
-            Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
+            let toasTop = that.data.andrToast;
+            if (toasTop) {
+              that.setData({andrToastTop:true});
+            } else {
+              that.setData({andrToastTop:false});
+            }
+            that.setData({leftHolder: leftTxt,isWeToast:true,toastText:'左选项不超过36个字符'});
+            setTimeout(()=>{
+              that.setData({isWeToast:false});
+            },2000)
+            // Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
           }
         }
         if (direct === 'right') {
@@ -417,11 +447,20 @@ Page({
           });
           let strlen = that.strlen(val);
           if (strlen<=36) {
-            that.setData({disRight: val,rightHadWrite: strlen})
+            that.setData({disRight: val,rightHadWrite: strlen,isWeToast:false})
           } else {
-            let rightTxt = that.data.disLeft;
-            that.setData({rightHolder: rightTxt});
-            Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
+            let rightTxt = that.data.disRight;
+            let toasTop = that.data.andrToast;
+            if (toasTop) {
+              that.setData({andrToastTop:true});
+            } else {
+              that.setData({andrToastTop:false});
+            }
+            that.setData({rightHolder: rightTxt,isWeToast:true,toastText:'右选项不超过36个字符'});
+            setTimeout(()=>{
+              that.setData({isWeToast:false});
+            },2000)
+            // Api.wxShowToast('右选项不超过36个字符', 'none', 2000);
           }
         }
         if (that.data.titleText !== '点击输入标题' && that.data.titleText.length>1 && that.data.leftText !== '' && that.data.rightText !== '') {
@@ -736,20 +775,21 @@ Page({
       wx.reLaunch({
         url: `/pages/mine/mine`
       })
-    },50)
+    },300)
   },
   // 取消分享
   cancelShare () {
     this.setData({
       isShare: false,
       maskHidden: false,
-      hasUserInfo: true
+      hasUserInfo: true,
+      isToastCancle: true
     });
     setTimeout(()=>{
       wx.reLaunch({
         url: `/pages/mine/mine`
       })
-    },100)
+    },300)
   },
 
   onShareAppMessage (res) {
@@ -1011,6 +1051,7 @@ Page({
     let leftText = that.data.leftText;
     let rightText = that.data.rightText;
     let direct = e.currentTarget.dataset.direct;
+    that.setData({showTitleNum:false,showLeftNum:false,showRightNum:false});
     if (title==='' && direct === 'title') {
       that.setData({
         titleText: '点击输入标题',

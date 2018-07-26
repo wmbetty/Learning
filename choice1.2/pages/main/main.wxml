@@ -19,9 +19,9 @@
                     </view>
                 </view>
                 <view class="hd-right-item" wx:if="{{!showUserbase}}">
-                    <view class="comm-box" data-id="{{item.id}}" catchtouchend="gotoDetails">
+                    <view class="comm-box" data-id="{{item.id}}" data-mid="{{item.member.id}}" catchtouchend="gotoDetails">
                         <image class="r-share-btn no-bg" src="../../images/main_commicon.png"></image>
-                        <text class="total-comment">{{item.total_comment}}</text>
+                        <text class="total-comment" wx:if="{{item.total_comment*1>0}}">{{item.total_comment*1>99?'99+':item.total_comment}}</text>
                     </view>
                     <view class="r-share-btn" data-question="{{item}}" catchtouchend="goShare"></view>
                 </view>
@@ -37,7 +37,7 @@
             <!-- 选项部分 -->
             <view class="choose-box">
                 <view wx:if="{{!showUserbase}}" class="{{item.type*1===2?'choose-item-box choose-item-imgbox':'choose-item-box'}}"  bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
-                    <view wx:if="{{iup-activetem.type*1!==2}}">{{item.option1}}</view>
+                    <view wx:if="{{item.type*1!==2}}">{{item.option1}}</view>
                     <image class="{{item.type*1===2 && item.option1_check_status*1===3?'choose-item-img delay-img':'choose-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option1}}" />
                     <image wx:if="{{item.type*1===2 && item.option1_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
                     <view wx:if="{{item.showMask}}" class="vote-mask">
@@ -84,7 +84,7 @@
 </view>
 
 <view class="share-mask" style="height: {{viewHeight}}px;" wx:if="{{showShare}}">
-        <view class="share-btn-container">
+        <view class="{{isSlidedown?'share-btn-container slide-down':'share-btn-container slide-up'}}">
             <view class="wechat-container" wx:if="{{showShare}}">
                 <button class="wechat-item-box" open-type="share" hover-stop-propagation="true" catchtap="shareToFriends">
                     <image src="../../images/wechat_icon.png" class="wechat-icon"/>

@@ -19,7 +19,7 @@ page{background: #F4F4F8;}
 }
 .mine-infos{
     display: flex;padding: 100rpx 46rpx 40rpx;
-    background: #f4f4f8;
+    background: #fff;
 }
 .my-name{
     font-size: 52rpx;color: #343434;font-weight: 600;margin-right: 20rpx;
@@ -27,7 +27,7 @@ page{background: #F4F4F8;}
 .my-gender{width: 30rpx;height: 30rpx;margin-left: 20rpx;margin-top: 26rpx;}
 .tab-head{
     display: flex;font-size: 36rpx;background: #fff;
-    padding: 20rpx 0 10rpx 36rpx;color: #343434;
+    padding: 0 0 0 36rpx;color: #343434;
 }
 .blue-font{
     color: #576B95;
@@ -36,9 +36,9 @@ page{background: #F4F4F8;}
     width: 80rpx;height: 10rpx;background: #343434;margin: 12rpx 23rpx;
 }
 .blue-line{background: #576B95;}
-.my-publish-item{margin-right: 60rpx;}
+.my-publish-item{margin-right: 60rpx;font-weight: bold;}
 .tab-content{padding-bottom: 100rpx;}
-.tab-list-item{background: #fff;padding: 20rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;}
+.tab-list-item{background: #fff;padding: 36rpx 20rpx 20rpx 30rpx;margin-bottom: 10rpx;}
 .item-title{color: #343434;font-size: 32rpx;margin-bottom: 18rpx;}
 .item-datas{
     display: flex;justify-content: space-between;font-size: 28rpx;

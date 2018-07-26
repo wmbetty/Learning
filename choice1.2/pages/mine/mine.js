@@ -1,4 +1,5 @@
 // pages/mine/mine.js
+// #d7d7d9
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
@@ -359,11 +360,12 @@ Page({
     } else {
       wx.setNavigationBarColor({
         frontColor:'#ffffff',
-        backgroundColor:'#d7d7d9'  
+        // backgroundColor:'#d7d7d9'
+        backgroundColor:'#E2DCCE'
       });
       wx.setNavigationBarTitle({
         title: ""
-      })
+      });
       that.setData({showSrollView:false});
     }
   },
@@ -371,8 +373,6 @@ Page({
   voteOthers (e) {
     let that = this;
     let type = e.currentTarget.dataset.type;
-    let joinApi = that.data.joinApi;
-    let myQuestionApi = that.data.myQuestionApi;
     if (type === 'mine') {
       that.setData({
         isMine: true
