@@ -84,3 +84,4 @@ page{background: #F4F4F8;position: relative;}
     position: absolute;top:0;right: 0;
     width: 20rpx;height: 20rpx;border-radius: 50%;background: #E74C49;
   }
+.nomore-text{color: #c7c7c7;font-size: 24rpx;text-align: center;padding: 20rpx 0;}

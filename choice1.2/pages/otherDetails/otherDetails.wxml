@@ -92,6 +92,7 @@
                     </view>
                 </view>
             </view>
+            <view class="nomore-text" wx:if="{{nomoreList}}">— 选象 让选择简单点 —</view>
         </view>
     </view>
     <!--评论底部固定栏-->

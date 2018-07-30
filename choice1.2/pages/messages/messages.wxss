@@ -10,21 +10,25 @@ page{
 }
 .msg-list-item{
     padding: 36rpx 30rpx 36rpx 40rpx;font-weight: bold;
-    display: flex;justify-content: space-between;
+    display: flex;justify-content: space-between;align-items: center;
 }
 .list-item-side{
-    display: flex;justify-content: space-between;font-size: 36rpx;color: #343434;
+    display: flex;justify-content: space-between;align-items: center;
+    font-size: 36rpx;color: #343434;
 }
 .feedback-icon{
-    width: 40rpx;height: 40rpx;margin-right: 24rpx;margin-top: 10rpx;
+    width: 40rpx;height: 40rpx;margin-right: 24rpx;
+    /*margin-top: 10rpx;*/
 }
 .info-icon{
-    width: 40rpx;height: 40rpx;margin-right: 26rpx;margin-top: 8rpx;
+    width: 40rpx;height: 40rpx;margin-right: 26rpx;
+    /*margin-top: 8rpx;*/
 }
 .suggest-icon{
-    width: 40rpx;height: 40rpx;margin-right: 34rpx;margin-top: 8rpx; 
+    width: 40rpx;height: 40rpx;margin-right: 34rpx;
+    /*margin-top: 8rpx; */
 }
-.info-text{margin-top: 6rpx;}
+/*.info-text{margin-top: 6rpx;}*/
 .msg-num{
     width: 30rpx;height: 30rpx;border-radius: 50%;background: #FF4901;color: #fff;
     text-align: center;line-height: 30rpx;font-size: 22rpx;font-weight: normal;
@@ -41,7 +45,7 @@ page{
     background-size: 100% 100%;
     margin: 4rpx 0 0 20rpx;
 }
-.had-pad{padding-top: 16rpx;}
+/*.had-pad{padding-top: 16rpx;}*/
 .feed-box{margin-top: 40rpx;background: #fff;}
 .suggest-title{margin-top: 6rpx;}
 .welcome-infos{

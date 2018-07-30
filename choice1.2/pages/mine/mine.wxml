@@ -23,16 +23,16 @@
     <view class="tab-container">
         <view class="{{showSrollView?'tab-head tab-head-fixed':'tab-head'}}" wx:if="{{userInfo.nickName}}">
             <view class="{{isMine?'tab-head-item my-publish-item blue-font':'tab-head-item my-publish-item'}}" data-type="mine"  bindtouchstart="voteOthers">
-                <view>发起<text wx:if="{{myTotalCount}}">({{myTotalCount}})</text></view>
-                <view class="{{isMine?'bottom-line blue-line':'bottom-line'}}" wx:if="{{isMine}}"></view>
+                <view>发起<text hidden="{{!myTotalCount}}">({{myTotalCount}})</text></view>
+                <view class="{{isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{!isMine}}"></view>
             </view>
             <view class="{{!isMine?'tab-head-item blue-font':'tab-head-item'}}" data-type="others"  bindtouchstart="voteOthers">
-                <view>参与<text wx:if="{{joinTotalCount}}">({{joinTotalCount}})</text></view>
-                <view class="{{!isMine?'bottom-line blue-line':'bottom-line'}}" wx:if="{{!isMine}}"></view>
+                <view>参与<text hidden="{{!joinTotalCount}}">({{joinTotalCount}})</text></view>
+                <view class="{{!isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{isMine}}"></view>
             </view>
         </view>
         <view class="tab-content" wx:if="{{userInfo.nickName}}">
-            <view wx:if="{{myPublish.length}}">
+            <view hidden="{{!myPublish.length}}">
                 <view hidden="{{!isMine}}">
                     <view class="tab-list-item" bindtap="gotoDetail" hover-class="list-hover" wx:for="{{myPublish}}" data-my="1" data-id="{{item.id}}" wx:key="index">
                         <view class="item-title">{{item.question}}</view>
@@ -55,9 +55,10 @@
                             </view>
                         </view>
                     </view>
+                    <view class="nomore-text" wx:if="{{nomorePublish}}">选象，让选择简单一点</view>
                 </view>
             </view>
-            <view wx:if="{{myJoin.length}}">
+            <view hidden="{{!myJoin.length}}">
                 <view hidden="{{isMine}}">
                     <view class="{{item.question.status===4?'tab-list-item delete-bg':'tab-list-item'}}" hover-class="list-hover"  data-id="{{item.question.id}}" data-stat="{{item.question.status}}" bindtap="gotoDetail" wx:for="{{myJoin}}" wx:key="index">
                         <view class="item-title">{{item.question.question || '未知题目'}}</view>
@@ -81,6 +82,7 @@
                         </view>
                         <image wx:if="{{item.question.status===4}}" src="../../images/dele_tag.png" class="delete-icon"/>
                     </view>
+                    <view class="nomore-text" wx:if="{{nomoreJoin}}">选象，让选择简单一点</view>
                 </view>
             </view>
 

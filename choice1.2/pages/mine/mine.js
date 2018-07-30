@@ -32,7 +32,9 @@ Page({
     isIphone: false,
     token: '',
     myvotecount: 0,
-    baseRedDot: 0
+    baseRedDot: 0,
+    nomoreJoin: false,
+    nomorePublish: false
   },
   cancelDialog () {
     let that = this;
@@ -304,7 +306,8 @@ Page({
           }
         })
       } else {
-        Api.wxShowToast('没有更多数据了', 'none', 2000);
+        that.setData({nomoreJoin:true});
+        // Api.wxShowToast('没有更多数据了', 'none', 2000);
       }
     } else {
       if (myTotalPage > 1 && myCurrPage <= myTotalPage) {
@@ -318,7 +321,8 @@ Page({
           }
         })
       } else {
-        Api.wxShowToast('没有更多数据了', 'none', 2000);
+        that.setData({nomorePublish:true})
+        // Api.wxShowToast('没有更多数据了', 'none', 2000);
       }
     }
   },

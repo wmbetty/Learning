@@ -1,7 +1,7 @@
 <!--pages/votemsg/votemsg.wxml-->
 <view class="page-head">投票</view>
-<view class="vote-list-group" wx:if="{{voteLists.length>0}}" wx:for="{{voteLists}}" wx:key="{{index}}">
-    <view class="{{item.question.status===4?'vote-list-item delete-bg':'vote-list-item'}}" data-qid="{{item.question.id}}" data-stat="{{item.question.status}}" catchtap="gotoDetail">
+<view class="vote-list-group" wx:if="{{voteLists.length>0}}">
+    <view wx:for="{{voteLists}}" wx:key="{{index}}" class="{{item.question.status===4?'vote-list-item delete-bg':'vote-list-item'}}" data-qid="{{item.question.id}}" data-stat="{{item.question.status}}" catchtap="gotoDetail">
         <view class="list-head">
             <image src="{{item.frommember.avatar || '../../images/avatarDefault.png'}}" class="voter-avatar" data-fromid="{{item.fromid}}" catchtap="gotoOthers"/>
             <view>
@@ -22,6 +22,7 @@
         </view>
         <image wx:if="{{item.question.status===4}}" src="../../images/dele_tag.png" class="delete-icon"/>
     </view>
+    <view class="nomore-text" wx:if="{{nomoreList}}">— 选象 让选择简单点 —</view>
 </view>
 <view wx:if="{{noDatas}}" class="empty-container">
     <empty-wxml empty-info="暂时没有投票消息哦"></empty-wxml>

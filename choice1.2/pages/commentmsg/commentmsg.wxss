@@ -40,3 +40,4 @@ page{
     width: 68rpx;height: 68rpx;
 }
 .empty-container{padding-top: 70rpx;}
+.nomore-text{color: #c7c7c7;font-size: 24rpx;text-align: center;padding: 20rpx 0;}

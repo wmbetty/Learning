@@ -1,8 +1,6 @@
 // pages/others/others.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-// const app = getApp();
-// let token = '';
 
 Page({
 
@@ -17,8 +15,8 @@ Page({
     currPage: '',
     viewHeight: 0,
     mid: '',
-    token: ''
-
+    token: '',
+    nomorePublish: false
   },
 
   /**
@@ -164,7 +162,8 @@ Page({
         }
       })
     } else {
-      Api.wxShowToast('没有更多数据了', 'none', 2000);
+      that.setData({nomorePublish:true})
+      // Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
 

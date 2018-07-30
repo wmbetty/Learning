@@ -163,6 +163,7 @@ Page({
       }
     })
   },
+  textTap () {},
   cancelDialog () {
     let that = this;
     that.setData({

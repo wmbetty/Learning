@@ -14,6 +14,7 @@
                 <view wx:if="{{item.status===0}}" class="s-circle"></view>
             </view>
         </view>
+        <view class="nomore-text" wx:if="{{nomoreList}}">— 选象 让选择简单点 —</view>
     </view>
 </view>
 <view wx:if="{{noDatas}}" class="empty-container">

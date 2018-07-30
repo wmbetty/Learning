@@ -485,3 +485,4 @@ page{
     text-align: center;
 }
 /*toast end*/
+.nomore-text{color: #c7c7c7;font-size: 24rpx;text-align: center;padding: 20rpx 0;}

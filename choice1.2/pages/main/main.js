@@ -130,13 +130,6 @@ Page({
                 } else {
                   if (datas.length > 0) {
                     wx.hideLoading();
-                    for (let item of datas) {
-                      if (item.type*1===1) {
-                        item.option1 = item.option1.substring(0, 18);
-                        item.option2 = item.option2.substring(0, 18);
-                        item.question = item.question.substring(0, 30);
-                      }
-                    }
                     questionList = questionList.concat(datas);
                     that.setData({questionList: questionList});
                     Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
@@ -147,13 +140,6 @@ Page({
                 }
               })
             } else {
-              for (let item of topDatas) {
-                if (item.type*1===1) {
-                  item.option1 = item.option1.substring(0, 18);
-                  item.option2 = item.option2.substring(0, 18);
-                  item.question = item.question.substring(0, 30);
-                }
-              }
               questionList = questionList.concat(topDatas);
               that.setData({questionList: questionList});
               Api.wxRequest(watchQuesApi,'POST',{qid: topDatas[0].id}, (res)=> {
@@ -254,13 +240,6 @@ Page({
                 if (status===200) {
                   let notopDatas = res.data.data || [];
                   if (notopDatas.length>0) {
-                    for (let item of datas) {
-                      if (item.type*1===1) {
-                        item.option1 = item.option1.substring(0, 18);
-                        item.option2 = item.option2.substring(0, 18);
-                        item.question = item.question.substring(0, 30);
-                      }
-                    }
                     that.setData({questionList: notopDatas});
                     Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
                       if (res.data.status*1===201) {
@@ -284,14 +263,7 @@ Page({
               })
             }
             if (datas.length>0) {
-              for (let item of datas) {
-                if (item.type*1===1) {
-                  item.option1 = item.option1.substring(0, 18);
-                  item.option2 = item.option2.substring(0, 18);
-                  item.question = item.question.substring(0, 30);
-                }
-              }
-              that.setData({questionList: datas})
+              that.setData({questionList: datas});
               Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
                 if (res.data.status*1===201) {
                   // console.log('watched')
@@ -789,13 +761,25 @@ Page({
   // 到他人中心
   gotoOthers (e) {
     let that = this;
+    let token = that.data.token;
     let userInfo = wx.getStorageSync('userInfo');
     let language = userInfo.language || '';
+    let local_userId = '';
     if (language) {
       let mid = e.target.dataset.mid;
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
+      let userInfoApi = backApi.userInfo+token;
+      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+        local_userId = res.data.data.id;
+        if (local_userId*1===mid*1) {
+          wx.reLaunch({
+            url: `/pages/mine/mine`
+          })
+        } else {
+          wx.navigateTo({
+            url: `/pages/others/others?mid=${mid}`
+          })
+        }
+      });
     } else {
       // 微信授权
       that.setData({

@@ -37,7 +37,8 @@ Page({
     page: 1,
     commentList: [],
     toastText:'评论最多可输入80字符~',
-    isWeToast: false
+    isWeToast: false,
+    nomoreList: false
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -351,7 +352,8 @@ Page({
       })
     } else {
       if (commlist.length) {
-        Api.wxShowToast('没有更多评论了','none',2000);
+        that.setData({nomoreList:true});
+        // Api.wxShowToast('没有更多评论了','none',2000);
       }
     }
   },
@@ -802,14 +804,26 @@ showMaskHidden () {
   },
   gotoOthers (e) {
     let that = this;
+    let token = that.data.token;
     let userInfo = wx.getStorageSync('userInfo');
     let language = userInfo.language || '';
+    let local_userId = '';
     if (language) {
       let mid = e.currentTarget.dataset.mid;
-      that.setData({page:1});
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
+      let userInfoApi = backApi.userInfo+token;
+      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+        local_userId = res.data.data.id;
+        if (local_userId*1===mid*1) {
+          wx.reLaunch({
+            url: `/pages/mine/mine`
+          })
+        } else {
+          that.setData({page:1});
+          wx.navigateTo({
+            url: `/pages/others/others?mid=${mid}`
+          })
+        }
+      });
     } else {
       that.setData({showDialog: true})
     }
@@ -992,23 +1006,8 @@ showMaskHidden () {
   },
   inputBlur () {
     this.setData({showInput:false})
-  },
-  gotoOthers (e) {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
-    if (language) {
-      let mid = e.currentTarget.dataset.mid;
-      that.setData({page:1});
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
-    } else {
-      // 微信授权
-      that.setData({showDialog: true})
-    }
   }
-})
+});
 
 // 获取评论列表
 function getCommentList(commentApi,qid,page,that) {

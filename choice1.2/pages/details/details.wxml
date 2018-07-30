@@ -8,7 +8,7 @@
                     <image src="{{details.member.avatar?details.member.avatar:'../../images/avatarDefault.png'}}" class="m-avatar"></image>
                 </view>
                 <view class="user-infos">
-                    <view class="infos-head">{{details.member.nickname || ''}}</view>
+                    <view class="infos-head" data-mid="{{details.mid}}" catchtap="gotoOthers">{{details.member.nickname || ''}}</view>
                     <view wx:if="{{details.member.gender}}" class="{{details.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
                 </view>
             </view>
@@ -57,17 +57,16 @@
     </view>
     <!--评论区-->
     <view>
-        <view>
+        <view style="padding: 12rpx 0;background: #F5F6F8;">
             <ad unit-id="adunit-08e3b6dc7197ab6f"></ad>
-            <view style="height: 60px;" wx:if="{{!commentList.length}}"></view>
         </view>
         <view class="comment-container" wx:if="{{commentList.length}}">
             <view class="comment-head">精彩评论</view>
             <view class="comment-list-group">
                 <view class="comment-list-item" wx:for="{{commentList}}" wx:key="index">
                     <view class="list-user">
-                        <image data-mid="{{item.member.id}}}" bindtap="gotoOthers" class="comm-user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}"></image>
-                        <view class="comm-user-name">{{item.member.nickname || '无名氏'}}</view>
+                        <image data-mid="{{item.member.id}}" bindtap="gotoOthers" class="comm-user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}"></image>
+                        <view class="comm-user-name" data-mid="{{item.member.id}}" catchtap="gotoOthers">{{item.member.nickname || '无名氏'}}</view>
                         <image wx:if="{{details.member.id===item.member.id}}" class="comment-owner" src="../../images/comm_owner.png"></image>
                     </view>
                     <view class="list-first-comment">
@@ -92,6 +91,7 @@
                     </view>
                 </view>
             </view>
+            <view class="nomore-text" wx:if="{{nomoreList}}">— 选象 让选择简单点 —</view>
         </view>
     </view>
     <!--评论底部固定栏-->

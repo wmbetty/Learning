@@ -5,7 +5,7 @@
         <view class="mine-banner">
             <view class="nums-box">
                 <image src="../../images/grey_gold.png" class="gold-coin" />
-                <view class="msg-box">{{userInfo.points}}</view>
+                <view class="msg-box">{{userInfo.points || 0}}</view>
             </view>
             <image class="my-avatar" src="{{userInfo.avatar || '../../images/avatarDefault.png'}}" />
             <image src="../../images/my_bg2.png" class="my-bg"/>
@@ -43,6 +43,10 @@
                         </view>
                     </view>
                 </view>
+                <view class="nomore-text" wx:if="{{nomorePublish}}">— 选象 让选择简单点 —</view>
+            </view>
+            <view wx:else class="empty-container">
+                <empty-wxml empty-info="懒人还没发过内容"></empty-wxml>
             </view>
 
         </view>

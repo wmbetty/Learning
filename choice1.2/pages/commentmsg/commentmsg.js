@@ -10,7 +10,8 @@ Page({
     noDatas: false,
     totalPage: '',
     currPage: '',
-    token: ''
+    token: '',
+    nomoreList: false
   },
   onLoad: function (options) {
     wx.setNavigationBarColor({
@@ -92,7 +93,8 @@ Page({
         }
       })
     } else {
-      Api.wxShowToast('没有更多数据了', 'none', 2000);
+      that.setData({nomoreList:true});
+      // Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
   onShareAppMessage: function (res) {

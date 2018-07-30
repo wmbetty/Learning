@@ -37,7 +37,8 @@ Page({
     page: 1,
     commentList: [],
     toastText:'评论最多可输入80字符~',
-    isWeToast: false
+    isWeToast: false,
+    nomoreList:true
   },
   textNumTest (text) {
     let chineseReg = /[\u4E00-\u9FA5]/g;
@@ -293,7 +294,8 @@ Page({
       })
     } else {
       if (commlist.length) {
-        Api.wxShowToast('没有更多评论了','none',2000);
+        that.setData({nomoreList:true});
+        // Api.wxShowToast('没有更多评论了','none',2000);
       }
     }
   },

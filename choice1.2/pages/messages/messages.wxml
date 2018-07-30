@@ -4,9 +4,7 @@
 <view class="msg-list-group">
     <view class="msg-list-item" bindtap="gotoVotemsg" hover-class="list-hover">
         <view class="list-item-side">
-            <view>
-                <image src="../../images/vote_icon.png" class="feedback-icon"/>
-            </view>
+            <image src="../../images/vote_icon.png" class="feedback-icon"/>
             <view class="info-text">投票</view>
         </view>
         <view class="list-item-side had-pad">
@@ -17,9 +15,7 @@
     </view>
     <view class="msg-list-item" bindtap="gotoNotice" hover-class="list-hover">
         <view class="list-item-side">
-            <view>
-                <image src="../../images/notice_icon.png" class="info-icon"/>
-            </view>
+            <image src="../../images/notice_icon.png" class="info-icon"/>
             <view>通知</view>
         </view>
         <view class="list-item-side had-pad">
@@ -30,9 +26,7 @@
     </view>
     <view class="msg-list-item" bindtap="gotoComment" hover-class="list-hover">
         <view class="list-item-side">
-            <view>
-                <image src="../../images/comment_icon.png" class="info-icon"/>
-            </view>
+            <image src="../../images/comment_icon.png" class="info-icon"/>
             <view>评论</view>
         </view>
         <view class="list-item-side had-pad">
@@ -45,9 +39,7 @@
 <view class="feed-box">
     <view class="msg-list-item" bindtap="gotoUser" hover-class="list-hover">
         <view class="list-item-side">
-            <view>
-                <image src="../../images/user_icon.png" class="info-icon"/>
-            </view>
+            <image src="../../images/user_icon.png" class="info-icon"/>
             <view class="suggest-title">用户基地</view>
         </view>
         <view class="list-item-side">
@@ -59,9 +51,7 @@
     </view>
     <view class="msg-list-item" bindtap="gotoFeed" hover-class="list-hover">
         <view class="list-item-side">
-            <view>
-                <image src="../../images/feedback_icon.png" class="suggest-icon"/>
-            </view>
+            <image src="../../images/feedback_icon.png" class="suggest-icon"/>
             <view class="suggest-title">建议反馈</view>
         </view>
         <view class="list-item-side had-pad">

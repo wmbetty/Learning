@@ -14,7 +14,7 @@
                     </view>
                     <view class="user-infos">
                         <view wx:if="{{showUserbase}}" class="infos-head">选小象</view>
-                        <view wx:if="{{!showUserbase}}" class="infos-head">{{(item.member&&item.member.nickname)?item.member.nickname:'无名氏'}}</view>
+                        <view wx:if="{{!showUserbase}}" class="infos-head" data-mid="{{item.mid*1}}" catchtouchend="gotoOthers">{{(item.member&&item.member.nickname)?item.member.nickname:'无名氏'}}</view>
                         <view wx:if="{{item.member&&item.member.gender&&(!showUserbase)}}" class="{{item.member.gender*1===1?'gender-box gender-boy':'gender-box gender-girl'}}"></view>
                     </view>
                 </view>

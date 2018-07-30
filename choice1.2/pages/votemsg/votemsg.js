@@ -1,8 +1,6 @@
 // pages/votemsg/votemsg.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-// let token = '';
 
 Page({
   data: {
@@ -12,7 +10,8 @@ Page({
     noDatas: false,
     totalPage: '',
     currPage: '',
-    token: ''
+    token: '',
+    nomoreList: false
   },
   onLoad: function (options) {
     let that = this;
@@ -93,7 +92,8 @@ Page({
         }
       })
     } else {
-      Api.wxShowToast('没有更多数据了', 'none', 2000);
+      that.setData({nomoreList:true});
+      // Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
   onShareAppMessage: function (res) {
