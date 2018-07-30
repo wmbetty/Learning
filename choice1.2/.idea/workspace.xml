@@ -17,7 +17,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="details.wxml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="details.wxml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pages/details/details.wxml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="339">
@@ -30,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="others.wxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pages/others/others.wxml">
+      <file leaf-file-name="votemsg.wxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pages/votemsg/votemsg.wxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-40">
-              <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+            <state relative-caret-position="138">
+              <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
             </state>
           </provider>
         </entry>
@@ -75,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sysnotice.wxss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pages/sysnotice/sysnotice.wxss">
+      <file leaf-file-name="commentmsg.wxml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pages/commentmsg/commentmsg.wxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="28" selection-start-line="28" selection-end-line="28" selection-end-column="82" />
+            <state relative-caret-position="154">
+              <caret line="7" column="67" selection-start-line="7" selection-start-column="67" selection-end-line="7" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -200,14 +200,14 @@
         <option value="$PROJECT_DIR$/pages/sysnotice/sysnotice.wxss" />
         <option value="$PROJECT_DIR$/pages/commentmsg/commentmsg.wxss" />
         <option value="$PROJECT_DIR$/pages/commentmsg/commentmsg.js" />
-        <option value="$PROJECT_DIR$/pages/commentmsg/commentmsg.wxml" />
-        <option value="$PROJECT_DIR$/pages/votemsg/votemsg.wxml" />
         <option value="$PROJECT_DIR$/pages/details/details.js" />
         <option value="$PROJECT_DIR$/pages/otherDetails/otherDetails.js" />
         <option value="$PROJECT_DIR$/pages/details/details.wxss" />
         <option value="$PROJECT_DIR$/pages/otherDetails/otherDetails.wxss" />
         <option value="$PROJECT_DIR$/pages/otherDetails/otherDetails.wxml" />
         <option value="$PROJECT_DIR$/pages/details/details.wxml" />
+        <option value="$PROJECT_DIR$/pages/votemsg/votemsg.wxml" />
+        <option value="$PROJECT_DIR$/pages/commentmsg/commentmsg.wxml" />
       </list>
     </option>
   </component>
@@ -394,18 +394,18 @@
       <workItem from="1532482070373" duration="19551000" />
       <workItem from="1532568279618" duration="15145000" />
       <workItem from="1532654493894" duration="11687000" />
-      <workItem from="1532913945323" duration="7371000" />
+      <workItem from="1532913945323" duration="7646000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="259703000" />
+    <option name="totallyTimeSpent" value="259978000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="812" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4985591" visible="true" weight="0.1506365" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4985591" visible="true" weight="0.18104668" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -671,31 +671,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pages/commentmsg/commentmsg.wxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="51" selection-start-line="3" selection-start-column="51" selection-end-line="3" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pages/votemsg/votemsg.wxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-83">
-          <caret line="3" column="51" selection-start-line="3" selection-start-column="51" selection-end-line="3" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pages/others/others.wxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-40">
           <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pages/sysnotice/sysnotice.wxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -756,6 +735,27 @@
             <element signature="n#style#0;n#view#0;n#view#2;n#view#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#text#0;n#view#0;n#view#2;n#view#0;n#view#1;n#view#1;n#view#2;n#view#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/votemsg/votemsg.wxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/sysnotice/sysnotice.wxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/commentmsg/commentmsg.wxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="7" column="67" selection-start-line="7" selection-start-column="67" selection-end-line="7" selection-end-column="67" />
         </state>
       </provider>
     </entry>

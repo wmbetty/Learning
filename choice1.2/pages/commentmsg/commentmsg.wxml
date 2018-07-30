@@ -5,7 +5,7 @@
         <view class="list-head">
             <image src="{{item.member.avatar || '../../images/avatarDefault.png'}}" class="voter-avatar" data-mid="{{item.mid}}" catchtap="gotoOthers"/>
             <view>
-                <view>{{item.member.nickname || '无名氏'}}</view>
+                <view data-mid="{{item.mid}}" catchtap="gotoOthers">{{item.member.nickname || '无名氏'}}</view>
                 <view class="time-text">{{item.created_time}}</view>
             </view>
         </view>
