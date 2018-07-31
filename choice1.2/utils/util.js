@@ -51,6 +51,7 @@ const praiseApi = `${http}v1/comment/praise?access-token=`
 const commentUnreadApi = `${http}v1/message/comment-notice-none-count?access-token=`
 const commMsgListApi = `${http}v1/message/comment-notice?access-token=`
 const commReadApi = `${http}v1/message/read-comment-notice?access-token=`
+const shareApi = `${http}v1/share/share-generate?access-token=`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -107,5 +108,6 @@ module.exports = {
   praiseApi: praiseApi,
   commentUnreadApi: commentUnreadApi,
   commMsgListApi: commMsgListApi,
-  commReadApi: commReadApi
+  commReadApi: commReadApi,
+  shareApi: shareApi
 }

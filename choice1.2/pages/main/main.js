@@ -9,17 +9,11 @@ var startx, starty;
 
 Page({
   data: {
-    startPoint: [],
     animationData: {},
-    animationDownData: {},
     questionList: [],
     downList: [],
-    currentIndex: 0,
-    numActive: false,
     showMask: false,
     showShare: false,
-    touxiang:"../../images/bg.png",
-    posterQrcode: '../../images/posterQrcode.png',
     choose_left: false,
     imagePath: '',
     showDialog: false,
@@ -38,8 +32,6 @@ Page({
     viewWidth: 0,
     maskHidden: false,
     showPosterView: false,
-    qrcodeImg: '',
-    cardTop: 0,
     showScore: false,
     isDown: false,
     hadUp: false,
@@ -50,7 +42,8 @@ Page({
     showThumb: false,
     token: '',
     noShowThumb: false,
-    baseRedDot: 0
+    baseRedDot: 0,
+    shareFriImg: ''
   },
   //手指接触屏幕
   touchstart (e) {
@@ -366,12 +359,13 @@ Page({
     let questId = that.data.quesId;
     let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
+    let shareFriImg = that.data.shareFriImg || '';
 
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
         path: `/pages/main/main`,
-        imageUrl:'/images/posterBg2.png',
+        imageUrl: '/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
             // console.log(res, 'friends')
@@ -386,7 +380,7 @@ Page({
       return {
         title: that.data.question,
         path: `/pages/main/main?qid=${questId}`,
-        imageUrl:'/images/posterBg2.png',
+        imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
             // console.log(res, 'friends')
@@ -397,186 +391,85 @@ Page({
 
         }
       }
-    }
-  },
-  // 绘制圆角矩形
-  drawRoundRect(cxt, x, y, width, height, radius){
-    cxt.beginPath();
-    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
-    cxt.lineTo(width - radius + x, y);
-    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
-    cxt.lineTo(width + x, height + y - radius);
-    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
-    cxt.lineTo(radius + x, height +y);
-    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
-    cxt.closePath();
-    cxt.fillStyle = 'rgba(231, 76, 73, 1)';
-    cxt.fill();
 
+    }
   },
   shareToMoment () {
     wx.showToast({
       title: '海报生成中...',
       icon: 'loading',
-      duration: 2000
+      duration: 1500
     });
     let that = this;
     let token = that.data.token;
-    let posterApi = backApi.posterApi+token;
+    let qid = that.data.quesId;
+    let shareApi = backApi.shareApi+token;
     let postData = {
-      page:`pages/details/details`,
-      scene: that.data.quesId
-    }
+      type: 'circle',
+      qid: qid
+    };
 
-    Api.wxRequest(posterApi,'POST',postData,(res)=>{
-      if (res.data.status * 1 === 200 && res.data.data.url) {
-        that.setData({qrcodeImg: res.data.data.url,showPosterView: true});
-        that.downLoadImg(res.data.data.url, 'qrcodeImgPath');
-
-        that.setData({
-          showShare: false,
-          maskHidden: true
-        })
-        var context = wx.createCanvasContext('mycanvas');
-        var question = that.data.question;
-
-        context.setFillStyle("#ffffff")
-        context.fillRect(0, 0, 375, 667)
-        var path = "../../images/posterBg.png";
-        context.drawImage(path, 0, 0, 375, 154);
-
-
-        setTimeout(function(){
-          var path1 = that.data.avatarImgPath;
-          var qrcodeImg = that.data.qrcodeImgPath;
-          //绘制一起吃面标语
-          let chineseReg = /[\u4E00-\u9FA5]/g;
-          if (chineseReg.test(question)) {
-            if (question.match(chineseReg).length >= 10) {  //返回中文的个数
-              context.setFontSize(26);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question.substring(0, 9), 185, 378);
-              context.stroke();
-              context.setFontSize(27);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question.substring(10, 19) + '...', 185, 414);
-              context.stroke();
-            } else {
-              context.setFontSize(26);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question, 185, 378);
-              context.stroke();
-            }
-          } else {
-            if (question.length > 20) {
-              context.setFontSize(26);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question.substring(0, 9), 185, 378);
-              context.stroke();
-              context.setFontSize(26);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question.substring(10, question.length - 1) + '...', 185, 414);
-              context.stroke();
-            } else {
-              context.setFontSize(26);
-              context.setFillStyle('#343434');
-              context.setTextAlign('center');
-              context.fillText(question, 185, 378);
-              context.stroke();
-            }
-          }
-          //绘制左下角文字背景图
-          // context.drawImage(path4, 25, 520, 184, 82);
-          context.setFontSize(14);
-          context.setFillStyle('#888888');
-          context.setTextAlign('center');
-          context.fillText('长按识别小程序 表达你的观点哟', 190, 550);
-          context.stroke();
-          //绘制右下角扫码提示语
-
-          context.drawImage('../../images/posterArrow.png', 180, 570, 10, 6);
-          context.drawImage(qrcodeImg, 154, 582, 60, 60);
-
-          //绘制头像
-          context.arc(186, 246, 50, 0, 2 * Math.PI) //画出圆
-          context.strokeStyle = "#ffe200";
-          context.clip(); //裁剪上面的圆形
-          context.drawImage(path1, 136, 196, 100, 100); // 在刚刚裁剪的园上画图
-          context.draw();
-
-          wx.canvasToTempFilePath({
-            canvasId: 'mycanvas',
-            success: function (res) {
-              // console.log(res,'canvas')
-              var tempFilePath = res.tempFilePath;
-              that.setData({
-                imagePath: tempFilePath,
-                canvasHidden: true
-              });
-            },
-            fail: function (res) {
-              console.log(res);
-            }
-          });
-
-        }, 3000);
-      } else {
-        Api.wxShowToast('小程序码获取失败~', 'none', 2000)
-      }
-    })
+    setTimeout(()=>{
+      Api.wxRequest(shareApi,'POST',postData,(res)=>{
+        if (res.data.status*1===201) {
+          that.setData({
+            showShare: false,
+            maskHidden: true,
+            imagePath:res.data.data.url
+          })
+        }
+      });
+    },1600)
   },
 
   //保存至相册
   saveImageToPhotosAlbum:function(){
     let that = this;
     let token = that.data.token;
+    let downimg = that.data.imagePath;
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
-      duration: 3200
+      duration: 1800
     });
     setTimeout(()=>{
-      wx.saveImageToPhotosAlbum({
-        filePath: that.data.imagePath,
-        success:(res)=>{
-          let shareMoment = backApi.shareMoment+token;
-          Api.wxRequest(shareMoment,'POST',{},(res)=>{
-            let points = res.data.data.points || 0;
-            if (points) {
-              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
-            } else {
-              Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+      wx.downloadFile({
+        url: downimg,
+        success:function(res){
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success: function (res) {
+              let shareMoment = backApi.shareMoment+token;
+              Api.wxRequest(shareMoment,'POST',{},(res)=>{
+                let points = res.data.data.points || 0;
+                if (points) {
+                  Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
+                } else {
+                  Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
+                }
+              });
+              that.setData({
+                maskHidden: false
+              })
+            },
+            fail: function (err) {
+              that.setData({
+                showDialog: true,
+                openType: 'openSetting',
+                authInfo: '需要获取相册权限才能保存图片哦'
+              })
             }
           })
-
-          that.setData({
-            maskHidden: false
-          })
         },
-        fail:(err)=>{
-          that.setData({
-            showDialog: true,
-            openType: 'openSetting',
-            authInfo: '需要获取相册权限才能保存图片哦'
-          })
+        fail:function(){
+          console.log('fail')
         }
-      })
-      if (!that.data.imagePath){
-        wx.showModal({
-          title: '提示',
-          content: '图片绘制中，请稍后重试',
-          showCancel:false
-        })
-      }
-    },3000)
+      });
+    },2000)
   },
   shareToFriends () {
-    this.setData({
+    let that = this;
+    that.setData({
       showShare: false
     })
   },
@@ -794,28 +687,26 @@ Page({
     if (language) {
       let quesId = e.target.dataset.question.id;
       let question = e.target.dataset.question.question;
-      let avatar = '';
-      let nname = '';
-      if (e.target.dataset.question.member && e.target.dataset.question.member.avatar) {
-        avatar = e.target.dataset.question.member.avatar
-      } else {
-        avatar = '../../images/avatarDefault.png';
-      }
-      if (e.target.dataset.question.member && e.target.dataset.question.member.nickname) {
-        avatar = e.target.dataset.question.member.avatar
-      } else {
-        nname = '无名氏';
-      }
+      let token = that.data.token;
+      let shareApi = backApi.shareApi+token;
+      let postData = {
+        type: 'friend',
+        qid: quesId
+      };
+
+      Api.wxRequest(shareApi,'POST',postData,(res)=>{
+        console.log(res.data.data.url,'friends');
+        if (res.data.status*1===201) {
+          that.setData({shareFriImg:res.data.data.url})
+        }
+      });
 
       that.setData({
         showShare: true,
         quesId: quesId,
         question: question,
-        nname: nname,
-        avatar: avatar,
         isSlidedown: false
       });
-      that.downLoadImg(avatar, 'avatarImgPath');
     } else {
       // 微信授权
       that.setData({

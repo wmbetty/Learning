@@ -162,15 +162,12 @@ page{
     bottom: 0;
     z-index: 10;
   }
-  .shengcheng{
-    width: 80%;
-    height: auto;padding-bottom: 24rpx;
-    position: fixed;
-    top: 50rpx;
-    left: 50%;
-    margin-left: -40%;
-    z-index: 10;
-  }
+.shengcheng{
+    width:90%;height:74%;
+    position:fixed;top:96rpx;left:45%;
+    margin-left:-40%;z-index:10;
+    border-radius: 10rpx;
+}
   .baocun{
     display: block;
   width: 48%;

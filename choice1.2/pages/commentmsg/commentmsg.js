@@ -62,7 +62,7 @@ Page({
         });
         let readCommApi = backApi.commReadApi+token;
         Api.wxRequest(readCommApi,'PUT',{},(res)=> {
-          console.log(res.data, 'read');
+          console.log('read');
         })
       } else {
         Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
