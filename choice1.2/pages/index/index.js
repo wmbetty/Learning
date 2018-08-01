@@ -915,60 +915,60 @@ Page({
     // },1600)
   },
   //保存至相册
-  saveImageToPhotosAlbum:function(){
-    let that = this;
-    let token = that.data.token;
-    let downimg = that.data.imagePath;
-    wx.showToast({
-      title: '保存中...',
-      icon: 'loading',
-      duration: 1800
-    });
-    setTimeout(()=>{
-      wx.downloadFile({
-        url: downimg,
-        success:function(res){
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success: function (res) {
-              let shareMoment = backApi.shareMoment+token;
-              Api.wxRequest(shareMoment,'POST',{},(res)=>{
-                let points = res.data.data.points || 0;
-                if (points) {
-                  Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500);
-                  setTimeout(()=> {
-                    wx.navigateBack({
-                      delta: 1
-                    })
-                  }, 2500)
-                } else {
-                  Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
-                  setTimeout(()=> {
-                    wx.navigateBack({
-                      delta: 1
-                    })
-                  }, 2500)
-                }
-              });
-              that.setData({
-                maskHidden: false
-              })
-            },
-            fail: function (err) {
-              that.setData({
-                showDialog: true,
-                openType: 'openSetting',
-                authInfo: '需要获取相册权限才能保存图片哦'
-              })
-            }
-          })
-        },
-        fail:function(){
-          console.log('fail')
-        }
-      });
-    },2000)
-  },
+  // saveImageToPhotosAlbum:function(){
+  //   let that = this;
+  //   let token = that.data.token;
+  //   let downimg = that.data.imagePath;
+  //   wx.showToast({
+  //     title: '保存中...',
+  //     icon: 'loading',
+  //     duration: 1800
+  //   });
+  //   setTimeout(()=>{
+  //     wx.downloadFile({
+  //       url: downimg,
+  //       success:function(res){
+  //         wx.saveImageToPhotosAlbum({
+  //           filePath: res.tempFilePath,
+  //           success: function (res) {
+  //             let shareMoment = backApi.shareMoment+token;
+  //             Api.wxRequest(shareMoment,'POST',{},(res)=>{
+  //               let points = res.data.data.points || 0;
+  //               if (points) {
+  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500);
+  //                 setTimeout(()=> {
+  //                   wx.navigateBack({
+  //                     delta: 1
+  //                   })
+  //                 }, 2500)
+  //               } else {
+  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
+  //                 setTimeout(()=> {
+  //                   wx.navigateBack({
+  //                     delta: 1
+  //                   })
+  //                 }, 2500)
+  //               }
+  //             });
+  //             that.setData({
+  //               maskHidden: false
+  //             })
+  //           },
+  //           fail: function (err) {
+  //             that.setData({
+  //               showDialog: true,
+  //               openType: 'openSetting',
+  //               authInfo: '需要获取相册权限才能保存图片哦'
+  //             })
+  //           }
+  //         })
+  //       },
+  //       fail:function(){
+  //         console.log('fail')
+  //       }
+  //     });
+  //   },2000)
+  // },
 
   shareToFriend () {
     setTimeout(()=> {
@@ -1073,24 +1073,24 @@ Page({
       that.setData({rightImgTemp: '',showRightDele: false,isPublish:false})
     }
   },
-  downLoadImg:  function(url, name) {
-    var that = this;
-    wx.getImageInfo({
-      src: url,    //请求的网络图片路径
-      success: function (res) {
-        if (name == 'avatarImgPath') {
-          that.setData({
-            avatarImgPath: res.path,
-          });
-        } else if (name == 'qrcodeImgPath') {
-          that.setData({
-            qrcodeImgPath: res.path,
-          });
-        }
-
-      }
-    })
-  },
+  // downLoadImg:  function(url, name) {
+  //   var that = this;
+  //   wx.getImageInfo({
+  //     src: url,    //请求的网络图片路径
+  //     success: function (res) {
+  //       if (name == 'avatarImgPath') {
+  //         that.setData({
+  //           avatarImgPath: res.path,
+  //         });
+  //       } else if (name == 'qrcodeImgPath') {
+  //         that.setData({
+  //           qrcodeImgPath: res.path,
+  //         });
+  //       }
+  //
+  //     }
+  //   })
+  // },
   // 统计中英文字节数
   strlen(str) {
   var len = 0;

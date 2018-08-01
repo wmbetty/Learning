@@ -721,24 +721,24 @@ Page({
     }
   },
 
-  downLoadImg:  function(url, name) {
-    var that = this;
-    wx.getImageInfo({
-      src: url,    //请求的网络图片路径
-      success: function (res) {
-        if (name == 'avatarImgPath') {
-          that.setData({
-            avatarImgPath: res.path,
-          });
-        } else if (name == 'qrcodeImgPath') {
-          that.setData({
-            qrcodeImgPath: res.path,
-          });
-        }
-
-      }
-    })
-  }
+  // downLoadImg:  function(url, name) {
+  //   var that = this;
+  //   wx.getImageInfo({
+  //     src: url,    //请求的网络图片路径
+  //     success: function (res) {
+  //       if (name == 'avatarImgPath') {
+  //         that.setData({
+  //           avatarImgPath: res.path,
+  //         });
+  //       } else if (name == 'qrcodeImgPath') {
+  //         that.setData({
+  //           qrcodeImgPath: res.path,
+  //         });
+  //       }
+  //
+  //     }
+  //   })
+  // }
 
 })
 
