@@ -95,7 +95,6 @@ Page({
       })
     } else {
       that.setData({nomoreList:true});
-      // Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
   onShareAppMessage: function (res) {

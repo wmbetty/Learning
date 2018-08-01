@@ -12,7 +12,8 @@
     "pages/feedback/feedback",
     "pages/notedetail/notedetail",
     "pages/usercenter/usercenter",
-    "pages/commentmsg/commentmsg"
+    "pages/commentmsg/commentmsg",
+    "pages/saveposter/saveposter"
   ],
   "window": {
     "backgroundTextStyle": "light",

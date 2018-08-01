@@ -11,10 +11,9 @@
     bottom:0;
     padding:10rpx;
     margin-left:-4rpx;
-    background:#343434;
-    font-size:20rpx;
-    color:#888;
-    box-shadow: 6rpx 6rpx 6rpx 6rpx #aaa;
+      display: flex;justify-content: space-between;
+    background:#343434;font-size:20rpx;color:#888;
+    box-shadow: 16rpx 16rpx 16rpx 16rpx rgba(0,0,0,0.7);
   }
   
    .tabBar-item{
@@ -27,7 +26,9 @@
       display: flex;justify-content: center;align-items: center;
   }
   .tabBar-item:nth-child(2) image{
-      width: 112rpx;height: 60rpx;margin-top: 12rpx;
+      /*width: 112rpx;height: 60rpx;margin-top: 12rpx;*/
+      width: 122rpx;height: 112rpx;
+      position:absolute;left:50%;margin-left:-60rpx;bottom:18rpx;
   }
   /*当前字体颜色*/
   .tabBartext{

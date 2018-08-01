@@ -307,7 +307,6 @@ Page({
         })
       } else {
         that.setData({nomoreJoin:true});
-        // Api.wxShowToast('没有更多数据了', 'none', 2000);
       }
     } else {
       if (myTotalPage > 1 && myCurrPage <= myTotalPage) {
@@ -322,7 +321,6 @@ Page({
         })
       } else {
         that.setData({nomorePublish:true})
-        // Api.wxShowToast('没有更多数据了', 'none', 2000);
       }
     }
   },

@@ -163,7 +163,6 @@ Page({
       })
     } else {
       that.setData({nomorePublish:true})
-      // Api.wxShowToast('没有更多数据了', 'none', 2000);
     }
   },
 

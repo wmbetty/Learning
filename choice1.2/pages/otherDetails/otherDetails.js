@@ -295,7 +295,6 @@ Page({
     } else {
       if (commlist.length) {
         that.setData({nomoreList:true});
-        // Api.wxShowToast('没有更多评论了','none',2000);
       }
     }
   },
@@ -429,33 +428,40 @@ closePoster () {
   })
 },
 shareToMoment () {
-  wx.showToast({
-    title: '海报生成中...',
-    icon: 'loading',
-    duration: 1500
-  });
+  // wx.showToast({
+  //   title: '海报生成中...',
+  //   icon: 'loading',
+  //   duration: 1500
+  // });
 
   let that = this;
   let token = that.data.token;
   let qid = that.data.quesId;
 
-  let shareApi = backApi.shareApi+token;
-  let postData = {
-    type: 'circle',
-    qid: qid
-  };
+  that.setData({
+    showMask: false
+  });
+  wx.navigateTo({
+    url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
+  })
 
-  setTimeout(()=>{
-    Api.wxRequest(shareApi,'POST',postData,(res)=>{
-      if (res.data.status*1===201) {
-        that.setData({
-          showMask: false,
-          maskHidden: true,
-          imagePath:res.data.data.url
-        })
-      }
-    });
-  },1600)
+  // let shareApi = backApi.shareApi+token;
+  // let postData = {
+  //   type: 'circle',
+  //   qid: qid
+  // };
+  //
+  // setTimeout(()=>{
+  //   Api.wxRequest(shareApi,'POST',postData,(res)=>{
+  //     if (res.data.status*1===201) {
+  //       that.setData({
+  //         showMask: false,
+  //         maskHidden: true,
+  //         imagePath:res.data.data.url
+  //       })
+  //     }
+  //   });
+  // },1600)
 },
 showMaskHidden () {
   let that = this;
@@ -471,10 +477,12 @@ showMaskHidden () {
   },
   
   shareToFriends () {
-    // this.setData({
-    //   showMask: false,
-    //   maskHidden: true
-    // })
+    setTimeout(()=>{
+      this.setData({
+        isShare: false,
+        showMask: false
+      })
+    },600)
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){
@@ -781,7 +789,7 @@ showMaskHidden () {
   },
   // 获取键盘高度
   getHeight (e) {
-    console.log(e,'eee')
+    // console.log(e,'eee')
   },
   // 获取输入框内容
   getContent (e) {

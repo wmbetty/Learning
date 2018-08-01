@@ -42,8 +42,8 @@ function tabbarinit() {
        {
          "current": 0,
          "pagePath": "/pages/index/index",
-         "iconPath": "/images/publish_dark.png",
-         "selectedIconPath": "/images/publish_dark.png"
+         "iconPath": "/images/add_bigIcon.png",
+         "selectedIconPath": "/images/add_bigIcon.png"
        },
        {
          "current": 0,

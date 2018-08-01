@@ -717,6 +717,7 @@ Page({
               });
               publishedPoint = res.data.data.member.points;
               wx.hideLoading();
+              that.setData({showClickBtn: false});
               if (publishedPoint===myPoint) {
                 Api.wxShowToast('发布成功', 'success', 2000);
                 that.setData({
@@ -757,10 +758,11 @@ Page({
             }
             if (status === 444) {
               wx.hideLoading();
+              that.setData({showClickBtn: false});
               Api.wxShowToast('出错了，请稍后再试哦', 'none', 2000);
             }
           })
-        },2500)
+        },2600)
       } else {
         // that.setData({
         //   btnDis: true
@@ -874,34 +876,43 @@ Page({
     }, 3500)
   },
   shareTomoment () {
-
-    wx.showToast({
-      title: '海报生成中...',
-      icon: 'loading',
-      duration: 1500
-    });
-
+    //
+    //
+    // wx.showToast({
+    //   title: '海报生成中...',
+    //   icon: 'loading',
+    //   duration: 1500
+    // });
+    //
     let that = this;
     let token = that.data.token;
     let qid = that.data.qid;
-
-    let shareApi = backApi.shareApi+token;
-    let postData = {
-      type: 'circle',
-      qid: qid
-    };
-
-    setTimeout(()=>{
-      Api.wxRequest(shareApi,'POST',postData,(res)=>{
-        if (res.data.status*1===201) {
-          that.setData({
-            maskHidden: true,
-            isShare: false,
-            imagePath:res.data.data.url
-          })
-        }
-      });
-    },1600)
+    that.setData({
+      isShare: false,
+      hasUserInfo: true,
+      showClickBtn: false
+    });
+    wx.navigateTo({
+      url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
+    })
+    //
+    // let shareApi = backApi.shareApi+token;
+    // let postData = {
+    //   type: 'circle',
+    //   qid: qid
+    // };
+    //
+    // setTimeout(()=>{
+    //   Api.wxRequest(shareApi,'POST',postData,(res)=>{
+    //     if (res.data.status*1===201) {
+    //       that.setData({
+    //         maskHidden: true,
+    //         isShare: false,
+    //         imagePath:res.data.data.url
+    //       })
+    //     }
+    //   });
+    // },1600)
   },
   //保存至相册
   saveImageToPhotosAlbum:function(){

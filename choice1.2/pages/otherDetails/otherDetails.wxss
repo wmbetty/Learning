@@ -4,6 +4,7 @@ page{
     position: relative;height: 100%;
      /*overflow: hidden;*/
 }
+.page-no-comment{margin-bottom: 140rpx;}
 .page-head{
     padding: 20rpx 30rpx 26rpx;color: #343434;font-size: 60rpx;background: #F5F6F8;
 }
