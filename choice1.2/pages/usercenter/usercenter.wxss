@@ -24,4 +24,4 @@ page{
 .u-infos view{margin-bottom: 8rpx;}
 .scan-info{text-align: center;color: #C7C7CC;font-size: 24rpx;margin: 46rpx 0 20rpx;}
 .wx-no{color: #343434;font-size: 36rpx;text-align: center;display: block;}
-.save-btn{width: 360rpx;height: 92rpx;margin: 0 auto;display: block;}
+.save-btn{width: 360rpx;height: 110rpx;margin: 0 auto;display: block;}

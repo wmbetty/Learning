@@ -87,22 +87,6 @@
     </view>
 </view>
 
-<!--<view class='imagePathBox' catchtap="closePoster" hidden="{{maskHidden == false}}">-->
-      <!--<image src="{{imagePath}}" class='shengcheng'></image>-->
-      <!--&lt;!&ndash;<view class="shengcheng poster-view" wx:show="{{showPosterView}}" catchtap="showMaskHidden">&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="../../images/posterBg.png" class="poster-banner" style="height:{{viewWidth*0.33}}px;"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="{{uavatar}}" class="poster-avatar"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<view class="poster-text">{{shareTitle}}</view>&ndash;&gt;-->
-          <!--&lt;!&ndash;<view class="poster-botom-text">长按识别小程序 表达你的观点哟</view>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="../../images/posterArrow.png" class="poster-arrow"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="{{qrcode}}" class="poster-code"></image>&ndash;&gt;-->
-      <!--&lt;!&ndash;</view>&ndash;&gt;-->
-      <!--<button class='baocun' bindtap='saveImageToPhotosAlbum'>保存海报</button>-->
-    <!--</view> -->
-  <!--<view class="canvas-box">-->
-      <!--<canvas  style="width: 375px;height: 667px;position:fixed;top:9999px" canvas-id="mycanvas"/>-->
-  <!--</view>-->
-
 <!-- 裁剪 -->
   
 <view class="cropper-wrapper" wx:if="{{showCropper}}" style="height:{{viewHeight}}px;">
@@ -115,7 +99,6 @@
             确定
         </view>
     </view>
-    <!-- <view class='empty-view'></view> -->
 </view>
 
 <!--自定义toast-->

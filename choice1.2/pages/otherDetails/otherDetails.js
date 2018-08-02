@@ -29,7 +29,6 @@ Page({
     showPosterView: false,
     viewWidth: 0,
     myAvatar: '',
-    // showHomebtn: false,
     showThumb: false,
     token: '',
     openType: 'getUserInfo',
@@ -39,17 +38,6 @@ Page({
     toastText:'评论最多可输入80字符~',
     isWeToast: false,
     nomoreList:true
-  },
-  textNumTest (text) {
-    let chineseReg = /[\u4E00-\u9FA5]/g;
-    if (chineseReg.test(text)) {
-      if (text.match(chineseReg).length >= 30) {  //返回中文的个数  
-        text = text.substring(0, 29) + "...";
-        return text; 
-      } else {
-        return text
-      } 
-    }
   },
   cancelDialog () {
     let that = this;
@@ -96,8 +84,6 @@ Page({
                     quesId: res.data.data.id,
                     hots: res.data.data.hots
                   });
-                  // wx.setStorageSync('cardItem', res.data.data);
-                  that.downLoadImg(res.data.data.member.avatar, 'avatarImgPath');
                   if (res.data.data.member) {
                     that.setData({
                       userInfo: res.data.data.member
@@ -118,7 +104,7 @@ Page({
               if (res.data.status*1===200) {
                 that.setData({
                   ismyVoted: true
-                })
+                });
                 if (res.data.data.choose*1===1) {
                   that.setData({
                     isLeft: true
@@ -213,8 +199,6 @@ Page({
                   quesId: res.data.data.id,
                   hots: res.data.data.hots
                 });
-                // wx.setStorageSync('cardItem', res.data.data);
-                that.downLoadImg(res.data.data.member.avatar, 'avatarImgPath');
                 if (res.data.data.member) {
                   that.setData({
                     userInfo: res.data.data.member
@@ -235,7 +219,7 @@ Page({
             if (res.data.status*1===200) {
               that.setData({
                 ismyVoted: true
-              })
+              });
               if (res.data.data.choose*1===1) {
                 that.setData({
                   isLeft: true
@@ -390,11 +374,10 @@ Page({
     that.setData({
       showMask: false,
       maskHidden: false
-    })
+    });
     Api.wxShowModal('', '删除后不可恢复，是否确认删除？', true, (res) => {
       if (res.confirm) {
         Api.wxRequest(deleMyQues,'DELETE',{},(res)=>{
-          // console.log(res,' DELETE')
           if (res.data.status*1 === 200) {
             Api.wxShowToast('删除成功', 'none', 2000);
             setTimeout(()=> {
@@ -407,33 +390,7 @@ Page({
       }
     })
   },
-  // 绘制圆角矩形
-  drawRoundRect(cxt, x, y, width, height, radius){   
-    cxt.beginPath();   
-    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);   
-    cxt.lineTo(width - radius + x, y);   
-    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);   
-    cxt.lineTo(width + x, height + y - radius);   
-    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);   
-    cxt.lineTo(radius + x, height +y);   
-    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);   
-    cxt.closePath();   
-    cxt.fillStyle = 'rgba(231, 76, 73, 1)';
-    cxt.fill();
-
-},
-closePoster () {
-  this.setData({
-    maskHidden: false
-  })
-},
 shareToMoment () {
-  // wx.showToast({
-  //   title: '海报生成中...',
-  //   icon: 'loading',
-  //   duration: 1500
-  // });
-
   let that = this;
   let token = that.data.token;
   let qid = that.data.quesId;
@@ -444,37 +401,7 @@ shareToMoment () {
   wx.navigateTo({
     url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
   })
-
-  // let shareApi = backApi.shareApi+token;
-  // let postData = {
-  //   type: 'circle',
-  //   qid: qid
-  // };
-  //
-  // setTimeout(()=>{
-  //   Api.wxRequest(shareApi,'POST',postData,(res)=>{
-  //     if (res.data.status*1===201) {
-  //       that.setData({
-  //         showMask: false,
-  //         maskHidden: true,
-  //         imagePath:res.data.data.url
-  //       })
-  //     }
-  //   });
-  // },1600)
 },
-showMaskHidden () {
-  let that = this;
-  that.setData({
-    maskHidden: true
-  })
-},
-  cancelPoster () {
-    let that = this;
-    that.setData({
-      maskHidden: false
-    })
-  },
   
   shareToFriends () {
     setTimeout(()=>{
@@ -485,66 +412,7 @@ showMaskHidden () {
     },600)
   },
   //保存至相册
-  // saveImageToPhotosAlbum:function(){
-  //   let that = this;
-  //   let token = that.data.token;
-  //   let downimg = that.data.imagePath;
-  //   wx.showToast({
-  //     title: '保存中...',
-  //     icon: 'loading',
-  //     duration: 1800
-  //   });
-  //   setTimeout(()=>{
-  //     wx.downloadFile({
-  //       url: downimg,
-  //       success:function(res){
-  //         wx.saveImageToPhotosAlbum({
-  //           filePath: res.tempFilePath,
-  //           success: function (res) {
-  //             let shareMoment = backApi.shareMoment+token;
-  //             Api.wxRequest(shareMoment,'POST',{},(res)=>{
-  //               let points = res.data.data.points || 0;
-  //               if (points) {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
-  //               } else {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
-  //               }
-  //             });
-  //             that.setData({
-  //               maskHidden: false
-  //             })
-  //           },
-  //           fail: function (err) {
-  //             that.setData({
-  //               showDialog: true,
-  //               openType: 'openSetting',
-  //               authInfo: '需要获取相册权限才能保存图片哦'
-  //             })
-  //           }
-  //         })
-  //       },
-  //       fail:function(){
-  //         console.log('fail')
-  //       }
-  //     });
-  //   },2000)
-  // },
-  //点击生成
-  formSubmit: function (e) {
-    var that = this;
-    that.setData({
-      maskHidden: false,
-      showShare: false
-    });
-    
-    setTimeout(function () {
-      wx.hideToast()
-      that.shareToMoment();
-      that.setData({
-        maskHidden: true
-      });
-    }, 1000)
-  },
+
   //  投票
   goVote (e) {
     let that = this;
@@ -553,7 +421,7 @@ showMaskHidden () {
       let userInfoApi = backApi.userInfo+that.data.token;
       Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
         that.setData({uInfo:res.data.data})
-      })
+      });
 
       let hasVoted = that.data.hasVoted;
       let chooseItem = e.currentTarget.dataset.choose;
@@ -616,7 +484,7 @@ showMaskHidden () {
             });
             Api.wxRequest(watchQuesApi,'POST',{qid: res.data.data.id}, (res)=> {
               console.log(res, 'ssss')
-            })
+            });
             // 请求通知消息
             let msgTotalApi = backApi.msgUnreadTotal+token
             Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
@@ -679,24 +547,6 @@ showMaskHidden () {
       url: `/pages/main/main`
     })
   },
-  downLoadImg:  function(url, name) {
-    let that = this;
-    wx.getImageInfo({
-      src: url,    //请求的网络图片路径
-      success: function (res) {
-        if (name == 'avatarImgPath') {
-          that.setData({
-            avatarImgPath: res.path,
-          });
-        } else if (name == 'qrcodeImgPath') {
-          that.setData({
-            qrcodeImgPath: res.path,
-          });
-        }
-
-      }
-    })
-  },
   // 点赞
   gotoLike (e) {
     let that = this;
@@ -725,7 +575,6 @@ showMaskHidden () {
           Api.wxShowToast(res.data.msg, 'none', 2000);
         }
       })
-      // that.setData({isLike:true})
     } else {
       that.setData({
         showDialog: true
@@ -735,7 +584,6 @@ showMaskHidden () {
   // 发表评论
   publishComment () {
     let that = this;
-    // that.setData({showInput:false})
     let token = that.data.token;
     let pid = that.data.pid;
     let content = that.data.content;
@@ -788,8 +636,8 @@ showMaskHidden () {
     }
   },
   // 获取键盘高度
-  getHeight (e) {
-    // console.log(e,'eee')
+  getHeight () {
+    console.log('获取键盘高度')
   },
   // 获取输入框内容
   getContent (e) {
@@ -800,13 +648,11 @@ showMaskHidden () {
     } else {
       that.setData({isRed:false});
     }
-    // that.setData({showInput:false});
     if (val.length>=79) {
       that.setData({isWeToast:true});
       setTimeout(()=>{
         that.setData({isWeToast:false});
       },2000)
-      // Api.wxShowToast('评论最多可输入80字符~', 'none', 2000);
     } else {
       that.setData({isWeToast:false});
     }
@@ -883,22 +729,4 @@ function getCommentList(commentApi,qid,page,that) {
       Api.wxShowToast('获取评论数据出错，请稍后再试哦~', 'none', 2000);
     }
   })
-}
-// 获取当前时间
-function getNowFormatDate() {
-  let date = new Date();
-  let seperator1 = "-";
-  let seperator2 = ":";
-  let month = date.getMonth() + 1;
-  let strDate = date.getDate();
-  if (month >= 1 && month <= 9) {
-    month = "0" + month;
-  }
-  if (strDate >= 0 && strDate <= 9) {
-    strDate = "0" + strDate;
-  }
-  let currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-    + " " + date.getHours() + seperator2 + date.getMinutes()
-    + seperator2 + date.getSeconds();
-  return currentdate;
 }

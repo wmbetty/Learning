@@ -408,50 +408,9 @@ Page({
   },
 
   //保存至相册
-  // saveImageToPhotosAlbum:function(){
-  //   let that = this;
-  //   let token = that.data.token;
-  //   let downimg = that.data.imagePath;
-  //   wx.showToast({
-  //     title: '保存中...',
-  //     icon: 'loading',
-  //     duration: 1800
-  //   });
-  //   setTimeout(()=>{
-  //     wx.downloadFile({
-  //       url: downimg,
-  //       success:function(res){
-  //         wx.saveImageToPhotosAlbum({
-  //           filePath: res.tempFilePath,
-  //           success: function (res) {
-  //             let shareMoment = backApi.shareMoment+token;
-  //             Api.wxRequest(shareMoment,'POST',{},(res)=>{
-  //               let points = res.data.data.points || 0;
-  //               if (points) {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500)
-  //               } else {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000)
-  //               }
-  //             });
-  //             that.setData({
-  //               maskHidden: false
-  //             })
-  //           },
-  //           fail: function (err) {
-  //             that.setData({
-  //               showDialog: true,
-  //               openType: 'openSetting',
-  //               authInfo: '需要获取相册权限才能保存图片哦'
-  //             })
-  //           }
-  //         })
-  //       },
-  //       fail:function(){
-  //         console.log('fail')
-  //       }
-  //     });
-  //   },2000)
-  // },
+
+  //
+
   shareToFriends () {
     let that = this;
     that.setData({
@@ -626,16 +585,6 @@ Page({
       })
     }
   },
-  showMaskHidden () {
-    this.setData({
-      maskHidden: true
-    })
-  },
-  closePoster () {
-    this.setData({
-      maskHidden: false
-    })
-  },
   // 到他人中心
   gotoOthers (e) {
     let that = this;
@@ -719,26 +668,7 @@ Page({
         showDialog: true
       })
     }
-  },
-
-  // downLoadImg:  function(url, name) {
-  //   var that = this;
-  //   wx.getImageInfo({
-  //     src: url,    //请求的网络图片路径
-  //     success: function (res) {
-  //       if (name == 'avatarImgPath') {
-  //         that.setData({
-  //           avatarImgPath: res.path,
-  //         });
-  //       } else if (name == 'qrcodeImgPath') {
-  //         that.setData({
-  //           qrcodeImgPath: res.path,
-  //         });
-  //       }
-  //
-  //     }
-  //   })
-  // }
+  }
 
 })
 

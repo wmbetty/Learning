@@ -1,4 +1,4 @@
-// pages/usercenter/usercenter.js
+
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const ImgLoader = require('../../components/img-loader/img-loader.js');
@@ -29,9 +29,9 @@ Page({
       success(settingdata) {
         if (settingdata.authSetting["scope.writePhotosAlbum"]) {
           Api.wxShowToast("获取权限成功，再次点击保存到相册",'none',2200)
-         } else {
+        } else {
           Api.wxShowToast("获取权限失败",'none',2200)
-         }
+        }
       }
     })
   },
@@ -149,7 +149,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
@@ -162,21 +162,21 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**

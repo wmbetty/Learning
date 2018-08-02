@@ -1,8 +1,6 @@
 // pages/feedback/feedback.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
-// let token = '';
 
 Page({
   data: {
@@ -57,15 +55,7 @@ Page({
       }
     }
   },
-  onPageScroll () {
-    // wx.setNavigationBarTitle({
-    //   title: "建议"
-    // })
-    // wx.setNavigationBarColor({
-    //   frontColor:'#ffffff',
-    //   backgroundColor:'#E64340'  
-    // })
-  },
+  onPageScroll () {},
   putMobile (e) {
     let val =  (e.detail.value).replace(/\s+/g,"");
     let mobileReg=/^[1][3,4,5,7,8][0-9]{9}$/;
@@ -76,19 +66,6 @@ Page({
     }
     
   },
-  // textNumTest (text) {
-  //   let chineseReg = /[\u4E00-\u9FA5]/g;
-  //   if (chineseReg.test(text)) {
-  //     if (text.match(chineseReg).length >= 30) {  //返回中文的个数  
-  //       text = text.substring(0, 29) + "...";
-  //       return text; 
-  //     } else{
-  //       return text
-  //     }  
-  //   } else {
-  //     return text
-  //   }
-  // },
   putAdvice (e) {
     let that = this;
     let val =  e.detail.value;

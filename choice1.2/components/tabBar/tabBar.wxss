@@ -28,7 +28,7 @@
   .tabBar-item:nth-child(2) image{
       /*width: 112rpx;height: 60rpx;margin-top: 12rpx;*/
       width: 122rpx;height: 112rpx;
-      position:absolute;left:50%;margin-left:-60rpx;bottom:18rpx;
+      position:absolute;left:50%;margin-left:-68rpx;bottom:18rpx;
   }
   /*当前字体颜色*/
   .tabBartext{

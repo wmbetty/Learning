@@ -75,7 +75,6 @@
                     </view>
                     <view wx:if="{{item.ate}}" class="list-other-comment">
                         <view class="other-comm-item"><text style="color: #888;" decode="{{true}}">@{{item.ate.member.nickname}} &nbsp;</text><text selectable="{{true}}">{{item.ate.content}}</text></view>
-                        <!--<view class="other-comm-item">啊啊啊啊，两个都好帅～</view>-->
                     </view>
                     <view class="list-comment-info">
                         <view class="comment-time">{{item.created_time}}</view>
@@ -87,7 +86,6 @@
                                 <image class="{{item.isLike?'good-icon good-icon-active':'good-icon'}}" src="{{(item.isLike || item.is_praise*1===1)?'../../images/good2.png':'../../images/good1.png'}}"></image>
                                 <text class="{{(item.isLike || item.is_praise*1===1)?'red-font':''}}">{{item.total_praise}}</text>
                             </view>
-                            <!--<image wx:if="{{item.isLike}}" class="comm-like-icon" src="../../images/good2.png"></image>-->
                         </view>
                     </view>
                 </view>
@@ -109,7 +107,6 @@
     </view>
     <view class="comment-fixed-area" hidden="{{!showInput}}">
         <view class="input-box">
-            <!--<text class="ate-box" wx:if="{{atename}}">@{{atename}}：</text>-->
             <input type="text" maxlength="80" focus="{{showInput}}" placeholder-style="color:#999;font-size:28rpx;" class="comment-input" cursor-spacing="8" placeholder="{{atename?'@'+atename+':':'靠谱青年，马上发言'}}" bindfocus="getHeight" bindinput="getContent" value="{{inputVal}}" bindblur="inputBlur" />
         </view>
         <button wx:if="{{!showClickBtn}}" class="{{isRed?'comm-btn comm-red-btn':'comm-btn'}}" bindtap="publishComment">发表</button>
@@ -140,22 +137,6 @@
         <view class="cancel-btn" catchtap="cancelShare">取消</view>
     </view>
 </view>
-<!--<view class='imagePathBox' bindtap="closePoster" hidden="{{maskHidden == false}}" catchtouchmove="true">-->
-      <!--<image src="{{imagePath}}" class='shengcheng'></image>-->
-      <!--&lt;!&ndash;<view class="shengcheng poster-view" wx:show="{{showPosterView}}" catchtap="showMaskHidden">&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="../../images/posterBg.png" class="poster-banner" style="height:{{viewWidth*0.33}}px;"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="{{details.member.avatar}}" class="poster-avatar"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<view class="poster-text">{{details.question}}</view>&ndash;&gt;-->
-          <!--&lt;!&ndash;<view class="poster-botom-text">长按识别小程序 表达你的观点哟</view>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="../../images/posterArrow.png" class="poster-arrow"></image>&ndash;&gt;-->
-          <!--&lt;!&ndash;<image src="{{qrcodeImg}}" class="poster-code"></image>&ndash;&gt;-->
-      <!--&lt;!&ndash;</view>&ndash;&gt;-->
-      <!--<button class='baocun' bindtap='saveImageToPhotosAlbum'>保存海报</button>-->
-    <!--</view>-->
-   <!--<view hidden="{{maskHidden == false}}" class="mask"></view> -->
-  <!--<view class="canvas-box">-->
-      <!--<canvas  style="width: 375px;height: 667px;position:fixed;top:9999px" canvas-id="mycanvas"/>-->
-  <!--</view>-->
 
 <!--自定义toast-->
 <view class="we-container">

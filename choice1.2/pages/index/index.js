@@ -186,7 +186,6 @@ Page({
               uavatar: userInfo.avatarUrl,
               hasUserInfo: true
             });
-            // downLoadImg(userInfo.avatarUrl, 'headerUrl');
             backApi.getToken().then(function(response) {
               if (response.data.status*1===200) {
                 let token = response.data.data.access_token;
@@ -353,7 +352,6 @@ Page({
     let that = this;
     let val = e.detail.value;
     let direct = e.target.dataset.direct;
-    // let chineseReg = /[\u4E00-\u9FA5]/g;
     let leftImg = that.data.leftImgTemp;
     let rightImg = that.data.rightImgTemp;
 
@@ -404,7 +402,6 @@ Page({
           setTimeout(()=>{
             that.setData({isWeToast:false});
           },2000)
-          // Api.wxShowToast('标题不超过60个字符', 'none', 2000);
         }
         that.setData({})
       }
@@ -433,7 +430,6 @@ Page({
             setTimeout(()=>{
               that.setData({isWeToast:false});
             },2000)
-            // Api.wxShowToast('左选项不超过36个字符', 'none', 2000);
           }
         }
         if (direct === 'right') {
@@ -456,7 +452,6 @@ Page({
             setTimeout(()=>{
               that.setData({isWeToast:false});
             },2000)
-            // Api.wxShowToast('右选项不超过36个字符', 'none', 2000);
           }
         }
         if (that.data.titleText !== '点击输入标题' && that.data.titleText.length>1 && that.data.leftText !== '' && that.data.rightText !== '') {
@@ -764,9 +759,6 @@ Page({
           })
         },2600)
       } else {
-        // that.setData({
-        //   btnDis: true
-        // })
         Api.wxShowToast('请提交完整信息哦', 'none', 2000);
       }
     }
@@ -776,18 +768,6 @@ Page({
     that.setData({
       maskHidden: true
     })
-  },
-  cancelPosters () {
-    this.setData({
-      isShare: false,
-      maskHidden: false,
-      hasUserInfo: true
-    });
-    setTimeout(()=>{
-      wx.reLaunch({
-        url: `/pages/mine/mine`
-      })
-    },300)
   },
   // 取消分享
   cancelShare () {
@@ -843,47 +823,7 @@ Page({
       }
     }
   },
-  // 绘制圆角矩形
-  drawRoundRect(cxt, x, y, width, height, radius){
-    cxt.beginPath();
-    cxt.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
-    cxt.lineTo(width - radius + x, y);
-    cxt.arc(width - radius + x, radius + y, radius, Math.PI * 3 / 2, Math.PI * 2);
-    cxt.lineTo(width + x, height + y - radius);
-    cxt.arc(width - radius + x, height - radius + y, radius, 0, Math.PI * 1 / 2);
-    cxt.lineTo(radius + x, height +y);
-    cxt.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI);
-    cxt.closePath();
-    cxt.setFillStyle('#ffffff');
-    cxt.fill();
-
-  },
-  cancelPoster () {
-    let that = this;
-    that.setData({
-      maskHidden: false,
-      hasUserInfo: true
-    })
-  },
-  closePoster () {
-    this.setData({
-      maskHidden: false
-    })
-    setTimeout(()=> {
-      wx.navigateBack({
-        delta: 1
-      })
-    }, 3500)
-  },
   shareTomoment () {
-    //
-    //
-    // wx.showToast({
-    //   title: '海报生成中...',
-    //   icon: 'loading',
-    //   duration: 1500
-    // });
-    //
     let that = this;
     let token = that.data.token;
     let qid = that.data.qid;
@@ -895,80 +835,8 @@ Page({
     wx.navigateTo({
       url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
     })
-    //
-    // let shareApi = backApi.shareApi+token;
-    // let postData = {
-    //   type: 'circle',
-    //   qid: qid
-    // };
-    //
-    // setTimeout(()=>{
-    //   Api.wxRequest(shareApi,'POST',postData,(res)=>{
-    //     if (res.data.status*1===201) {
-    //       that.setData({
-    //         maskHidden: true,
-    //         isShare: false,
-    //         imagePath:res.data.data.url
-    //       })
-    //     }
-    //   });
-    // },1600)
   },
   //保存至相册
-  // saveImageToPhotosAlbum:function(){
-  //   let that = this;
-  //   let token = that.data.token;
-  //   let downimg = that.data.imagePath;
-  //   wx.showToast({
-  //     title: '保存中...',
-  //     icon: 'loading',
-  //     duration: 1800
-  //   });
-  //   setTimeout(()=>{
-  //     wx.downloadFile({
-  //       url: downimg,
-  //       success:function(res){
-  //         wx.saveImageToPhotosAlbum({
-  //           filePath: res.tempFilePath,
-  //           success: function (res) {
-  //             let shareMoment = backApi.shareMoment+token;
-  //             Api.wxRequest(shareMoment,'POST',{},(res)=>{
-  //               let points = res.data.data.points || 0;
-  //               if (points) {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~,可加3积分哦', 'none', 2500);
-  //                 setTimeout(()=> {
-  //                   wx.navigateBack({
-  //                     delta: 1
-  //                   })
-  //                 }, 2500)
-  //               } else {
-  //                 Api.wxShowToast('图片已保存到相册，赶紧晒一下吧~', 'none', 2000);
-  //                 setTimeout(()=> {
-  //                   wx.navigateBack({
-  //                     delta: 1
-  //                   })
-  //                 }, 2500)
-  //               }
-  //             });
-  //             that.setData({
-  //               maskHidden: false
-  //             })
-  //           },
-  //           fail: function (err) {
-  //             that.setData({
-  //               showDialog: true,
-  //               openType: 'openSetting',
-  //               authInfo: '需要获取相册权限才能保存图片哦'
-  //             })
-  //           }
-  //         })
-  //       },
-  //       fail:function(){
-  //         console.log('fail')
-  //       }
-  //     });
-  //   },2000)
-  // },
 
   shareToFriend () {
     setTimeout(()=> {
@@ -1073,24 +941,6 @@ Page({
       that.setData({rightImgTemp: '',showRightDele: false,isPublish:false})
     }
   },
-  // downLoadImg:  function(url, name) {
-  //   var that = this;
-  //   wx.getImageInfo({
-  //     src: url,    //请求的网络图片路径
-  //     success: function (res) {
-  //       if (name == 'avatarImgPath') {
-  //         that.setData({
-  //           avatarImgPath: res.path,
-  //         });
-  //       } else if (name == 'qrcodeImgPath') {
-  //         that.setData({
-  //           qrcodeImgPath: res.path,
-  //         });
-  //       }
-  //
-  //     }
-  //   })
-  // },
   // 统计中英文字节数
   strlen(str) {
   var len = 0;

@@ -1,11 +1,8 @@
-<!--pages/usercenter/usercenter.wxml-->
-<!--<view class="page-head">用户基地</view>-->
-<!--<view class="welcome-info">欢迎年轻的你加入选象基地</view>-->
 
 <view class="main-box">
     <image class="poster-img" src="{{imagePath}}"></image>
 </view>
-<image src="../../images/save_qrcode_btn.png" class="save-btn" bindtap="savePhoto" />
+<image src="../../images/saveposter_btn.png" class="save-btn" bindtap="savePhoto" />
 
 <import src="../../components/img-loader/img-loader.wxml"/>
 <template is="img-loader" data="{{ imgLoadList }}"></template>
