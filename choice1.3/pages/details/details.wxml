@@ -1,4 +1,4 @@
-<!--pages/details/details.wxml-->
+
 <view style="min-height: {{winHeight}}px;position: relative;" class="{{commentList.length===0?'page-no-comment':''}}">
     <view class="page-head">详情</view>
     <view class="main-container" wx:if="{{maskHidden==false}}">
@@ -74,7 +74,6 @@
                     </view>
                     <view wx:if="{{item.ate}}" class="list-other-comment">
                         <view class="other-comm-item"><text style="color: #888;" decode="{{true}}">@{{item.ate.member.nickname}} &nbsp;</text><text selectable="{{true}}">{{item.ate.content}}</text></view>
-                        <!--<view class="other-comm-item">啊啊啊啊，两个都好帅～</view>-->
                     </view>
                     <view class="list-comment-info">
                         <view class="comment-time">{{item.created_time}}</view>
@@ -86,7 +85,6 @@
                                 <image class="{{item.isLike?'good-icon good-icon-active':'good-icon'}}" src="{{(item.isLike || item.is_praise*1===1)?'../../images/good2.png':'../../images/good1.png'}}"></image>
                                 <text class="{{(item.isLike || item.is_praise*1===1)?'red-font':''}}">{{item.total_praise}}</text>
                             </view>
-                            <!--<image wx:if="{{item.isLike}}" class="comm-like-icon" src="../../images/good2.png"></image>-->
                         </view>
                     </view>
                 </view>
@@ -108,7 +106,6 @@
     </view>
     <view class="comment-fixed-area" hidden="{{!showInput}}">
         <view class="input-box">
-            <!--<text class="ate-box" wx:if="{{atename}}">@{{atename}}：</text>-->
             <input type="text" maxlength="80" focus="{{showInput}}" placeholder-style="color:#999;font-size:28rpx;" class="comment-input" cursor-spacing="8" placeholder="{{atename?'@'+atename+':':'靠谱青年，马上发言'}}" bindfocus="getHeight" bindinput="getContent" value="{{inputVal}}" bindblur="inputBlur" />
         </view>
         <button wx:if="{{!showClickBtn}}" class="{{isRed?'comm-btn comm-red-btn':'comm-btn'}}" bindtap="publishComment">发表</button>
