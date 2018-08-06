@@ -8,6 +8,11 @@ function wxPromisify(fn) {
   }
 }
 
+//微信用户登录，获取code
+function wxLogin() {
+  return wxPromisify(wx.login)
+}
+
 /**
  * 获取微信用户信息
  * 必须在登录之后调用
@@ -34,6 +39,9 @@ function wxGetSystemInfo() {
  * 消息提示
  */
 function wxShowToast(title, icon, duration) {
+  //title 文本最多显示 7 个汉字长度,
+  //不显示图标时， title 文本最多可显示两行
+  //icon有效值：success、loading、none
   wx.showToast({
     title: title,
     icon: icon,
@@ -52,6 +60,32 @@ function wxShowModal(title, txt, showCancel, callback) {
     confirmColor: '#E74C49',
     showCancel: showCancel,
     success: (res) => {
+      callback(res)
+    }
+  })
+}
+
+// 本地存储
+function wxSetStorage(key, value) {
+  wx.setStorage({
+    key: key,
+    data: value
+  })
+}
+
+function wxGetStorage(key, callback) {
+  wx.getStorage({
+    key: key,
+    success: (res) => {
+      callback(res)
+    }
+  })
+}
+
+function wxRemoveStorage(key, callback) {
+  wx.removeStorage({
+    key: key,
+    success: function(res) {
       callback(res)
     }
   })
@@ -80,10 +114,14 @@ function wxRequest(url, method, data={}, callback) {
 
 module.exports = {
   wxPromisify: wxPromisify,
+  wxLogin: wxLogin,
   wxGetUserInfo: wxGetUserInfo,
   wxGetSystemInfo: wxGetSystemInfo,
   wxGetSetting: wxGetSetting,
   wxRequest: wxRequest,
   wxShowToast: wxShowToast,
-  wxShowModal: wxShowModal
+  wxShowModal: wxShowModal,
+  wxSetStorage: wxSetStorage,
+  wxGetStorage: wxGetStorage,
+  wxRemoveStorage: wxRemoveStorage
 }
