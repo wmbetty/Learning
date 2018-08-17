@@ -1,0 +1,6 @@
+<!--pages/gcindex/gcindex.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
+
+<view>首页123</view>
+
+<template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount,baseRedDot,commentTotal}}"/>
