@@ -14,7 +14,8 @@
     "pages/notedetail/notedetail",
     "pages/usercenter/usercenter",
     "pages/commentmsg/commentmsg",
-    "pages/saveposter/saveposter"
+    "pages/saveposter/saveposter",
+    "pages/gcintro/gcintro"
   ],
   "window": {
     "backgroundTextStyle": "light",

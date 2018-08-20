@@ -74,7 +74,7 @@ Page({
                   Api.wxShowToast('该话题已被删', 'none', 3000);
                   setTimeout(()=>{
                     wx.reLaunch({
-                      url: `/pages/main/main`
+                      url: `/pages/gcindex/gcindex`
                     })
                   },1500)
                 } else {
@@ -189,7 +189,7 @@ Page({
                 Api.wxShowToast('该话题已被删', 'none', 3000);
                 setTimeout(()=>{
                   wx.reLaunch({
-                    url: `/pages/main/main`
+                    url: `/pages/gcindex/gcindex`
                   })
                 },1500)
               } else {
@@ -259,7 +259,7 @@ Page({
                 Api.wxShowToast('该话题已被删', 'none', 3000);
                 setTimeout(()=>{
                   wx.reLaunch({
-                    url: `/pages/main/main`
+                    url: `/pages/gcindex/gcindex`
                   })
                 },1500)
               } else {
@@ -346,7 +346,7 @@ Page({
 
     return {
       title: that.data.details.question,
-      path: `/pages/main/main?qid=${questId}`,
+      path: `/pages/gcindex/gcindex?qid=${questId}`,
       imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
       success() {
         Api.wxRequest(shareFriends,'POST',{},(res)=>{
@@ -626,7 +626,7 @@ shareToMoment () {
   },
   goHome () {
     wx.reLaunch({
-      url: `/pages/main/main`
+      url: `/pages/gcindex/gcindex`
     })
   },
   // 点赞

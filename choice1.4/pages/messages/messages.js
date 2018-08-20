@@ -17,7 +17,8 @@ Page({
     msgCount: 0,
     viewHeight: 0,
     token: '',
-    showRedDot: false
+    showRedDot: false,
+    baseRedDot: 0
 
   },
   cancelDialog () {
@@ -49,7 +50,7 @@ Page({
   },
   onLoad: function (options) {
     let that = this;
-    tabBar.tabbar("tabBar", 1, that);
+    tabBar.tabbar("tabBar", 3, that);
 
     wx.setNavigationBarColor({
       frontColor:'#000000',
@@ -123,7 +124,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/main/main`,
+        path: `/pages/gcindex/gcindex`,
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{

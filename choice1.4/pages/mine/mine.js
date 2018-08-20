@@ -331,7 +331,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/main/main`,
+        path: `/pages/gcindex/gcindex`,
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{

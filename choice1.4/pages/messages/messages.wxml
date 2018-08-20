@@ -1,5 +1,5 @@
 <!--pages/messages/messages.wxml-->
-<!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
+ <import src="../../components/tabBar/tabBar.wxml"/>
 <view class="page-head">消息中心</view>
 <view class="msg-list-group">
     <view class="msg-list-item" bindtap="gotoVotemsg" hover-class="list-hover">
@@ -62,3 +62,5 @@
 </view>
 <!-- 授权弹窗 -->
 <dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
+
+<template is="tabBar" data="{{tabBar:bindData.tabBar}}"/>

@@ -172,44 +172,35 @@ Page({
   onLoad: function () {
     let that = this;
     tabBar.tabbar("tabBar", 1, that);
-    let questId = wx.getStorageSync('quesid');
-    if (questId) {
-      wx.navigateTo({
-        url: `/pages/details/details?id=${questId}`
-      })
-      setTimeout(()=> {
-        wx.setStorageSync('quesid', '');
-      }, 300)
-    }
 
     // 获取token
     backApi.getToken().then(function(response){
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
-        let userInfo = wx.getStorageSync('userInfo', userInfo);
-        let userInfoApi = backApi.userInfo+token;
-        if (userInfo) {
-          let userData = {
-            avatarUrl: userInfo.avatarUrl,
-            nickName: userInfo.nickName,
-            country: userInfo.country,
-            city: userInfo.city,
-            language: userInfo.language,
-            province: userInfo.province,
-            gender: userInfo.gender
-          };
-
-          // 更新用户信息
-
-          Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-            baseLock = res.data.data.user_base_lock;
-            if (baseLock*1===2) {
-              that.setData({baseRedDot: 1});
-            }
-            mid = res.data.data.id;
-          });
-        }
+        // let userInfo = wx.getStorageSync('userInfo', userInfo);
+        // let userInfoApi = backApi.userInfo+token;
+        // if (userInfo) {
+        //   let userData = {
+        //     avatarUrl: userInfo.avatarUrl,
+        //     nickName: userInfo.nickName,
+        //     country: userInfo.country,
+        //     city: userInfo.city,
+        //     language: userInfo.language,
+        //     province: userInfo.province,
+        //     gender: userInfo.gender
+        //   };
+        //
+        //   // 更新用户信息
+        //
+        //   Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+        //     baseLock = res.data.data.user_base_lock;
+        //     if (baseLock*1===2) {
+        //       that.setData({baseRedDot: 1});
+        //     }
+        //     mid = res.data.data.id;
+        //   });
+        // }
 
         wx.showLoading({
           title: '加载中',
@@ -279,6 +270,16 @@ Page({
   },
   onShow () {
     let that = this;
+    // let userInfo = wx.getStorageSync('userInfo', userInfo);
+    // console.log(userInfo, 'infoooo main.js')
+    // if (userInfo) {
+    //
+    // } else {
+    //   // 微信授权
+    //   that.setData({
+    //     showDialog: true
+    //   })
+    // }
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -364,7 +365,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/main/main`,
+        path: `/pages/gcindex/gcindex`,
         imageUrl: '/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
@@ -379,7 +380,7 @@ Page({
     } else {
       return {
         title: that.data.question,
-        path: `/pages/main/main?qid=${questId}`,
+        path: `/pages/gcindex/gcindex?qid=${questId}`,
         imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{

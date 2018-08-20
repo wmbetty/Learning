@@ -829,7 +829,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/main/main`,
+        path: `/pages/gcindex/gcindex`,
         imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
@@ -844,7 +844,7 @@ Page({
     } else {
       return {
         title: that.data.shareTitle,
-        path: `/pages/main/main?qid=${questId}`,
+        path: `/pages/gcindex/gcindex?qid=${questId}`,
         imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
