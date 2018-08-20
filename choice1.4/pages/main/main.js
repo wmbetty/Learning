@@ -172,7 +172,7 @@ Page({
     tabBar.tabbar("tabBar", 1, that);
 
     let userInfo = wx.getStorageSync('userInfo', userInfo);
-    if (userInfo) {
+    if (userInfo.id) {
       // 获取token
       backApi.getToken().then(function(response){
         console.log(response, 'ss')
