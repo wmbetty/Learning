@@ -1,7 +1,7 @@
 //app.js
 const Api = require('wxapi/wxApi');
 const backApi = require('utils/util');
-var aldstat = require("utils/ald-stat.js");
+// var aldstat = require("utils/ald-stat.js");
 
 App({
   globalData: {
@@ -14,36 +14,36 @@ App({
     
   },
   onShow (options) {
-    wx.login({
-      success: function(res) {
-        let reqData = {};
-        let code = res.code;
-        if (code) {
-          reqData.code = code;
-          Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
-            let acc_token = res.data.data.access_token;
-            if (acc_token) {
-              let userInfo = wx.getStorageSync('userInfo', userInfo);
-              let userInfoApi = backApi.userInfo+acc_token;
-              if (userInfo) {
-                let userData = {
-                  avatarUrl: userInfo.avatarUrl,
-                  nickName: userInfo.nickName,
-                  country: userInfo.country,
-                  city: userInfo.city,
-                  language: userInfo.language,
-                  province: userInfo.province,
-                  gender: userInfo.gender
-                };
-                Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-                  console.log(res.data.status, 'app.js update-user')
-                })
-              }
-            }
-          })
-        }
-      }
-    });
+    // wx.login({
+    //   success: function(res) {
+    //     let reqData = {};
+    //     let code = res.code;
+    //     if (code) {
+    //       reqData.code = code;
+    //       Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
+    //         let acc_token = res.data.data.access_token;
+    //         if (acc_token) {
+    //           let userInfo = wx.getStorageSync('userInfo', userInfo);
+    //           let userInfoApi = backApi.userInfo+acc_token;
+    //           if (userInfo) {
+    //             let userData = {
+    //               avatarUrl: userInfo.avatarUrl,
+    //               nickName: userInfo.nickName,
+    //               country: userInfo.country,
+    //               city: userInfo.city,
+    //               language: userInfo.language,
+    //               province: userInfo.province,
+    //               gender: userInfo.gender
+    //             };
+    //             Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
+    //               console.log(res.data.status, 'app.js update-user')
+    //             })
+    //           }
+    //         }
+    //       })
+    //     }
+    //   }
+    // });
     // 是否是通过分享进入
     let scene = options.scene*1;
     if (scene === 1007 || scene === 1008) {

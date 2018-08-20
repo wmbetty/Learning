@@ -15,7 +15,11 @@
     "pages/usercenter/usercenter",
     "pages/commentmsg/commentmsg",
     "pages/saveposter/saveposter",
-    "pages/gcintro/gcintro"
+    "pages/gcintro/gcintro",
+    "pages/activity/activity",
+    "pages/categotries/categotries",
+    "pages/rankboard/rankboard",
+    "pages/chosecate/chosecate"
   ],
   "window": {
     "backgroundTextStyle": "light",

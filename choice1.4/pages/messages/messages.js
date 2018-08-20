@@ -34,17 +34,65 @@ Page({
     that.setData({
       showDialog: false
     });
-    wx.getUserInfo({
-      success: (res)=>{
-        let userInfo = res.userInfo;
-        if (userInfo.nickName) {
-          wx.setStorageSync('userInfo', userInfo);
-          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            if (res.data.data.user_base_lock*1===2) {
-              that.setData({showRedDot: true})
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
             }
-          })
-        }
+            Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+              if (res.data.status*1===200) {
+                wx.setStorageSync('userInfo', res.data.data);
+                if (res.data.data.user_base_lock*1===2) {
+                  that.setData({showRedDot: true})
+                }
+                backApi.getToken().then(function(response) {
+                  let token = response.data.data.access_token;
+                  that.setData({token: token});
+                  let myInfoApi = backApi.myInfo+token;
+                  Api.wxRequest(myInfoApi,'GET',{},(res)=>{
+                    if (res.data.data.user_base_lock*1===2) {
+                      that.setData({showRedDot: true})
+                    } else {
+                      that.setData({showRedDot: false})
+                    }
+                  });
+                  let voteUnreadApi = backApi.voteUnreadApi+token;
+                  let noticeUnreadApi = backApi.noticeUnreadApi+token;
+                  let commentUnreadApi = backApi.commentUnreadApi+token;
+                  Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
+                    let vcount = res.data.data.vote;
+                    that.setData({
+                      voteUnreadCount: vcount
+                    })
+                  });
+                  Api.wxRequest(noticeUnreadApi,'GET',{},(res)=> {
+                    let ncount = res.data.data.notice;
+                    that.setData({
+                      noticeUnreadCount:ncount
+                    })
+                  });
+                  Api.wxRequest(commentUnreadApi,'GET',{},(res)=> {
+                    let comcount = res.data.data.total;
+                    that.setData({
+                      commentUnreadCount:comcount
+                    })
+                  });
+                })
+
+              } else {
+                Api.wxShowToast('更新用户信息出错了', 'none', 2000);
+              }
+            })
+          }
+        })
+      },
+      fail: function (res) {
+        console.log(res, 'message wx.login')
       }
     })
   },
@@ -68,8 +116,9 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
+    console.log(userInfo, 'infooo')
 
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       backApi.getToken().then(function(response) {
         let token = response.data.data.access_token;
         that.setData({token: token,showDialog: true});
@@ -89,8 +138,6 @@ Page({
         let voteUnreadApi = backApi.voteUnreadApi+token;
         let noticeUnreadApi = backApi.noticeUnreadApi+token;
         let commentUnreadApi = backApi.commentUnreadApi+token;
-        // wx.setStorageSync('msgTotal', 0);
-        // wx.setStorageSync('voteUnreadCount', 0);
         Api.wxRequest(voteUnreadApi,'GET',{},(res)=> {
           let vcount = res.data.data.vote;
           that.setData({
@@ -139,29 +186,12 @@ Page({
     }
   },
   onPageScroll () {
-    // if (e.scrollTop*1>=this.data.viewHeight/3) {
-    //   wx.setNavigationBarColor({
-    //     frontColor:'#ffffff',
-    //     backgroundColor:'#E64340'
-    //   })
-    //   wx.setNavigationBarTitle({
-    //     title: "消息"
-    //   })
-    // } else {
-    //   wx.setNavigationBarColor({
-    //     frontColor:'#ffffff',
-    //     backgroundColor:'#F5F6F8'
-    //   })
-    //   wx.setNavigationBarTitle({
-    //     title: ""
-    //   })
-    // }
   },
   gotoVotemsg () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.nickName) {
+    if (!userInfo.id) {
       that.setData({
         showDialog: true
       })
@@ -179,7 +209,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.nickName) {
+    if (!userInfo.id) {
       that.setData({
         showDialog: true
       })
@@ -197,7 +227,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.nickName) {
+    if (!userInfo.id) {
       that.setData({
         showDialog: true
       })

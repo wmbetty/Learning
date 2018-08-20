@@ -47,14 +47,12 @@ Page({
   },
   //手指接触屏幕
   touchstart (e) {
-    let that = this;
     startx = e.touches[0].pageX;
     starty = e.touches[0].pageY;
   },
   //手指离开屏幕
   touchend (e) {
     let that = this;
-    let token = that.data.token;
     let curr_id = e.currentTarget.dataset.item.id;
     let listItem = e.currentTarget.dataset.item;
     let index = e.currentTarget.dataset.index;
@@ -173,116 +171,95 @@ Page({
     let that = this;
     tabBar.tabbar("tabBar", 1, that);
 
-    // 获取token
-    backApi.getToken().then(function(response){
-      if (response.data.status*1===200) {
-        let token = response.data.data.access_token;
-        that.setData({token: token});
-        // let userInfo = wx.getStorageSync('userInfo', userInfo);
-        // let userInfoApi = backApi.userInfo+token;
-        // if (userInfo) {
-        //   let userData = {
-        //     avatarUrl: userInfo.avatarUrl,
-        //     nickName: userInfo.nickName,
-        //     country: userInfo.country,
-        //     city: userInfo.city,
-        //     language: userInfo.language,
-        //     province: userInfo.province,
-        //     gender: userInfo.gender
-        //   };
-        //
-        //   // 更新用户信息
-        //
-        //   Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-        //     baseLock = res.data.data.user_base_lock;
-        //     if (baseLock*1===2) {
-        //       that.setData({baseRedDot: 1});
-        //     }
-        //     mid = res.data.data.id;
-        //   });
-        // }
+    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    if (userInfo) {
+      // 获取token
+      backApi.getToken().then(function(response){
+        console.log(response, 'ss')
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token});
 
-        wx.showLoading({
-          title: '加载中',
-        });
-        let watchQuesApi = backApi.watchQuesApi+token;
-        let noTopQuesApi = backApi.noTopQues+token;
-        let page = that.data.page;
-        let notopPage = that.data.notopPage;
+          wx.showLoading({
+            title: '加载中',
+          });
+          let watchQuesApi = backApi.watchQuesApi+token;
+          let noTopQuesApi = backApi.noTopQues+token;
+          let page = that.data.page;
+          let notopPage = that.data.notopPage;
 
-        // 取首页数据
-        Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
-          let status = res.data.status*1;
-          if (status===200) {
-            wx.hideLoading();
-            let datas = res.data.data || [];
-            if (datas.length===0) {
-              // top=0时
-              Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
-                let status = res.data.status*1;
-                that.setData({notopPage: notopPage+1});
-                if (status===200) {
-                  let notopDatas = res.data.data || [];
-                  if (notopDatas.length>0) {
-                    that.setData({questionList: notopDatas});
-                    Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
-                      if (res.data.status*1===201) {
-                        // console.log('watched');
-                      }
-                    })
+          // 取首页数据
+          Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
+            let status = res.data.status*1;
+            if (status===200) {
+              wx.hideLoading();
+              let datas = res.data.data || [];
+              if (datas.length===0) {
+                // top=0时
+                Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
+                  let status = res.data.status*1;
+                  that.setData({notopPage: notopPage+1});
+                  if (status===200) {
+                    let notopDatas = res.data.data || [];
+                    if (notopDatas.length>0) {
+                      that.setData({questionList: notopDatas});
+                      Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
+                        if (res.data.status*1===201) {
+                          // console.log('watched');
+                        }
+                      })
+                    }
+                    if (notopDatas.length===0) {
+                      that.setData({
+                        notopPage: 1
+                      })
+                    }
+                    if (notopDatas.length===0) {
+                      that.setData({
+                        isEmpty: true
+                      })
+                    }
+                  } else {
+                    Api.wxShowToast('网络出错了', 'none', 2000);
                   }
-                  if (notopDatas.length===0) {
-                    that.setData({
-                      notopPage: 1
-                    })
+                })
+              }
+              if (datas.length>0) {
+                that.setData({questionList: datas});
+                Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+                  if (res.data.status*1===201) {
+                    // console.log('watched')
                   }
-                  if (notopDatas.length===0) {
-                    that.setData({
-                      isEmpty: true
-                    })
-                  }
-                } else {
-                  Api.wxShowToast('网络出错了', 'none', 2000);
-                }
-              })
+                })
+              }
+            } else {
+              wx.hideLoading();
+              Api.wxShowToast('网络出错了,请稍后再试', 'none', 2000);
             }
-            if (datas.length>0) {
-              that.setData({questionList: datas});
-              Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
-                if (res.data.status*1===201) {
-                  // console.log('watched')
-                }
-              })
-            }
-          } else {
-            wx.hideLoading();
-            Api.wxShowToast('网络出错了,请稍后再试', 'none', 2000);
-          }
-        })
-      } else {
-        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
-      }
+          })
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+        }
 
-    }).catch(function(err){
-      //错误处理
-      console.log(err,'token err')
-    });
+      }).catch(function(err){
+        //错误处理
+        console.log(err,'token err')
+      });
+    } else {
+      // 微信授权
+      that.setData({
+        showDialog: true
+      })
+    }
   },
   onShow () {
     let that = this;
-    // let userInfo = wx.getStorageSync('userInfo', userInfo);
-    // console.log(userInfo, 'infoooo main.js')
-    // if (userInfo) {
-    //
-    // } else {
-    //   // 微信授权
-    //   that.setData({
-    //     showDialog: true
-    //   })
-    // }
+
     backApi.getToken().then(function(response) {
+      console.log(response, '22')
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
+        that.setData({token: token});
         let voteUnreadApi = backApi.voteUnreadApi+token;
         let msgTotalApi = backApi.msgUnreadTotal+token;
         let commTotalApi = backApi.commentUnreadApi+token;
@@ -436,239 +413,272 @@ Page({
   confirmDialog (e) {
     let that = this;
     let openType = that.data.openType;
-    let token = that.data.token;
-    let userInfoApi = backApi.userInfo+token;
+
     that.setData({
       showDialog: false
     });
-    if (openType==='getUserInfo') {
-      wx.getUserInfo({
-        success: (res)=>{
-          let userInfo = res.userInfo;
-          if (userInfo.nickName) {
-            wx.setStorageSync('userInfo', userInfo);
-            Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-              baseLock = res.data.data.user_base_lock;
-              if (baseLock*1===2) {
-                that.setData({baseRedDot: 1});
+    wx.login({
+      success: function (res) {
+        let code = res.code
+        if (openType==='getUserInfo') {
+          wx.getUserInfo({
+            success: (res)=>{
+              let userData = {
+                encryptedData: res.encryptedData,
+                iv: res.iv,
+                code: code
               }
-            })
-          }
-        },
-        fail: (res)=>{
-          wx.openSetting({
-            success(settingdata) {
-              if (settingdata.authSetting["scope.userInfo"]) {
-                Api.wxShowToast("获取权限成功",'none',2000)
-              } else {
-                Api.wxShowToast("获取权限失败",'none',2000)
-              }
+              backApi.getToken().then(function(response){
+                if (response.data.status*1===200) {
+                  let token = response.data.data.access_token;
+                  let userInfoApi = backApi.userInfo+token;
+                  let watchQuesApi = backApi.watchQuesApi+token;
+                  let noTopQuesApi = backApi.noTopQues+token;
+                  let page = that.data.page;
+                  let notopPage = that.data.notopPage;
+                  Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                    if (res.data.status*1===200) {
+                      wx.setStorageSync('userInfo', res.data.data);
+                      baseLock = res.data.data.user_base_lock;
+                      if (baseLock*1===2) {
+                        that.setData({baseRedDot: 1});
+                      }
+
+                      wx.showLoading({
+                        title: '加载中',
+                      });
+                      Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
+                        let status = res.data.status*1;
+                        if (status===200) {
+                          wx.hideLoading();
+                          let datas = res.data.data || [];
+                          if (datas.length===0) {
+                            // top=0时
+                            Api.wxRequest(noTopQuesApi, 'GET', {page:notopPage}, (res)=>{
+                              let status = res.data.status*1;
+                              that.setData({notopPage: notopPage+1});
+                              if (status===200) {
+                                let notopDatas = res.data.data || [];
+                                if (notopDatas.length>0) {
+                                  that.setData({questionList: notopDatas});
+                                  Api.wxRequest(watchQuesApi,'POST',{qid: notopDatas[0].id}, (res)=> {
+                                    if (res.data.status*1===201) {
+                                      // console.log('watched');
+                                    }
+                                  })
+                                }
+                                if (notopDatas.length===0) {
+                                  that.setData({
+                                    notopPage: 1
+                                  })
+                                }
+                                if (notopDatas.length===0) {
+                                  that.setData({
+                                    isEmpty: true
+                                  })
+                                }
+                              } else {
+                                Api.wxShowToast('网络出错了', 'none', 2000);
+                              }
+                            })
+                          }
+                          if (datas.length>0) {
+                            that.setData({questionList: datas});
+                            Api.wxRequest(watchQuesApi,'POST',{qid: datas[0].id}, (res)=> {
+                              if (res.data.status*1===201) {
+                                // console.log('watched')
+                              }
+                            })
+                          }
+                        } else {
+                          wx.hideLoading();
+                          Api.wxShowToast('网络出错了,请稍后再试', 'none', 2000);
+                        }
+                      })
+
+                    } else {
+                      Api.wxShowToast('更新用户信息失败', 'none', 2000);
+                    }
+                  })
+                } else {
+                  Api.wxShowToast('登录失败', 'none', 2000);
+                }
+              }).catch(function (err) {
+                console.log(err,'token err')
+              })
+            },
+            fail: (res)=>{
+              that.setData({
+                showDialog: true,
+                openType: 'openSetting',
+                authInfo: '授权失败，需要微信权限哦'
+              })
             }
           })
+        } else {
         }
-      })
-    } else {
-    }
+      },
+      fail: function (res) {
+        console.log(res, 'wx.login')
+      }
+    })
 
   },
   // 投票
   gotoVote (e) {
     let that = this;
-    // let page = that.data.page;
     let token = that.data.token;
-    // let watchQuesApi = backApi.watchQuesApi+token;
-    // let noTopQuesApi = backApi.noTopQues+token;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
     let answerData = {
       qid: 0,
       choose: ''
     };
 
-    // 判断是否授权
-    if (language) {
+    let qList = that.data.questionList;
+    let direct = e.currentTarget.dataset.direct;
+    let idx = e.currentTarget.dataset.index;
+    let qid = '';
+    if (e.currentTarget.dataset.item) {
+      qid = e.currentTarget.dataset.item.id;
+    }
 
-      let qList = that.data.questionList;
-      let direct = e.currentTarget.dataset.direct;
-      let idx = e.currentTarget.dataset.index;
-      let qid = '';
-      if (e.currentTarget.dataset.item) {
-        qid = e.currentTarget.dataset.item.id;
-      }
+    let answerApi = backApi.u_answer;
+    answerData.qid = qid;
+    let showThumb = that.data.showThumb;
 
-      let answerApi = backApi.u_answer;
-      answerData.qid = qid;
-      let showThumb = that.data.showThumb;
-
-      if (direct === 'left') {
-        answerData.choose = 1;
-        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-          let status = res.data.status*1;
-          // 投票成功后
-          if (status === 201) {
-            if (!showThumb) {
-              that.setData({showThumb: true})
-            }
-            let afterChoose = res.data.data;
-            for (let i=0;i<qList.length;i++) {
-              if (idx===i) {
-                qList[i].choose_left = true;
-                qList[i].showMask = true;
-                qList[i].hots = afterChoose.hots;
-                qList[i].choose1_per = afterChoose.choose1_per;
-                qList[i].choose2_per = afterChoose.choose2_per;
-                setTimeout(()=>{
-                  that.setData({
-                    questionList: qList
-                  })
-                },600)
-              }
-            }
-          } else {
-            that.setData({showThumb: false})
-            Api.wxShowToast('投过票了', 'none', 300);
+    if (direct === 'left') {
+      answerData.choose = 1;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          if (!showThumb) {
+            that.setData({showThumb: true})
           }
-        })
-
-      }
-      if (direct === 'right') {
-        answerData.choose = 2;
-        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-          let status = res.data.status*1;
-          // 投票成功后
-          if (status === 201) {
-            if (!showThumb) {
-              that.setData({showThumb: true})
+          let afterChoose = res.data.data;
+          for (let i=0;i<qList.length;i++) {
+            if (idx===i) {
+              qList[i].choose_left = true;
+              qList[i].showMask = true;
+              qList[i].hots = afterChoose.hots;
+              qList[i].choose1_per = afterChoose.choose1_per;
+              qList[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  questionList: qList
+                })
+              },600)
             }
-            let afterChoose = res.data.data;
-            for (let i=0;i<qList.length;i++) {
-              if (idx === i) {
-                qList[i].choose_right = true;
-                qList[i].showMask = true;
-                qList[i].hots = afterChoose.hots;
-                qList[i].choose1_per = afterChoose.choose1_per;
-                qList[i].choose2_per = afterChoose.choose2_per;
-                setTimeout(()=>{
-                  that.setData({
-                    questionList: qList
-                  })
-                },600)
-              }
-            }
-          } else {
-            that.setData({showThumb: false,noShowThumb: true})
-            Api.wxShowToast('投过票了', 'none', 2000);
           }
-        })
-      }
+        } else {
+          that.setData({showThumb: false})
+          Api.wxShowToast('投过票了', 'none', 300);
+        }
+      })
 
-      if (direct==='userbase') {
-        wx.navigateTo({
-          url: `/pages/usercenter/usercenter`
-        })
-      }
-
-      if (direct==='nobase') {
-        that.setData({showbaseMask:true});
-        setTimeout(()=>{
-          that.setData({showUserbase: false})
-        },3200)
-      }
-
-      setTimeout(()=>{
-        that.slidethis(idx,qid,e.currentTarget.dataset.item);
-      },4000)
-
-    } else {
-      // 微信授权
-      that.setData({
-        showDialog: true
+    }
+    if (direct === 'right') {
+      answerData.choose = 2;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          if (!showThumb) {
+            that.setData({showThumb: true})
+          }
+          let afterChoose = res.data.data;
+          for (let i=0;i<qList.length;i++) {
+            if (idx === i) {
+              qList[i].choose_right = true;
+              qList[i].showMask = true;
+              qList[i].hots = afterChoose.hots;
+              qList[i].choose1_per = afterChoose.choose1_per;
+              qList[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  questionList: qList
+                })
+              },600)
+            }
+          }
+        } else {
+          that.setData({showThumb: false,noShowThumb: true})
+          Api.wxShowToast('投过票了', 'none', 2000);
+        }
       })
     }
+
+    if (direct==='userbase') {
+      wx.navigateTo({
+        url: `/pages/usercenter/usercenter`
+      })
+    }
+
+    if (direct==='nobase') {
+      that.setData({showbaseMask:true});
+      setTimeout(()=>{
+        that.setData({showUserbase: false})
+      },3200)
+    }
+
+    setTimeout(()=>{
+      that.slidethis(idx,qid,e.currentTarget.dataset.item);
+    },4000)
   },
   // 到他人中心
   gotoOthers (e) {
     let that = this;
     let token = that.data.token;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
     let local_userId = '';
-    if (language) {
-      let mid = e.target.dataset.mid;
-      let userInfoApi = backApi.userInfo+token;
-      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-        local_userId = res.data.data.id;
-        if (local_userId*1===mid*1) {
-          wx.reLaunch({
-            url: `/pages/mine/mine`
-          })
-        } else {
-          wx.navigateTo({
-            url: `/pages/others/others?mid=${mid}`
-          })
-        }
-      });
-    } else {
-      // 微信授权
-      that.setData({
-        showDialog: true
-      })
-    }
+    let mid = e.target.dataset.mid;
+    let userInfoApi = backApi.userInfo+token;
+    Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+      local_userId = res.data.data.id;
+      if (local_userId*1===mid*1) {
+        wx.reLaunch({
+          url: `/pages/mine/mine`
+        })
+      } else {
+        wx.navigateTo({
+          url: `/pages/others/others?mid=${mid}`
+        })
+      }
+    });
   },
   goShare (e) {
     let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
-    if (language) {
-      let quesId = e.target.dataset.question.id;
-      let question = e.target.dataset.question.question;
-      let token = that.data.token;
-      let shareApi = backApi.shareApi+token;
-      let postData = {
-        type: 'friend',
-        qid: quesId
-      };
+    let quesId = e.target.dataset.question.id;
+    let question = e.target.dataset.question.question;
+    let token = that.data.token;
+    let shareApi = backApi.shareApi+token;
+    let postData = {
+      type: 'friend',
+      qid: quesId
+    };
 
-      Api.wxRequest(shareApi,'POST',postData,(res)=>{
-        console.log(res.data.data.url,'friends');
-        if (res.data.status*1===201) {
-          that.setData({shareFriImg:res.data.data.url})
-        }
-      });
+    Api.wxRequest(shareApi,'POST',postData,(res)=>{
+      console.log(res.data.data.url,'friends');
+      if (res.data.status*1===201) {
+        that.setData({shareFriImg:res.data.data.url})
+      }
+    });
 
-      that.setData({
-        showShare: true,
-        quesId: quesId,
-        question: question,
-        isSlidedown: false
-      });
-    } else {
-      // 微信授权
-      that.setData({
-        showDialog: true
-      })
-    }
+    that.setData({
+      showShare: true,
+      quesId: quesId,
+      question: question,
+      isSlidedown: false
+    });
   },
   gotoDetails (e) {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
-    if (language) {
-      let id = e.currentTarget.dataset.id;
-      let myid = e.currentTarget.dataset.mid;
-      let my = '';
-      if (myid==mid) {
-        my = 1;
-      }
-      wx.navigateTo({
-        url: `/pages/details/details?id=${id}&my=${my}`
-      })
-    } else {
-      // 微信授权
-      that.setData({
-        showDialog: true
-      })
+    let id = e.currentTarget.dataset.id;
+    let myid = e.currentTarget.dataset.mid;
+    let my = '';
+    if (myid==mid) {
+      my = 1;
     }
+    wx.navigateTo({
+      url: `/pages/details/details?id=${id}&my=${my}`
+    })
   }
 
 })

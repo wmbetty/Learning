@@ -170,44 +170,55 @@ Page({
   },
   confirmDialog (e) {
     let that = this;
-    let token = that.data.token;
     let openType = that.data.openType;
-    let userInfoApi = backApi.userInfo+token;
     that.setData({
       showDialog: false
     });
-    if (openType==='getUserInfo') {
-      wx.getUserInfo({
-        success: (res)=>{
-          let userInfo = res.userInfo;
-          if (userInfo.nickName) {
-            wx.setStorageSync('userInfo', userInfo);
-            that.setData({
-              uavatar: userInfo.avatarUrl,
-              hasUserInfo: true
-            });
-            backApi.getToken().then(function(response) {
-              if (response.data.status*1===200) {
-                let token = response.data.data.access_token;
-                that.setData({token: token});
-                let myInfo = backApi.myInfo+token;
-                Api.wxRequest(myInfo,'GET',{},(res)=>{
-                  if (res.data.status*1===200) {
-                    myPoint = res.data.data.points;
-                    ImgLock = res.data.data.release_img_lock*1;
-                  }
-                });
-                Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-                  // console.log(res.data.status, 'index update-user')
-                })
-              } else {
-                Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
-              }
 
-            });
+    if (openType==='getUserInfo') {
+      wx.login({
+        success: function (res) {
+          let code = res.code
+          if (openType === 'getUserInfo') {
+            wx.getUserInfo({
+              success: (res) => {
+                that.setData({hasUserInfo: true})
+                let userData = {
+                  encryptedData: res.encryptedData,
+                  iv: res.iv,
+                  code: code
+                }
+                backApi.getToken().then(function (response) {
+                  if (response.data.status * 1 === 200) {
+                    let token = response.data.data.access_token;
+                    let userInfoApi = backApi.userInfo+token;
+                    let myInfo = backApi.myInfo+token;
+                    Api.wxRequest(myInfo,'GET',{},(res)=>{
+                      if (res.data.status*1===200) {
+                        myPoint = res.data.data.points;
+                        ImgLock = res.data.data.release_img_lock*1;
+                      }
+                    });
+
+                    Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                      if (res.data.status * 1 === 200) {
+                        wx.setStorageSync('userInfo', res.data.data);
+                        that.setData({
+                          uavatar: res.data.data.avatar
+                        });
+                      } else {
+                        Api.wxShowToast('更新用户信息失败', 'none', 2000)
+                      }
+                    })
+                  }
+                }).catch(function (err) {
+                  console.log(err, 'index err')
+                })
+              }
+            })
           }
         },
-        fail: (res)=>{
+        fail: function () {
           that.setData({
             showDialog: true,
             openType: 'openSetting',
@@ -215,7 +226,6 @@ Page({
           })
         }
       })
-    } else {
     }
   },
   onLoad: function(option) {
@@ -262,7 +272,7 @@ Page({
   onShow () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
@@ -278,7 +288,7 @@ Page({
 
     } else {
       that.setData({
-        uavatar: userInfo.avatarUrl
+        uavatar: userInfo.avatar
       });
       backApi.getToken().then(function(response) {
         if (response.data.status * 1 === 200) {
@@ -403,7 +413,6 @@ Page({
             that.setData({isWeToast:false});
           },2000)
         }
-        that.setData({})
       }
       if (!that.data.txtActive) {
         if (leftImg && rightImg && val !== '点击输入标题' && val !== '') {

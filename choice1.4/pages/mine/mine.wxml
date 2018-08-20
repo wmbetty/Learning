@@ -7,12 +7,12 @@
                 <image src="../../images/grey_gold.png" class="gold-coin" />
                 <view class="point-box">{{points || 0}}</view>
             </view>
-            <image class="my-avatar" src="{{userInfo.avatarUrl || '../../images/avatarDefault.png'}}" />
+            <image class="my-avatar" src="{{userInfo.avatar || '../../images/avatarDefault.png'}}" />
             <image src="../../images/my_bg2.png" class="my-bg"/>
         </view>
     </view>
     <view class="mine-infos">
-        <view class="my-name">{{userInfo.nickName || ''}}</view>
+        <view class="my-name">{{userInfo.nickname || ''}}</view>
         <image wx:if="{{userInfo.gender===1}}" src="../../images/boy_icon.png" class="my-gender"/>
         <image wx:if="{{userInfo.gender===2}}" src="../../images/girl_icon.png" class="my-gender"/>
         <!--<view class="msg-box" bindtap="gotoMsg">-->
@@ -21,7 +21,7 @@
         <!--</view>-->
     </view>
     <view class="tab-container">
-        <view class="{{showSrollView?'tab-head tab-head-fixed':'tab-head'}}" wx:if="{{userInfo.nickName}}">
+        <view class="{{showSrollView?'tab-head tab-head-fixed':'tab-head'}}" wx:if="{{userInfo.id}}">
             <view class="{{isMine?'tab-head-item my-publish-item blue-font':'tab-head-item my-publish-item'}}" data-type="mine"  bindtouchstart="voteOthers">
                 <view>发起<text hidden="{{!myTotalCount}}">({{myTotalCount}})</text></view>
                 <view class="{{isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{!isMine}}"></view>
@@ -31,7 +31,7 @@
                 <view class="{{!isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{isMine}}"></view>
             </view>
         </view>
-        <view class="tab-content" wx:if="{{userInfo.nickName}}">
+        <view class="tab-content" wx:if="{{userInfo.id}}">
             <view hidden="{{!myPublish.length}}">
                 <view hidden="{{!isMine}}">
                     <view class="tab-list-item" bindtap="gotoDetail" hover-class="list-hover" wx:for="{{myPublish}}" data-my="1" data-id="{{item.id}}" wx:key="index">
