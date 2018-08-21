@@ -62,7 +62,7 @@ Page({
               if (response.data.status * 1 === 200) {
                 let token = response.data.data.access_token;
                 let userInfoApi = backApi.userInfo + token;
-                Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                   if (res.data.status * 1 === 200) {
                     wx.setStorageSync('userInfo', res.data.data);
                     if (res.data.data.user_base_lock*1===2) {

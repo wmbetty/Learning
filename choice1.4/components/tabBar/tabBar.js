@@ -27,9 +27,9 @@ function tabbarinit() {
   return [
       { "current":0,
         "pagePath": "/pages/gcindex/gcindex",
-        "iconPath": "/images/main.png",
-        "selectedIconPath": "/images/main_act.png",
-        "text": "首页"
+        "iconPath": "/images/gcindex.png",
+        "selectedIconPath": "/images/gcindex_act.png",
+        "text": "主页"
       },
        { "current":0,
          "pagePath": "/pages/main/main",

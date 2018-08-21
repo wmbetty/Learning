@@ -52,6 +52,14 @@ const commentUnreadApi = `${http}v1/message/comment-notice-none-count?access-tok
 const commMsgListApi = `${http}v1/message/comment-notice?access-token=`
 const commReadApi = `${http}v1/message/read-comment-notice?access-token=`
 const shareApi = `${http}v1/share/share-generate?access-token=`
+const bannerApi = `${http}v1/banner?access-token=`
+const categoryListApi = `${http}v1/category?access-token=`
+const topicListApi = `${http}v1/topic?access-token=`
+const cateDetailsApi = `${http}v1/category/`
+const cateQuesApi =  `${http}v1/category/question?access-token=`
+const topicDetail = `${http}v1/topic/`
+const topicQues = `${http}v1/topic/question?access-token=`
+const rankApi = `${http}v1/ranking?access-token=`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -109,5 +117,13 @@ module.exports = {
   commentUnreadApi: commentUnreadApi,
   commMsgListApi: commMsgListApi,
   commReadApi: commReadApi,
-  shareApi: shareApi
+  shareApi: shareApi,
+  bannerApi: bannerApi,
+  categoryListApi: categoryListApi,
+  topicListApi: topicListApi,
+  cateDetailsApi: cateDetailsApi,
+  cateQuesApi: cateQuesApi,
+  topicDetail: topicDetail,
+  topicQues: topicQues,
+  rankApi: rankApi
 }

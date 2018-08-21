@@ -256,7 +256,6 @@ Page({
     let that = this;
 
     backApi.getToken().then(function(response) {
-      console.log(response, '22')
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
@@ -436,7 +435,7 @@ Page({
                   let noTopQuesApi = backApi.noTopQues+token;
                   let page = that.data.page;
                   let notopPage = that.data.notopPage;
-                  Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                  Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                     if (res.data.status*1===200) {
                       wx.setStorageSync('userInfo', res.data.data);
                       baseLock = res.data.data.user_base_lock;
@@ -631,7 +630,7 @@ Page({
     let local_userId = '';
     let mid = e.target.dataset.mid;
     let userInfoApi = backApi.userInfo+token;
-    Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+    Api.wxRequest(userInfoApi,'POST',userInfo,(res)=> {
       local_userId = res.data.data.id;
       if (local_userId*1===mid*1) {
         wx.reLaunch({

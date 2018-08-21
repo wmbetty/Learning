@@ -12,7 +12,16 @@ Page({
     voteUnreadCount: 0,
     msgCount: 0,
     commentTotal: 0,
-    baseRedDot: 0
+    baseRedDot: 0,
+    interval: 3000,
+    duration: 800,
+    indicatorColor: 'rgba(199, 199, 204, 1)',
+    dotActiveColor: '#666666',
+    bannerList: [],
+    categoryList: [],
+    topicList: [],
+    showDialog: false,
+    showPage: false
   },
 
   onLoad: function (options) {
@@ -28,6 +37,53 @@ Page({
         wx.setStorageSync('quesid', '');
       }, 300)
     }
+
+    wx.setNavigationBarColor({
+      frontColor:'#000000',
+      backgroundColor:'#F5F6F8'
+    });
+
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    });
+
+    backApi.getToken().then(function(response) {
+      if (response.data.status * 1 === 200) {
+        let token = response.data.data.access_token;
+        let bannerApi = backApi.bannerApi+token;
+        let categoryListApi = backApi.categoryListApi+token;
+        let topicListApi = backApi.topicListApi+token;
+        that.setData({token: token});
+        Api.wxRequest(bannerApi,'GET',{},(res)=>{
+          if (res.data.status*1===201) {
+            wx.hideLoading();
+            that.setData({bannerList: res.data.data,showPage: true})
+          } else {
+            Api.wxShowToast('轮播图获取失败~', 'none', 2000)
+          }
+        })
+        Api.wxRequest(categoryListApi,'GET',{},(res)=>{
+          if (res.data.status*1===201) {
+            let category = res.data.data;
+            that.setData({categoryList: category})
+          } else {
+            Api.wxShowToast('分类获取失败~', 'none', 2000)
+          }
+        })
+        Api.wxRequest(topicListApi,'GET',{},(res)=>{
+          if (res.data.status*1===200) {
+            let topic = res.data.data;
+            that.setData({topicList: topic})
+          } else {
+            Api.wxShowToast('话题获取失败~', 'none', 2000)
+          }
+        })
+      } else {
+        Api.wxShowToast('token获取失败~', 'none', 2000)
+      }
+    })
+
   },
 
   onReady: function () {
@@ -39,31 +95,10 @@ Page({
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
+        that.setData({token: token});
         let voteUnreadApi = backApi.voteUnreadApi+token;
         let msgTotalApi = backApi.msgUnreadTotal+token;
         let commTotalApi = backApi.commentUnreadApi+token;
-
-        // let userInfo = wx.getStorageSync('userInfo', userInfo);
-        // let userInfoApi = backApi.userInfo+token;
-        // if (userInfo) {
-        //   let userData = {
-        //     avatarUrl: userInfo.avatarUrl,
-        //     nickName: userInfo.nickName,
-        //     country: userInfo.country,
-        //     city: userInfo.city,
-        //     language: userInfo.language,
-        //     province: userInfo.province,
-        //     gender: userInfo.gender
-        //   };
-        //
-        //   // 更新用户信息
-        //   Api.wxRequest(userInfoApi,'PUT',userData,(res)=>{
-        //     baseLock = res.data.data.user_base_lock;
-        //     if (baseLock*1===2) {
-        //       that.setData({baseRedDot: 1});
-        //     }
-        //   });
-        // }
 
         // 获取投票信息
         Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
@@ -144,5 +179,60 @@ Page({
 
   onShareAppMessage: function () {
   
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({showDialog: false});
+  },
+  confirmDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
+            }
+            backApi.getToken().then(function (response) {
+              if (response.data.status * 1 === 200) {
+                let token = response.data.data.access_token;
+                let userInfoApi = backApi.userInfo + token;
+                Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                  if (res.data.status*1===200) {
+                    wx.setStorageSync('userInfo', res.data.data);
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
+  },
+  // 去分类详情
+  goCateDetail (e) {
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    if (userInfo.id) {
+      let title = e.currentTarget.dataset.title;
+      wx.navigateTo({
+        url: `/pages/categotries/categotries?title=${title}`
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
+  },
+  bannerGo (e) {
+    console.log(e, 'link')
+    let link = e.currentTarget.dataset.link;
+    wx.navigateTo({
+      url: link
+    })
   }
 })

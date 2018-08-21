@@ -200,7 +200,7 @@ Page({
                       }
                     });
 
-                    Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                    Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                       if (res.data.status * 1 === 200) {
                         wx.setStorageSync('userInfo', res.data.data);
                         that.setData({
