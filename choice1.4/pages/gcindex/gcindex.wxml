@@ -14,7 +14,7 @@
     </view>
     <view class="category-container">
         <view class="flex-space-cont category-f1">
-            <view wx:for="{{categoryList}}" wx:if="{{index<3}}" wx:key="key"  class="cate-s-item" hover-class="list-hover" data-title="娱乐八卦" bindtap="goCateDetail">
+            <view wx:for="{{categoryList}}" wx:if="{{index<3}}" wx:key="key"  class="cate-s-item" hover-class="list-hover" data-id="{{item.id}}" data-title="{{item.name}}" bindtap="goCateDetail">
                 <image src="{{item.icon_url}}" class="category-icon" />
                 <view>{{item.name}}</view>
             </view>
@@ -22,13 +22,13 @@
         <view class="flex-space-cont category-f2">
             <view class="category-f2-cont category-f2-left">
                 <view class="flex-space-cont">
-                    <view class="cate-s-item" wx:for="{{categoryList}}" wx:if="{{index>2 && index<5}}" wx:key="key" hover-class="list-hover" data-title="时尚购物" bindtap="goCateDetail">
+                    <view class="cate-s-item" wx:for="{{categoryList}}" wx:if="{{index>2 && index<5}}" wx:key="key" data-id="{{item.id}}" hover-class="list-hover" data-title="{{item.name}}" bindtap="goCateDetail">
                         <image src="{{item.icon_url}}" class="category-icon" />
                         <view>{{item.name}}</view>
                     </view>
                 </view>
                 <view class="flex-space-cont category-f2-f2">
-                    <view class="cate-s-item" hover-class="list-hover" wx:for="{{categoryList}}" wx:if="{{index>4}}" wx:key="key" data-title="游戏动漫" bindtap="goCateDetail">
+                    <view class="cate-s-item" hover-class="list-hover" wx:for="{{categoryList}}" wx:if="{{index>4}}" wx:key="key" data-id="{{item.id}}" data-title="{{item.name}}" bindtap="goCateDetail">
                         <image src="{{item.icon_url}}" class="category-icon" />
                         <view>{{item.name}}</view>
                     </view>

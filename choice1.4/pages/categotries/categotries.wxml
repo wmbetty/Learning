@@ -1,2 +1,42 @@
 <!--pages/categotries/categotries.wxml-->
-<text>pages/categotries/categotries.wxml</text>
+<view>
+    <view class="banner-cont">
+        <image src="" />
+    </view>
+    <view class="ques-tab-contanier">
+        <view class="flex-space-cont ques-tab-head">
+            <view class="tab-head-item" data-type="1" bindtap="changeTab">
+                <view class="{{type*1===1?'tab-active':''}}">热门问题</view>
+                <view wx:if="{{type*1===1}}" class="black-line"></view>
+            </view>
+            <view class="tab-head-item" data-type="2" bindtap="changeTab">
+                <view class="{{type*1===2?'tab-active':''}}">最新问题</view>
+                <view wx:if="{{type*1===2}}" class="black-line"></view>
+            </view>
+        </view>
+        <view class="ques-tab-content">
+            <view class="tab-content-item" hidden="{{type*1===2}}">
+                <view class="ques-list-item">
+                    <view class="ques-user-info">
+                        <image class="user-avatar" src="" />
+                        <view>你啃你西瓜1111</view>
+                    </view>
+                    <view class="ques-cont">
+                        <view class="ques-title">如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗</view>
+                    </view>
+                </view>
+            </view>
+            <view class="tab-content-item" hidden="{{type*1===1}}">
+                <view class="ques-list-item">
+                    <view class="ques-user-info">
+                        <image class="user-avatar" src="" />
+                        <view>你啃你西瓜</view>
+                    </view>
+                    <view class="ques-cont">
+                        <view class="ques-title">如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗</view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

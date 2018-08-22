@@ -203,7 +203,7 @@ Page({
               if (response.data.status * 1 === 200) {
                 let token = response.data.data.access_token;
                 let userInfoApi = backApi.userInfo + token;
-                Api.wxRequest(userInfoApi,'PUT',userData,(res)=> {
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                   if (res.data.status*1===200) {
                     wx.setStorageSync('userInfo', res.data.data);
                   }
@@ -221,8 +221,9 @@ Page({
     let userInfo = wx.getStorageSync('userInfo', userInfo);
     if (userInfo.id) {
       let title = e.currentTarget.dataset.title;
+      let cid = e.currentTarget.dataset.id;
       wx.navigateTo({
-        url: `/pages/categotries/categotries?title=${title}`
+        url: `/pages/categotries/categotries?title=${title}&id=${cid}`
       })
     } else {
       that.setData({showDialog: true});
