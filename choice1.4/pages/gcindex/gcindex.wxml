@@ -34,7 +34,7 @@
                     </view>
                 </view>
             </view>
-            <view class="cate-s-item category-f2-cont" hover-class="list-hover" data-title="排行榜" bindtap="goCateDetail">
+            <view class="cate-s-item category-f2-cont" hover-class="list-hover" bindtap="goRank">
                 <image class="rank-big-icon" src="../../images/rank.png"/>
                 <view>进榜单</view>
                 <view>做网红</view>

@@ -229,6 +229,17 @@ Page({
       that.setData({showDialog: true});
     }
   },
+  goRank () {
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: `/pages/rankboard/rankboard`
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
+  },
   bannerGo (e) {
     console.log(e, 'link')
     let link = e.currentTarget.dataset.link;
