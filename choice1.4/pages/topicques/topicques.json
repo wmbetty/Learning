@@ -1,6 +1,5 @@
 {
-  "navigationBarTitleText": "",
-  "navigationBarBackgroundColor": "#E74C49",
+  "navigationBarTitleText": "话题",
   "usingComponents": {
     "empty-wxml": "../../components/empty/empty"
   }

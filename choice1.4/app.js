@@ -23,7 +23,7 @@ App({
     //       Api.wxRequest(backApi.loginApi,'POST',reqData,(res)=>{
     //         let acc_token = res.data.data.access_token;
     //         if (acc_token) {
-    //           let userInfo = wx.getStorageSync('userInfo', userInfo);
+    //           let userInfo = wx.getStorageSync('userInfo');
     //           let userInfoApi = backApi.userInfo+acc_token;
     //           if (userInfo) {
     //             let userData = {

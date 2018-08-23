@@ -43,8 +43,8 @@
     </view>
     <view class="topic-container">
         <view class="topic-head">话题精选</view>
-        <view class="topic-list-group">
-            <view class="topic-list-item" style="background: url('{{item.bg_url}}') no-repeat;background-size: 100% 100%;" wx:for="{{topicList}}" wx:key="key">
+        <view class="topic-list-group" wx:if="{{showContent}}">
+            <view class="topic-list-item" style="background: url('{{item.bg_url}}') no-repeat;background-size: 100% 100%;" wx:for="{{topicList}}" wx:key="key" data-title="{{item.title}}" data-tid="{{item.id}}" bindtap="gotoTopic">
                 <view class="topic-info-cont">
                     <view class="topic-title">{{item.title}}</view>
                     <view class="flex-space-cont topic-list-botom">
@@ -55,6 +55,10 @@
                         </view>
                     </view>
                 </view>
+            </view>
+            <view class="nomore-text" wx:if="{{noList}}">选象，让选择简单一点</view>
+            <view wx:if="{{topicList.length===0}}" class="tab-content-empty">
+                <empty-wxml empty-info="暂无话题数据"></empty-wxml>
             </view>
         </view>
     </view>

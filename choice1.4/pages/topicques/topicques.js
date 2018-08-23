@@ -1,0 +1,318 @@
+// pages/topicques/topicques.js
+const backApi = require('../../utils/util');
+const Api = require('../../wxapi/wxApi');
+
+Page({
+  data: {
+    type:1,
+    topicId: '',
+    page1: 1,
+    page2: 1,
+    topicDetail: {},
+    totalPage1: 1,
+    totalPage2: 2,
+    showContent: false,
+    list1: [],
+    list2: [],
+    showBotomText1: false,
+    showBotomText2: false,
+    noList1: false,
+    noList2: false,
+    showThumb: false
+  },
+  onLoad: function (options) {
+    let that = this;
+    let title = options.title;
+    let topicId = options.id*1;
+    let topicDetailsApi = backApi.topicDetail+topicId;
+    that.setData({topicId: topicId});
+    wx.setNavigationBarTitle({
+      title: title
+    });
+    let type = that.data.type;
+    let page1 = that.data.page1;
+    let page2 = that.data.page2;
+    let getQuesData1 = {
+      topic_id: topicId,
+      type: type,
+      page: page1
+    };
+    let getQuesData2 = {
+      topic_id: topicId,
+      type: 2,
+      page: page2
+    };
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    });
+    backApi.getToken().then(function(response) {
+      if (response.data.status * 1 === 200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
+        let topicQuesApi = backApi.topicQues+token;
+        Api.wxRequest(topicDetailsApi,'GET',{},(res)=>{
+          if (res.data.status*1===200) {
+            that.setData({topicDetail: res.data.data})
+          } else {
+            Api.wxShowToast('话题详情获取失败~', 'none', 2000)
+          }
+        });
+        Api.wxRequest(topicQuesApi,'GET',getQuesData1,(res)=>{
+          if (res.data.status*1===200) {
+            wx.hideLoading();
+            let totalPage1 = res.header['X-Pagination-Page-Count'];
+            that.setData({list1: res.data.data, showContent:true,totalPage1:totalPage1})
+
+          } else {
+            wx.hideLoading();
+            Api.wxShowToast('问题数据获取失败~', 'none', 2000)
+          }
+        })
+        Api.wxRequest(topicQuesApi,'GET',getQuesData2,(res)=>{
+          if (res.data.status*1===200) {
+            let totalPage2 = res.header['X-Pagination-Page-Count'];
+            that.setData({list2: res.data.data,totalPage2:totalPage2})
+          } else {
+            Api.wxShowToast('问题数据获取失败~', 'none', 2000)
+          }
+        })
+
+      } else {
+        Api.wxShowToast('token获取失败~', 'none', 2000)
+      }
+    })
+  },
+  onReady: function () {
+  
+  },
+  onShow: function () {
+  
+  },
+  onHide: function () {
+  
+  },
+  onUnload: function () {
+  
+  },
+  onPullDownRefresh: function () {
+  
+  },
+  onReachBottom: function () {
+    let that = this;
+    let type = that.data.type;
+    let list1 = that.data.list1;
+    let list2 = that.data.list2;
+    let page1 = that.data.page1*1+1;
+    let page2 = that.data.page2*1+1;
+    let totalPage1 = that.data.totalPage1*1;
+    let totalPage2 = that.data.totalPage2*1;
+    let token = that.data.token;
+    let topicId = that.data.topicId;
+    let topicQuesApi = backApi.topicQues+token;
+    if (type*1===1) {
+      if (page1>totalPage1) {
+        that.setData({showBotomText1:true})
+      } else {
+        Api.wxRequest(topicQuesApi,'GET',{topic_id:topicId,type:1,page:page1},(res)=>{
+          if (res.data.status*1===200) {
+            list1 = list1.concat(res.data.data)
+            that.setData({list1: list1,page1:page1})
+          } else {
+            Api.wxShowToast('问题数据获取失败~', 'none', 2000)
+          }
+        })
+      }
+    } else {
+      if (page2>totalPage2) {
+        that.setData({showBotomText2:true})
+      } else {
+        Api.wxRequest(topicQuesApi,'GET',{topic_id:topicId,type:2,page:page2},(res)=>{
+          if (res.data.status*1===200) {
+            list2 = list2.concat(res.data.data)
+            that.setData({list2: list2,page2:page2})
+          } else {
+            Api.wxShowToast('问题数据获取失败~', 'none', 2000)
+          }
+        })
+      }
+    }
+  
+  },
+  onShareAppMessage: function () {
+  
+  },
+  changeTab (e) {
+    let that = this;
+    let type = e.currentTarget.dataset.type;
+    that.setData({type: type})
+  },
+  gotoVote (e) {
+    let that = this;
+    let token = that.data.token;
+    let answerData = {
+      qid: 0,
+      choose: ''
+    };
+
+    let list1 = that.data.list1;
+    let list2 = that.data.list2;
+    let type = that.data.type;
+    let direct = e.currentTarget.dataset.direct;
+    let idx = e.currentTarget.dataset.index;
+    let item = e.currentTarget.dataset.item;
+    let qid = item.id;
+
+    let answerApi = backApi.u_answer;
+    answerData.qid = qid;
+    let showThumb = that.data.showThumb;
+
+    if (direct === 'left' && type*1===1) {
+      answerData.choose = 1;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          that.setData({showThumb: true})
+          setTimeout(()=>{
+            that.setData({showThumb: false})
+          },1200)
+          let afterChoose = res.data.data;
+          for (let i=0;i<list1.length;i++) {
+            if (idx===i) {
+              list1[i].choose_left = true;
+              list1[i].showMask = true;
+              list1[i].hots = afterChoose.hots;
+              list1[i].choose1_per = afterChoose.choose1_per;
+              list1[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  list1: list1
+                })
+              },600)
+            }
+          }
+        } else {
+          that.setData({showThumb: false})
+          Api.wxShowToast('投过票了', 'none', 300);
+        }
+      })
+
+    }
+    if (direct === 'right' && type*1===1) {
+      answerData.choose = 2;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          that.setData({showThumb: true})
+          setTimeout(()=>{
+            that.setData({showThumb: false})
+          },1200)
+          let afterChoose = res.data.data;
+          for (let i=0;i<list1.length;i++) {
+            if (idx === i) {
+              list1[i].choose_right = true;
+              list1[i].showMask = true;
+              list1[i].hots = afterChoose.hots;
+              list1[i].choose1_per = afterChoose.choose1_per;
+              list1[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  list1: list1
+                })
+              },600)
+            }
+          }
+        } else {
+          that.setData({showThumb: false,noShowThumb: true})
+          Api.wxShowToast('投过票了', 'none', 2000);
+        }
+      })
+    }
+    if (direct === 'left' && type*1===2) {
+      answerData.choose = 1;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          that.setData({showThumb: true})
+          setTimeout(()=>{
+            that.setData({showThumb: false})
+          },1200)
+          let afterChoose = res.data.data;
+          for (let i=0;i<list2.length;i++) {
+            if (idx===i) {
+              list2[i].choose_left = true;
+              list2[i].showMask = true;
+              list2[i].hots = afterChoose.hots;
+              list2[i].choose1_per = afterChoose.choose1_per;
+              list2[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  list2: list2
+                })
+              },600)
+            }
+          }
+        } else {
+          that.setData({showThumb: false})
+          Api.wxShowToast('投过票了', 'none', 300);
+        }
+      })
+
+    }
+    if (direct === 'right' && type*1===2) {
+      answerData.choose = 2;
+      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+        let status = res.data.status*1;
+        // 投票成功后
+        if (status === 201) {
+          that.setData({showThumb: true})
+          setTimeout(()=>{
+            that.setData({showThumb: false})
+          },1200)
+          let afterChoose = res.data.data;
+          for (let i=0;i<list2.length;i++) {
+            if (idx === i) {
+              list2[i].choose_right = true;
+              list2[i].showMask = true;
+              list2[i].hots = afterChoose.hots;
+              list2[i].choose1_per = afterChoose.choose1_per;
+              list2[i].choose2_per = afterChoose.choose2_per;
+              setTimeout(()=>{
+                that.setData({
+                  list2: list2
+                })
+              },600)
+            }
+          }
+        } else {
+          that.setData({showThumb: false})
+          Api.wxShowToast('投过票了', 'none', 2000);
+        }
+      })
+    }
+  },
+  gotoOther (e) {
+    let mid = e.currentTarget.dataset.mid;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (mid*1===userInfo.id*1) {
+      wx.reLaunch({url:`/pages/mine/mine`})
+    } else {
+      wx.navigateTo({
+        url: `/pages/others/others?mid=${mid}`
+      })
+    }
+  },
+  gotoDetail (e) {
+    let id = e.currentTarget.dataset.qid;
+    if (id) {
+      wx.navigateTo({
+        url: `/pages/details/details?id=${id}`
+      })
+    } else {
+      Api.wxShowToast('该问题为空~', 'none', 2000)
+    }
+  },
+})

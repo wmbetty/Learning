@@ -1,0 +1,80 @@
+/* pages/topicques/topicques.wxss */
+page{background: #F4F4F4;position: relative;}
+.banner-cont{
+    width: 750rpx;height: 320rpx;margin: 0 auto;
+}
+.banner-cont image{display: block;width: 100%;height: 100%;background: #f1f1f1;}
+.ques-tab-head{
+    width: 750rpx;height: 64rpx;margin: 0 auto;padding: 16rpx 0;background: #fff;
+}
+.flex-space-cont{display: flex;justify-content: space-between;}
+.tab-head-item{width: 50%;height: 100%;font-size: 36rpx;color: #999;text-align: center;}
+.black-line{
+    width: 80rpx;height: 10rpx;background: #343434;margin: 8rpx auto 0;
+}
+.tab-active{color: #343434;}
+.ques-tab-content{margin-top: 20rpx;padding-bottom: 30rpx;}
+.ques-list-item{
+    margin-bottom: 20rpx;background: #fff;padding: 40rpx;
+}
+.head-left{display: flex;align-items: center;}
+.head-right{display: flex;align-items: center;}
+.m-avatar{display:block;width:48rpx;height:48rpx;border-radius:50%;
+    background:#f4f4f8;border:2rpx solid #efefef;margin-right: 12rpx;}
+.u-nickname{font-size:28rpx;max-width:240rpx;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color: #62559D;margin-right: 20rpx;}
+.gender-box{width:24rpx;height:24rpx;}
+.gender-boy{background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAb1BMVEUAAABolO5nle14o/9nlO5ole5olu5plvCEqP9ole5nle5nlO5nlu9nle5ole1ole5nle5nle5nlO5ole9qlfFunvJolO5ole5vnf9ole5ole1olO5nle9plu5smPBtmfBqmfBole1ol+9nlO9nlO3mUSARAAAAJHRSTlMA+PQJ8NZZKgWclY5+6+jQx66IejcT5KMN3IJpXkg0IyG7UU8IBo44AAABCUlEQVRIx63Vx27DMBBF0WGTVS1ZxZK7k8z/f2MWQaA2j5QA3/VZPBAYkOalZ62K8iuLOtpQzv9VaWRCuuFJugn4hGdV3kGD5QWPvbOX5RgPeqXtAPWd192hTgXdQ10JuoT6KOgz1FbQBdRa0PZDS5ygHcItS7VA16Kuge5F3QOdijoFOhJ1BHR8EfAlho+yfvBjS7Dvlf4hnNELrM2OK+aEfL3VDKs3ectmOiN/xk2wMxTooMYdBwoVj1oH7SPhseQR+1ZkxfIqM7TmeWKp01Owr9Gu/GthTa0Yp2ozG+zYn5vMvykOpW7S94Fr/vCVt3WF14gutLObte0o5+3lVO7QJekdWhPv6RfbxpAUjscA0AAAAABJRU5ErkJggg==') no-repeat;background-size:100% 100%}
+.gender-girl{background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAdVBMVEUAAAD6cXHuaWjuaWjzbmz/fHzuamjtamjuaWjuaWjuamjva2nva2nwa2nta2fuamjtamjua2nxbGnybmvuaWjtamjuamjuamjtaWnuamjvaWnybGruaWftamfuaWjuaWjuamfuaWfvamruaWjva2nwbGztaWdNxpRkAAAAJnRSTlMADtV2Gwb26M3AsGxcQZ6Fc0c2EtyrmHlyaVIl6+PHpaOUMJZ8IbNsieoAAAEKSURBVEjHpdTZboMwEIVhY7PbUCBhCWRp03be/xGrqIqUOGcGo/zXnxA6I1DvFlW2MY2togBblXSvrNaeW9NjdSTinJ47S7wgv4LHDb1mObxLgT5G7KNRB0bnUJ+ZQQiWJlC3hOugPjDaQf3BaAP1J6O/mEPiSqj3jM6hThmdwbsTFxq8Y/UCtGW1wwNKE8qTyKP8Et8O3J1v8nGSCXrvbziSlPV07AbNUP09x+ia7Vgen4/eG/EHlxQPuEzUSqP0uYtLmlWdS781+Ug/Er0a7a9nrlDG7oLPmV2cN3c7aJLSQ6vudR6F6e4fzxTWfMNxGqjT2+vXFFqt1ELhLWraoCfVb9C9Om3Qpz8I2qGEjYffIwAAAABJRU5ErkJggg==') no-repeat;background-size:100% 100%}
+.comment-box{display: flex;align-items: center;font-size: 28rpx;color: #888;margin-right: 40rpx;}
+.hot-box{display: flex;align-items: center;font-size: 28rpx;color: #888;}
+.comm-icon{width: 32rpx;height: 32rpx;margin-right: 12rpx;}
+.hot-icon{width:26rpx;height:30rpx;margin-right:14rpx;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAjVBMVEUAAADIyM3IyM3x8fHIyM3Kys7Hx83IyM3IyM3Pz9PPz9Te3t7IyM3IyM3IyM3NzdLIyM3IyM3IyMzIyM3IyM3IyM7Jyc7R0dHIyM3IyM3IyM3IyM3IyM7Jyc7Jyc7Kys/MzM/IyM3IyM3IyM3IyM3IyM3IyM3IyM7Jyc3IyM7Ly8/MzNDIyM3Jyc3Hx8zykL1oAAAALnRSTlMA++0Cdj/415sSDAfx490ZycO+poxfRxWwqqOHcE85LyXo0s26tX98ZFQrH5NZ/XGvYwAAAeFJREFUSMeNldm6gjAMhAtFQAQXXHDDfUfn/R/vpC3HD1oqzE0h/EIyTSMztIovO9ZVewCO15X+QOjekfYg9exGh4p2s070GDimhIdd4IEPXAuXKi060D0AN5n8pgM9I27HMvrCsB3mQyqQM7YGcGilF0StaX3SOm+lr0T1aC2UK+01BvLqCEza7AuI/ijby5/xfGSjNwSPubxMaZPE+oC/sOThAM6eKbq08Az4rya4nwD471Vy8iRiIAWDBnoFqoyXFdBnVspJ0taE5xSOi4o5929HupEOj9zqhnjK94iC5cvNPKbVLnco25vYWocK5uZxdPvf2ylZMWALh5bRWjZaTUsKPeqtmIq3YiN7Z1Z3jx4EvPYpkjKJu/TMMKQ2Fu4KTjOVFiquqEC9IfITkHjyc1thkHZ2E6Yp6lfMf1SfJL8a9KWnKTfappF+pqnsq5U+6O+mks72E6Uf0os86hY9iF6YY8SipW5v78dwGsR6mtwVTWWf0bd66F22jqm+GKHa3MpiijWdbi6yfjOS3kbxq3mMxplRy0SEc71XppADyVA2BCmsWZUHUCWaOkjcD/OovN+eAZl0c/VXSDmndLocJ5DyrYOZb4/QdNkzuyIvqaBO+3/4y6MsfDeYhE9jRP0BN5NLq+fXj/QAAAAASUVORK5CYII=') no-repeat;
+    background-size:100% 100%;margin-top: -4rpx;}
+.list-item-title{width: 100%;min-height: 50rpx;font-size: 36rpx;color: #343434;margin: 30rpx 0;}
+/*.list-item-options{}*/
+.options-container{
+    position: relative;width: 330rpx;height: 380rpx;
+}
+.options-item{
+    width: 310rpx;height: 360rpx;font-size: 40rpx;color: #fff;padding: 10rpx;
+    display:flex;justify-content:center;align-items:center;word-break: break-all;
+}
+.options-item-img{width: 310rpx;height: 360rpx;}
+.green-bg{background: #11B591;}
+.purple-bg{background: #62559D;}
+.list-item-botom{margin-top: 20rpx;font-size: 28rpx;color: #343434;padding: 30rpx;background: #E5E7ED;border-radius: 10rpx;}
+.botom-title{color: #62559D;margin-bottom: 10rpx;}
+.nomore-text{color:#c7c7c7;font-size:24rpx;text-align:center;padding:20rpx 0}
+.tab-content-empty{padding-top:80rpx;margin-bottom:140rpx}
+.vote-mask{position:absolute;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);color:#fff;text-align:center;font-size:80rpx;font-weight:bold;display:flex;justify-content:center;align-items:center;animation:mask-in 1s ease-in}
+@keyframes mask-in
+{
+    0%{opacity:.9}
+    30%{opacity:.5}
+    60%{opacity:.7}
+    100%{opacity:.9}
+}
+.vote-selected{color:#e74c49}
+.show-number{display:block;width:100%;text-align:center;animation:tada .5s .2s ease both}
+@keyframes tada{
+    0%{transform:scale(1)}
+    10%,20%{transform:scale(0.6) rotate(-3deg)}
+    30%,50%,70%,90%{transform:scale(1) rotate(3deg)}
+    40%,60%,80%{transform:scale(1.2) rotate(-3deg)}
+    100%{transform:scale(1) rotate(0)}
+}
+.delay-img{filter:blur(5px);width:100%;height:100%;position:absolute;left:0;top:0}
+.hexie-img{width:100%;height:100%;position:absolute;left:0;top:0}
+.voted-thumb-box{width:440rpx;height:440rpx;position:fixed;left:23%;top:160px;}
+.thumb2{width:360rpx;height:360rpx;position:absolute;left:6%;top:-2%;animation:thumb2 1s linear;opacity:0;z-index:15;animation-delay:.3s}
+.vote-circle{width:360rpx;height:360rpx;position:absolute;left:5%;top:-4%;animation:circle 1s linear;opacity:0}
+@keyframes thumb2{
+    15%{transform:scale(0.4);opacity:1}
+    30%{transform:scale(0.8);opacity:.5}
+    100%{transform:scale(1);opacity:0}
+}
+@keyframes circle{
+    15%{transform:rotate(120deg);opacity:1}
+    30%{transform:rotate(240deg);opacity:.5}
+    100%{transform:rotate(360deg);opacity:0}
+}

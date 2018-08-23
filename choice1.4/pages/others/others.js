@@ -12,7 +12,8 @@ Page({
     viewHeight: 0,
     mid: '',
     token: '',
-    nomorePublish: false
+    nomorePublish: false,
+    showContent: false
   },
   onLoad: function (options) {
     let that = this;
@@ -38,8 +39,13 @@ Page({
             that.setData({
               userInfo: datas
             });
+            wx.showLoading({
+              title: '加载中',
+              mask: true
+            })
             Api.wxRequest(otherPublishQues,'GET',{mid:mid,page:1},(res)=> {
               if (res.data.status*1===200 && res.data.data.length) {
+                wx.hideLoading();
                 let myPublish = res.data.data;
                 let totalPage = res.header['X-Pagination-Page-Count'];
                 let currPage = res.header['X-Pagination-Current-Page'];
@@ -53,6 +59,7 @@ Page({
               }
             })
           } else {
+            wx.hideLoading();
             Api.wxShowToast('获取信息失败', 'none', 2000);
           }
         })

@@ -1,21 +1,23 @@
 <!--index.wxml-->
 <!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 <import src="../../components/we-cropper/we-cropper.wxml"/>
-<view wx:if="{{hasUserInfo}}" class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
+<view hidden="{{!hasUserInfo}}" class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
     <view class="tab-item-box">
         <view class="{{txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="text" bindtouchend="changeTab"><image src="{{txtActive?'../../images/text_icon.png':'../../images/text_act_icon.png'}}" class="tab-item-img"></image></view>
         <view class="{{!txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="image" bindtouchend="changeTab"><image src="{{!txtActive?'../../images/img_icon.png':'../../images/img_act_icon.png'}}" class="tab-item-img"></image></view>
     </view>
 </view>
-<view wx:if="{{hasUserInfo}}">
+<view hidden="{{!hasUserInfo}}">
     <view hidden="{{!showTitleNum}}" class="idx-text-num">
         <text>{{hadTitleNum}}</text>/<text>60</text>
     </view>
     <view wx:if="{{!showCropper}}" class="{{pagePad?'title-box title-box-sm':'title-box'}}">
         
         <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
-        
         </view>
+    <view class="choose-btn-container">
+        <view class="chose-cate-btn" bindtap="showChooseCate">{{choseBtnText}}</view>
+    </view>
     <view hidden="{{!txtActive}}">
         <view class="pub-cont">
             <view class="pub-cont-box" data-txt="left" bindtouchend="textFocus">
@@ -66,7 +68,7 @@
 </view>
 
 <!-- 分享弹窗 -->
-<view class="share-mask" style="height: {{winHeight}}px;}}" wx:if="{{isShare}}">
+<view class="share-mask" style="height: {{winHeight}}px;" wx:if="{{isShare}}">
     <view class="{{isToastCancle?'toast-cancle':'share-toast'}}">
         <view class="share-toast-head">
             <image class="share-close" src="../../images/close.png" bindtap="cancelShare"/>
@@ -84,6 +86,23 @@
             </button>
             
         </view>
+    </view>
+</view>
+
+<!--选择分类弹窗-->
+<view class="choose-mask" wx:if="{{showCateList}}" style="height: {{winHeight}}px;" bindtap="cancleChoose">
+    <view class="choose-title">请选择一个话题分类</view>
+    <view class="choose-items-cont">
+        <view class="flex-space-cont margin-botom-20">
+            <view wx:for="{{categoryList}}" wx:key="key" wx:if="{{index<2}}" class="{{index===0?'cate-item purple-bg':'cate-item green-bg'}}" data-cid="{{item.id}}" data-cname="{{item.name}}" bindtap="chooseCate">{{item.name}}</view>
+        </view>
+        <view class="flex-space-cont margin-botom-20">
+            <view wx:for="{{categoryList}}" wx:key="key" wx:if="{{index>1 && index<4}}" class="{{index===2?'cate-item green-bg':'cate-item purple-bg'}}" data-cid="{{item.id}}" data-cname="{{item.name}}" bindtap="chooseCate">{{item.name}}</view>
+        </view>
+        <view class="flex-space-cont margin-botom-20">
+            <view wx:for="{{categoryList}}" wx:key="key" wx:if="{{index>3 && index<6}}" class="{{index===4?'cate-item purple-bg':'cate-item green-bg'}}" data-cid="{{item.id}}" data-cname="{{item.name}}" bindtap="chooseCate">{{item.name}}</view>
+        </view>
+        <view class="cate-item last-big-item" wx:for="{{categoryList}}" wx:key="key" wx:if="{{index===6}}" data-cid="{{item.id}}" data-cname="{{item.name}}" bindtap="chooseCate">{{item.name}}</view>
     </view>
 </view>
 

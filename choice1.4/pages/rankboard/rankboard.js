@@ -87,6 +87,8 @@ Page({
           }
         })
 
+      } else {
+        wx.hideLoading();
       }
     })
 
@@ -297,7 +299,7 @@ Page({
   },
   gotoOthers (e) {
     let mid = e.currentTarget.dataset.mid;
-    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    let userInfo = wx.getStorageSync('userInfo');
     if (mid*1===userInfo.id*1) {
       wx.reLaunch({url:`/pages/mine/mine`})
     } else {

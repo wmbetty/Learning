@@ -21,7 +21,11 @@ Page({
     categoryList: [],
     topicList: [],
     showDialog: false,
-    showPage: false
+    showPage: false,
+    page: 1,
+    totalPage: 1,
+    noList: false,
+    showContent: false
   },
 
   onLoad: function (options) {
@@ -44,8 +48,7 @@ Page({
     });
 
     wx.showLoading({
-      title: '加载中',
-      mask: true
+      title: '加载中'
     });
 
     backApi.getToken().then(function(response) {
@@ -60,6 +63,7 @@ Page({
             wx.hideLoading();
             that.setData({bannerList: res.data.data,showPage: true})
           } else {
+            wx.hideLoading();
             Api.wxShowToast('轮播图获取失败~', 'none', 2000)
           }
         })
@@ -71,10 +75,11 @@ Page({
             Api.wxShowToast('分类获取失败~', 'none', 2000)
           }
         })
-        Api.wxRequest(topicListApi,'GET',{},(res)=>{
+        Api.wxRequest(topicListApi,'GET',{page: that.data.page},(res)=>{
           if (res.data.status*1===200) {
+            let totalPage = res.header['X-Pagination-Page-Count'];
             let topic = res.data.data;
-            that.setData({topicList: topic})
+            that.setData({topicList: topic,totalPage: totalPage,showContent:true})
           } else {
             Api.wxShowToast('话题获取失败~', 'none', 2000)
           }
@@ -174,8 +179,25 @@ Page({
   },
 
   onReachBottom: function () {
-  
-  },
+    let that = this;
+    let page = that.data.page*1+1;
+    let totalPage = that.data.totalPage;
+    let topicListApi = backApi.topicListApi+that.data.token;
+    let topicList = that.data.topicList;
+    if (page>totalPage) {
+      that.setData({noList: true})
+    } else {
+      Api.wxRequest(topicListApi,'GET',{page: page},(res)=>{
+        if (res.data.status*1===200) {
+          topicList = topicList.concat(res.data.data);
+          that.setData({topicList: topicList,page: page})
+        } else {
+          Api.wxShowToast('话题获取失败~', 'none', 2000)
+        }
+      })
+    }
+  }
+  ,
 
   onShareAppMessage: function () {
   
@@ -218,7 +240,7 @@ Page({
   // 去分类详情
   goCateDetail (e) {
     let that = this;
-    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.language) {
       let title = e.currentTarget.dataset.title;
       let cid = e.currentTarget.dataset.id;
@@ -231,7 +253,7 @@ Page({
   },
   goRank () {
     let that = this;
-    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.language) {
       wx.navigateTo({
         url: `/pages/rankboard/rankboard`
@@ -241,10 +263,26 @@ Page({
     }
   },
   bannerGo (e) {
-    console.log(e, 'link')
-    let link = e.currentTarget.dataset.link;
-    wx.navigateTo({
-      url: link
-    })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.language) {
+      let link = e.currentTarget.dataset.link;
+      wx.navigateTo({
+        url: link
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
+  },
+  gotoTopic (e) {
+    let tid = e.currentTarget.dataset.tid;
+    let title = e.currentTarget.dataset.title;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.language) {
+      wx.navigateTo({
+        url: `/pages/topicques/topicques?id=${tid}&title=${title}`
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
   }
 })

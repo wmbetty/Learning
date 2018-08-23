@@ -14,6 +14,11 @@ let optionLtImage = '';
 
 Page({
   data: {
+    categoryList: [],
+    showCateList: false,
+    choseBtnText: '选择分类',
+    category_id: '',
+    topic_id: '',
     showTextarea: false,
     isLeftDirect: '',
     showLeft: false,
@@ -276,10 +281,20 @@ Page({
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
+          let categoryListApi = backApi.categoryListApi+token;
           that.setData({
             showDialog: true,
             hasUserInfo: false,
             token: token
+          })
+
+          Api.wxRequest(categoryListApi,'GET',{},(res)=>{
+            if (res.data.status*1===201) {
+              let category = res.data.data;
+              that.setData({categoryList: category})
+            } else {
+              Api.wxShowToast('分类获取失败~', 'none', 2000)
+            }
           })
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
@@ -295,10 +310,20 @@ Page({
           let token = response.data.data.access_token;
           that.setData({token: token});
           let myInfo = backApi.myInfo+token;
+          let categoryListApi = backApi.categoryListApi+token;
+
           Api.wxRequest(myInfo,'GET',{},(res)=>{
             if (res.data.status*1===200) {
               myPoint = res.data.data.points;
               ImgLock = res.data.data.release_img_lock*1;
+            }
+          })
+          Api.wxRequest(categoryListApi,'GET',{},(res)=>{
+            if (res.data.status*1===201) {
+              let category = res.data.data;
+              that.setData({categoryList: category})
+            } else {
+              Api.wxShowToast('分类获取失败~', 'none', 2000)
             }
           })
         } else {
@@ -535,7 +560,9 @@ Page({
         question: that.data.titleText.replace(/\s/g, "").substring(0,30),
         option1: that.data.leftText.replace(/\s/g, "").substring(0,36),
         option2: that.data.rightText.replace(/\s/g, "").substring(0,36),
-        type: 1
+        type: 1,
+        category_id: that.data.category_id,
+        topic_id: that.data.topic_id
       };
 
       that.setData({
@@ -692,7 +719,9 @@ Page({
             question: that.data.titleText.replace(/\s/g, "").substring(0,30),
             option1: optionLtImage,
             option2: optionRtImage,
-            type: 2
+            type: 2,
+            category_id: that.data.category_id,
+            topic_id: that.data.topic_id
           };
           that.setData({showClickBtn: true});
           Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
@@ -1001,5 +1030,29 @@ Page({
       }
     }
     return len;
+  },
+  showChooseCate () {
+    let that = this;
+    that.setData({
+      showCateList: true,hasUserInfo: false
+    })
+  },
+  cancleChoose () {
+    let that = this;
+    that.setData({
+      showCateList: false,hasUserInfo: true,choseBtnText: '选择分类'
+    })
+  },
+  chooseCate (e) {
+    let that = this;
+    let cid = e.currentTarget.dataset.cid;
+    let cname = e.currentTarget.dataset.cname;
+    console.log(cname, 'eee')
+    setTimeout(()=>{
+      that.setData({
+        showCateList: false,hasUserInfo: true,choseBtnText: cname,category_id: cid
+      })
+    },200)
+    console.log(that.data.choseBtnText,'text')
   }
 });

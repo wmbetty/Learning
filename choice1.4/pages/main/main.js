@@ -140,6 +140,7 @@ Page({
           }
         })
       } else {
+        wx.hideLoading();
         Api.wxRequest(watchQuesApi,'POST',{qid: qid}, (res)=> {
           // console.log('watch')
         })

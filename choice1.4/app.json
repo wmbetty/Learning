@@ -19,7 +19,8 @@
     "pages/activity/activity",
     "pages/categotries/categotries",
     "pages/rankboard/rankboard",
-    "pages/chosecate/chosecate"
+    "pages/chosecate/chosecate",
+    "pages/topicques/topicques"
   ],
   "window": {
     "backgroundTextStyle": "light",

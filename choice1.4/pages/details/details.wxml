@@ -123,7 +123,7 @@
 </view>
 
 <!-- 分享弹窗 -->
-<view class="share-mask" style="height: {{winHeight}}px;}}" wx:if="{{showMask}}">
+<view class="share-mask" style="height: {{winHeight}}px;" wx:if="{{showMask}}">
     <view class="{{isSlidedown?'share-btn-container slide-down':'share-btn-container slide-up'}}">
         <view class="wechat-container" wx:if="{{isShare}}">
             <button open-type="share" class="wechat-item-box" catchtap="shareToFriends">

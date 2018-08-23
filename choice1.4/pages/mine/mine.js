@@ -94,6 +94,9 @@ Page({
                           myCurrPage: myCurrPage,
                           myTotalCount: myCount
                         })
+                      } else {
+                        wx.hideLoading();
+                        Api.wxShowToast('数据获取失败', 'none', 2000);
                       }
                     })
                     Api.wxRequest(joinApi, 'GET', {}, (res)=> {

@@ -31,7 +31,7 @@
                 </view>
             </view>
             <view class="{{showBotomBtn2?'tab-content-item':''}}" hidden="{{type*1===1}}">
-                <view wx:if="{{topicList2.length}}" class="ques-list-item" wx:for="{{topicList1}}" wx:key="key">
+                <view wx:if="{{topicList2.length}}" class="ques-list-item" wx:for="{{topicList2}}" wx:key="key">
                     <view class="ques-user-info">
                         <image class="user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}" data-mid="{{item.mid}}" bindtap="gotoOther" />
                         <view>{{item.member.nickname || '无名氏'}}</view>

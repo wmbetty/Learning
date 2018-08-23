@@ -64,6 +64,7 @@ Page({
             that.setData({topicList1: res.data.data, showContent:true,totalPage1:totalPage1})
 
           } else {
+            wx.hideLoading();
             Api.wxShowToast('问题数据获取失败~', 'none', 2000)
           }
         })
@@ -166,7 +167,7 @@ Page({
   },
   gotoOther (e) {
     let mid = e.currentTarget.dataset.mid;
-    let userInfo = wx.getStorageSync('userInfo', userInfo);
+    let userInfo = wx.getStorageSync('userInfo');
     if (mid*1===userInfo.id*1) {
       wx.reLaunch({url:`/pages/mine/mine`})
     } else {
