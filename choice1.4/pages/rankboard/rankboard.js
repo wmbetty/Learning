@@ -20,7 +20,8 @@ Page({
     list2: [],
     list3: [],
     list4: [],
-    list5: []
+    list5: [],
+    showContent: false
   },
 
   onLoad: function (options) {
@@ -52,7 +53,7 @@ Page({
         let rankApi = backApi.rankApi+token;
         Api.wxRequest(rankApi,'GET',rankData1,(res)=>{
           if (res.data.status*1===200) {
-            that.setData({list1: res.data.data})
+            that.setData({list1: res.data.data,showContent:true})
           } else {
             Api.wxShowToast('数据获取失败~', 'none', 2000)
           }

@@ -1,7 +1,7 @@
 <!--pages/categotries/categotries.wxml-->
 <view>
     <view class="banner-cont">
-        <image src="../../images/cate_banner.png" />
+        <image src="{{cateDetails.img_url || '../../images/cate_banner.png'}}" />
     </view>
     <view class="ques-tab-contanier">
         <view class="flex-space-cont ques-tab-head">
@@ -14,33 +14,35 @@
                 <view wx:if="{{type*1===2}}" class="black-line"></view>
             </view>
         </view>
-        <view class="ques-tab-content">
-            <view class="tab-content-item" hidden="{{type*1===2}}">
+        <view class="ques-tab-content" wx:if="{{showContent}}">
+            <view class="{{showBotomBtn1?'tab-content-item':''}}" hidden="{{type*1===2}}">
                 <view wx:if="{{topicList1.length}}" class="ques-list-item" wx:for="{{topicList1}}" wx:key="key">
                     <view class="ques-user-info">
-                        <image class="user-avatar" src="" />
-                        <view>你啃你西瓜1111</view>
+                        <image class="user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}" data-mid="{{item.mid}}" bindtap="gotoOther" />
+                        <view>{{item.member.nickname || '无名氏'}}</view>
                     </view>
                     <view class="ques-cont">
-                        <view class="ques-title">如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗</view>
+                        <view class="ques-title" data-qid="{{item.id}}" bindtap="gotoDetail">{{item.question}}</view>
                     </view>
                 </view>
-                <view wx:if="{{topicList1.length===0}}">
-                    暂无数据
+                <view wx:if="{{showBotomBtn1}}" class="list-botom-btn" bindtap="gotoMain">到底啦，去看看问题广场吧</view>
+                <view wx:if="{{topicList1.length===0}}" class="tab-content-empty">
+                    <empty-wxml empty-info="暂无热门问题"></empty-wxml>
                 </view>
             </view>
-            <view class="tab-content-item" hidden="{{type*1===1}}">
+            <view class="{{showBotomBtn2?'tab-content-item':''}}" hidden="{{type*1===1}}">
                 <view wx:if="{{topicList2.length}}" class="ques-list-item" wx:for="{{topicList1}}" wx:key="key">
                     <view class="ques-user-info">
-                        <image class="user-avatar" src="" />
-                        <view>你啃你西瓜</view>
+                        <image class="user-avatar" src="{{item.member.avatar || '../../images/avatarDefault.png'}}" data-mid="{{item.mid}}" bindtap="gotoOther" />
+                        <view>{{item.member.nickname || '无名氏'}}</view>
                     </view>
                     <view class="ques-cont">
-                        <view class="ques-title">如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗如果我是DJ你会爱我吗</view>
+                        <view class="ques-title" data-qid="{{item.id}}" bindtap="gotoDetail">{{item.question}}</view>
                     </view>
                 </view>
-                <view wx:if="{{topicList2.length===0}}">
-                    暂无数据
+                <view wx:if="{{showBotomBtn2}}" class="list-botom-btn" bindtap="gotoMain">到底啦，去看看问题广场吧</view>
+                <view wx:if="{{topicList2.length===0}}" class="tab-content-empty">
+                    <empty-wxml empty-info="暂无最新问题"></empty-wxml>
                 </view>
             </view>
         </view>

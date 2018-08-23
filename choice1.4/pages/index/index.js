@@ -272,7 +272,7 @@ Page({
   onShow () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (!userInfo.id) {
+    if (!userInfo.language) {
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;

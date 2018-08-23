@@ -219,7 +219,7 @@ Page({
   goCateDetail (e) {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo', userInfo);
-    if (userInfo.id) {
+    if (userInfo.language) {
       let title = e.currentTarget.dataset.title;
       let cid = e.currentTarget.dataset.id;
       wx.navigateTo({
@@ -232,7 +232,7 @@ Page({
   goRank () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo', userInfo);
-    if (userInfo.id) {
+    if (userInfo.language) {
       wx.navigateTo({
         url: `/pages/rankboard/rankboard`
       })

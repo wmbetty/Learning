@@ -27,3 +27,9 @@ page{background: #fff;}
     background: #F5F6F8;font-size: 40rpx;color: #343434;
 }
 .ques-title{padding: 40rpx;}
+.tab-content-empty{padding-top:80rpx;margin-bottom:140rpx}
+.list-botom-btn{
+    font-size: 32rpx;color: #11B591;background: #F5F6F8;margin: 0 auto;border-radius: 10rpx;
+    width: 656rpx;height: 100rpx;display: flex;align-items: center;justify-content: center;
+}
+.tab-content-item{padding-bottom: 40rpx;}

@@ -116,9 +116,8 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    console.log(userInfo, 'infooo')
 
-    if (!userInfo.id) {
+    if (!userInfo.language) {
       backApi.getToken().then(function(response) {
         let token = response.data.data.access_token;
         that.setData({token: token,showDialog: true});
@@ -191,7 +190,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.id) {
+    if (!userInfo.language) {
       that.setData({
         showDialog: true
       })
@@ -209,7 +208,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.id) {
+    if (!userInfo.language) {
       that.setData({
         showDialog: true
       })
@@ -227,7 +226,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.id) {
+    if (!userInfo.language) {
       that.setData({
         showDialog: true
       })

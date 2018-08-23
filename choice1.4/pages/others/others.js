@@ -3,10 +3,6 @@ const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     userInfo: {},
     myPublish: [],
@@ -18,22 +14,19 @@ Page({
     token: '',
     nomorePublish: false
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     let that = this;
-
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         let localUserInfo = wx.getStorageSync('userInfo');
-        let userInfoApi = backApi.userInfo+token;
-        Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
-          let localuser_id = res.data.data.id;
-          that.setData({localuser_id:localuser_id});
-        });
+        let localuser_id = localUserInfo.id;
+        that.setData({localuser_id:localuser_id});
+        // let userInfoApi = backApi.userInfo+token;
+        // Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
+        //   let localuser_id = res.data.data.id;
+        //   that.setData({localuser_id:localuser_id});
+        // });
 
         let infoApi = backApi.othersInfo+token;
         let otherPublishQues = backApi.otherPublishQues+token;
@@ -72,7 +65,6 @@ Page({
   gotoDetail (e) {
     let that = this;
     let id = e.currentTarget.dataset.id;
-    // let mid = that.data.mid;
     let localuser_id = that.data.localuser_id;
     let myid= e.currentTarget.dataset.mid;
     let other = 'other';

@@ -21,7 +21,7 @@
         <!--</view>-->
     </view>
     <view class="tab-container">
-        <view class="{{showSrollView?'tab-head tab-head-fixed':'tab-head'}}" wx:if="{{userInfo.id}}">
+        <view class="{{showSrollView?'tab-head tab-head-fixed':'tab-head'}}" wx:if="{{userInfo.language}}">
             <view class="{{isMine?'tab-head-item my-publish-item blue-font':'tab-head-item my-publish-item'}}" data-type="mine"  bindtouchstart="voteOthers">
                 <view>发起<text hidden="{{!myTotalCount}}">({{myTotalCount}})</text></view>
                 <view class="{{isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{!isMine}}"></view>
@@ -31,7 +31,7 @@
                 <view class="{{!isMine?'bottom-line blue-line':'bottom-line'}}" hidden="{{isMine}}"></view>
             </view>
         </view>
-        <view class="tab-content" wx:if="{{userInfo.id}}">
+        <view class="tab-content" wx:if="{{userInfo.language}}">
             <view hidden="{{!myPublish.length}}">
                 <view hidden="{{!isMine}}">
                     <view class="tab-list-item" bindtap="gotoDetail" hover-class="list-hover" wx:for="{{myPublish}}" data-my="1" data-id="{{item.id}}" wx:key="index">

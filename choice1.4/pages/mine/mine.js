@@ -175,7 +175,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (userInfo.id) {
+    if (userInfo.language) {
       that.setData({
         userInfo: userInfo
       });

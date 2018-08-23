@@ -53,87 +53,112 @@ Page({
     that.setData({
       showDialog: false
     });
-    if (openType==='getUserInfo') {
-      wx.getUserInfo({
-        success: (res)=>{
-          let userInfo = res.userInfo;
-          if (userInfo.nickName) {
-            that.setData({myAvatar: userInfo.avatarUrl});
-            wx.setStorageSync('userInfo', userInfo);
-            Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-              console.log(res.data.status, 'sssssssss')
-            });
-            let detailUrl = backApi.quesDetail+qid;
-            let myChooseTagApi = backApi.myChooseTagApi+token;
-            let commentApi = backApi.commentApi+token;
-            let page = that.data.page;
 
-            Api.wxRequest(detailUrl,'GET',{},(res)=>{
-
-              if (res.data.data.id) {
-                if (res.data.data.status*1===4) {
-                  Api.wxShowToast('该话题已被删', 'none', 3000);
-                  setTimeout(()=>{
-                    wx.reLaunch({
-                      url: `/pages/gcindex/gcindex`
-                    })
-                  },1500)
-                } else {
-                  that.setData({
-                    details: res.data.data,
-                    quesId: res.data.data.id,
-                    hots: res.data.data.hots
+    wx.login({
+      success: function (res) {
+        let code = res.code
+        if (openType==='getUserInfo') {
+          wx.getUserInfo({
+            success: (res)=>{
+              let userData = {
+                encryptedData: res.encryptedData,
+                iv: res.iv,
+                code: code
+              }
+              backApi.getToken().then(function(response){
+                if (response.data.status*1===200) {
+                  let token = response.data.data.access_token;
+                  let userInfoApi = backApi.userInfo+token;
+                  that.setData({token: token});
+                  Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
+                    if (res.data.status*1===200) {
+                      wx.setStorageSync('userInfo', res.data.data);
+                      that.setData({myAvatar: res.data.data.avatar});
+                      baseLock = res.data.data.user_base_lock;
+                      if (baseLock*1===2) {
+                        that.setData({baseRedDot: 1});
+                      }
+                    } else {
+                      Api.wxShowToast('更新用户信息失败', 'none', 2000);
+                    }
+                  })
+                  let detailUrl = backApi.quesDetail+qid;
+                  let myChooseTagApi = backApi.myChooseTagApi+token;
+                  let commentApi = backApi.commentApi+token;
+                  let page = that.data.page;
+                  Api.wxRequest(detailUrl,'GET',{},(res)=>{
+                    if (res.data.data.id) {
+                      if (res.data.data.status*1===4) {
+                        Api.wxShowToast('该话题已被删', 'none', 3000);
+                        setTimeout(()=>{
+                          wx.reLaunch({
+                            url: `/pages/gcindex/gcindex`
+                          })
+                        },1500)
+                      } else {
+                        that.setData({
+                          details: res.data.data,
+                          quesId: res.data.data.id,
+                          hots: res.data.data.hots
+                        });
+                        if (res.data.data.member) {
+                          that.setData({
+                            userInfo: res.data.data.member
+                          })
+                        }
+                      }
+                    } else {
+                      Api.wxShowToast('网络错误，请重试', 'none', 2000);
+                    }
                   });
-                  if (res.data.data.member) {
-                    that.setData({
-                      userInfo: res.data.data.member
-                    })
-                  }
-                }
-              } else {
-                Api.wxShowToast('网络错误，请重试', 'none', 2000);
-              }
-            });
-            Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
+                  Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
 
-              if (res.data === '') {
-                that.setData({
-                  ismyVoted: false
-                })
-              }
-              if (res.data.status*1===200) {
-                that.setData({
-                  ismyVoted: true
-                });
-                if (res.data.data.choose*1===1) {
-                  that.setData({
-                    isLeft: true
-                  })
+                    if (res.data === '') {
+                      that.setData({
+                        ismyVoted: false
+                      })
+                    }
+                    if (res.data.status*1===200) {
+                      that.setData({
+                        ismyVoted: true
+                      })
+                      if (res.data.data.choose*1===1) {
+                        that.setData({
+                          isLeft: true
+                        })
+                      } else {
+                        that.setData({
+                          isRight: true
+                        })
+                      }
+                    }
+                  });
+                  // 获取评论列表
+                  getCommentList(commentApi,qid,page,that);
+
                 } else {
-                  that.setData({
-                    isRight: true
-                  })
+                  Api.wxShowToast('登录失败', 'none', 2000);
                 }
-              }
-            });
-            // 获取评论列表
-            getCommentList(commentApi,qid,page,that);
-          }
-        },
-        fail: (res)=>{
-          wx.openSetting({
-            success(settingdata) {
-              if (settingdata.authSetting["scope.userInfo"]) {
-                Api.wxShowToast("获取权限成功",'none',2000)
-              } else {
-                Api.wxShowToast("获取权限失败",'none',2000)
-              }
+              }).catch(function (err) {
+                console.log(err,'token err')
+              })
+            },
+            fail: (res)=>{
+              that.setData({
+                showDialog: true,
+                openType: 'openSetting',
+                authInfo: '授权失败，需要微信权限哦'
+              })
             }
           })
+        } else {
         }
-      })
-    } else {
-    }
+      },
+      fail: function (res) {
+        console.log(res, 'wx.login')
+      }
+    })
+
   },
   onLoad: function (options) {
     let that = this;
@@ -172,7 +197,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.language) {
-      that.setData({myAvatar: userInfo.avatarUrl});
+      that.setData({myAvatar: userInfo.avatar});
 
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
@@ -233,11 +258,6 @@ Page({
           });
           // 获取评论列表
           getCommentList(commentApi,qid,page,that);
-
-          let userInfoApi = backApi.userInfo+token;
-          Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-            that.setData({uInfo:res.data.data})
-          })
 
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);

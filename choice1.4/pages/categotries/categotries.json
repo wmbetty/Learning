@@ -1,2 +1,5 @@
 {
+  "usingComponents": {
+    "empty-wxml": "../../components/empty/empty"
+  }
 }

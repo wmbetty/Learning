@@ -16,7 +16,7 @@
             <view class="{{isAllRank?'tab-black-text':''}}">总榜</view>
         </view>
     </view>
-    <view class="tab-cont">
+    <view class="tab-cont" wx:if="{{showContent}}">
         <!--周排行榜-->
         <view hidden="{{!isWeek}}">
             <view hidden="{{type*1!==1}}" class="rank-list-group">
