@@ -92,5 +92,7 @@ button[class="baocun"]::after {border:0}
 .purple-bg{background: #62559D}
 .last-big-item{width: 690rpx;height: 180rpx;background: #ED6967}
 .margin-botom-20{margin-bottom: 20rpx;}
-.chose-cate-btn{color: #11B591;border: 1px solid #11B591;width: 200rpx;height: 52rpx;text-align: center;line-height: 52rpx;margin: 0 auto;border-radius: 30rpx;font-size: 24rpx;}
+.chose-cate-btn{color: #11B591;border: 1px solid #11B591;width: 200rpx;height: 52rpx;text-align: center;line-height: 52rpx;margin: 0 auto;border-radius: 30rpx;font-size: 24rpx;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .choose-btn-container{background: #fff;padding-bottom: 20rpx;border-bottom:1px solid #f1f1f1;}
+.topic-btn{color: #C7C7CC;border: 1px solid #C7C7CC;width: 220rpx;}
+.btn-text{width: 90%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}

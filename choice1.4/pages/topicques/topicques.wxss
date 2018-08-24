@@ -1,7 +1,7 @@
 /* pages/topicques/topicques.wxss */
-page{background: #F4F4F4;position: relative;}
+page{background: #F4F4F4;position: relative;padding-bottom: 100rpx;}
 .banner-cont{
-    width: 750rpx;height: 320rpx;margin: 0 auto;
+    width: 750rpx;height: 320rpx;margin: 0 auto;background: #f1f1f1;
 }
 .banner-cont image{display: block;width: 100%;height: 100%;background: #f1f1f1;}
 .ques-tab-head{
@@ -78,3 +78,14 @@ page{background: #F4F4F4;position: relative;}
     30%{transform:rotate(240deg);opacity:.5}
     100%{transform:rotate(360deg);opacity:0}
 }
+.fixed-botom-container{
+    width: 100%;height: 100rpx;background: #fff;border-top: 1px solid #f1f1f1;
+    position: fixed;left: 0;bottom: 0;display: flex;align-items: center;justify-content: space-between;
+}
+.topic-botom-btn{width: 330rpx;height: 72rpx;}
+.left-btn{margin-left: 30rpx;}
+.right-btn{margin-right: 30rpx;}
+button::after{border: none;}
+.share-btn-botom{background: #62559D;border-radius: 0;padding: 0;}
+.topic-botom-btn image{display: block;width: 330rpx;height: 72rpx;}
+.tab-head-fixed{position: fixed;width: 100%;left: 0;top: 0;background: #fff;z-index: 999}

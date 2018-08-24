@@ -16,7 +16,8 @@
         <textarea class="{{showTextarea?'text-val textarea-has-text':'text-val'}}" data-direct="title" bindfocus="textFocus" bindblur="textBlur" bindinput="titlePut" value="{{titleText}}" bindtouchstart="textTap" />
         </view>
     <view class="choose-btn-container">
-        <view class="chose-cate-btn" bindtap="showChooseCate">{{choseBtnText}}</view>
+        <view hidden="{{showTopicBtn}}" class="chose-cate-btn" bindtap="showChooseCate">{{choseBtnText}}</view>
+        <view hidden="{{!showTopicBtn}}" class="chose-cate-btn topic-btn"># <text class="btn-text">{{topicBtnText}}</text> #</view>
     </view>
     <view hidden="{{!txtActive}}">
         <view class="pub-cont">

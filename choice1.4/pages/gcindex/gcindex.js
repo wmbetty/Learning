@@ -33,6 +33,16 @@ Page({
     tabBar.tabbar("tabBar", 0, that);
 
     let questId = wx.getStorageSync('quesid');
+    // let topicId = wx.getStorageSync('topicId');
+    let topicId = options.topicId;
+    let cid = options.cid;
+    let cname = options.cname;
+    let isMain = options.isMain;
+    let isRank = options.isRank;
+    let isIntro = options.isIntro;
+    let actId = options.actId;
+    let isUser = options.isUser;
+
     if (questId) {
       wx.navigateTo({
         url: `/pages/details/details?id=${questId}`
@@ -40,6 +50,45 @@ Page({
       setTimeout(()=> {
         wx.setStorageSync('quesid', '');
       }, 300)
+    }
+
+    if (topicId) {
+      wx.navigateTo({
+        url: `/pages/topicques/topicques?id=${topicId}`
+      })
+    }
+
+    if (cid) {
+      wx.navigateTo({
+        url: `/pages/categotries/categotries?title=${cname}&id=${cid}`
+      })
+    }
+
+    if (isMain) {
+      wx.navigateTo({
+        url: `/pages/main/main`
+      })
+    }
+
+    if (isRank) {
+      wx.navigateTo({
+        url: `/pages/rankboard/rankboard`
+      })
+    }
+    if (isIntro) {
+      wx.navigateTo({
+        url: '/pages/gcintro/gcintro'
+      })
+    }
+    if (actId) {
+      wx.navigateTo({
+        url: `/pages/activity/activity?id=${actId}`
+      })
+    }
+    if (isUser) {
+      wx.navigateTo({
+        url: '/pages/usercenter/usercenter'
+      })
     }
 
     wx.setNavigationBarColor({
@@ -92,7 +141,6 @@ Page({
   },
 
   onReady: function () {
-  
   },
 
   onShow: function () {
@@ -200,6 +248,17 @@ Page({
   ,
 
   onShareAppMessage: function () {
+    return {
+      title: '选象 让选择简单点',
+      path: `/pages/gcindex/gcindex`,
+      success() {
+        Api.wxShowToast('分享成功~', 'none', 2000);
+      },
+      fail() {},
+      complete() {
+
+      }
+    }
   
   },
   cancelDialog () {
@@ -240,49 +299,61 @@ Page({
   // 去分类详情
   goCateDetail (e) {
     let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      let title = e.currentTarget.dataset.title;
-      let cid = e.currentTarget.dataset.id;
-      wx.navigateTo({
-        url: `/pages/categotries/categotries?title=${title}&id=${cid}`
-      })
-    } else {
-      that.setData({showDialog: true});
-    }
+    setTimeout(()=>{
+      let userInfo = wx.getStorageSync('userInfo');
+      if (userInfo.language) {
+        let title = e.currentTarget.dataset.title;
+        let cid = e.currentTarget.dataset.id;
+        wx.navigateTo({
+          url: `/pages/categotries/categotries?title=${title}&id=${cid}`
+        })
+      } else {
+        that.setData({showDialog: true});
+      }
+    },200)
   },
   goRank () {
     let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      wx.navigateTo({
-        url: `/pages/rankboard/rankboard`
-      })
-    } else {
-      that.setData({showDialog: true});
-    }
+    setTimeout(()=>{
+      let userInfo = wx.getStorageSync('userInfo');
+      if (userInfo.language) {
+        wx.navigateTo({
+          url: `/pages/rankboard/rankboard`
+        })
+      } else {
+        that.setData({showDialog: true});
+      }
+    },200)
   },
   bannerGo (e) {
-    let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      let link = e.currentTarget.dataset.link;
-      wx.navigateTo({
-        url: link
-      })
-    } else {
-      that.setData({showDialog: true});
-    }
+    let that = this;
+    setTimeout(()=>{
+      let userInfo = wx.getStorageSync('userInfo');
+      if (userInfo.language) {
+        let link = e.currentTarget.dataset.link;
+        if (link) {
+          wx.navigateTo({
+            url: link
+          })
+        }
+      } else {
+        that.setData({showDialog: true});
+      }
+    },200)
   },
   gotoTopic (e) {
+    let that = this;
     let tid = e.currentTarget.dataset.tid;
     let title = e.currentTarget.dataset.title;
-    let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      wx.navigateTo({
-        url: `/pages/topicques/topicques?id=${tid}&title=${title}`
-      })
-    } else {
-      that.setData({showDialog: true});
-    }
+    setTimeout(()=>{
+      let userInfo = wx.getStorageSync('userInfo');
+      if (userInfo.language) {
+        wx.navigateTo({
+          url: `/pages/topicques/topicques?id=${tid}&title=${title}`
+        })
+      } else {
+        that.setData({showDialog: true});
+      }
+    },200)
   }
 })

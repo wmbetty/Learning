@@ -364,11 +364,12 @@ Page({
     return {
       title: that.data.details.question,
       path: `/pages/gcindex/gcindex?qid=${questId}`,
-      imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
+      imageUrl: shareFriImg?shareFriImg:'',
       success() {
         Api.wxRequest(shareFriends,'POST',{},(res)=>{
           // console.log(res, 'friends')
         })
+        Api.wxShowToast('分享成功~', 'none', 2000);
       },
       fail() {},
       complete() {}

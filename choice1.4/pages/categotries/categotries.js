@@ -17,7 +17,8 @@ Page({
     totalPage2: 1,
     showContent: false,
     showBotomBtn1: false,
-    showBotomBtn2: false
+    showBotomBtn2: false,
+    fixedTabHead: false
   },
   onLoad: function (options) {
     let that = this;
@@ -145,7 +146,18 @@ Page({
   },
 
   onShareAppMessage: function () {
-  
+    let that = this;
+    return {
+      title: that.data.cateDetails.name,
+      path: `/pages/gcindex/gcindex?cname=${that.data.cateDetails.name}&cid=${that.data.cateDetails.id}`,
+      success() {
+        Api.wxShowToast('分享成功~', 'none', 2000);
+      },
+      fail() {},
+      complete() {
+
+      }
+    }
   },
   changeTab (e) {
     let that = this;
@@ -174,6 +186,15 @@ Page({
       wx.navigateTo({
         url: `/pages/others/others?mid=${mid}`
       })
+    }
+  },
+  onPageScroll (e) {
+    let that = this;
+    if (e.scrollTop*1>=200) {
+      that.setData({fixedTabHead:true});
+    }
+    if (e.scrollTop*1<=116) {
+      that.setData({fixedTabHead:false});
     }
   }
 })

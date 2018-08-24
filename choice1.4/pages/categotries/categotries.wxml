@@ -1,10 +1,10 @@
 <!--pages/categotries/categotries.wxml-->
 <view>
     <view class="banner-cont">
-        <image src="{{cateDetails.img_url || '../../images/cate_banner.png'}}" />
+        <image src="{{cateDetails.img_url}}" />
     </view>
     <view class="ques-tab-contanier">
-        <view class="flex-space-cont ques-tab-head">
+        <view class="{{fixedTabHead?'flex-space-cont ques-tab-head tab-head-fixed':'flex-space-cont ques-tab-head'}}">
             <view class="tab-head-item" data-type="1" bindtap="changeTab">
                 <view class="{{type*1===1?'tab-active':''}}">热门问题</view>
                 <view wx:if="{{type*1===1}}" class="black-line"></view>

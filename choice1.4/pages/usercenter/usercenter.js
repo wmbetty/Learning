@@ -102,12 +102,9 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        imageUrl:'/images/posterBg2.png',
+        path: `/pages/gcindex/gcindex?isUser=1`,
         success() {
-          Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            console.log(res, 'friends')
-          })
+          Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
         complete() {

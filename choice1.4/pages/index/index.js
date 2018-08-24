@@ -17,6 +17,8 @@ Page({
     categoryList: [],
     showCateList: false,
     choseBtnText: '选择分类',
+    showTopicBtn: false,
+    topicBtnText: '',
     category_id: '',
     topic_id: '',
     showTextarea: false,
@@ -234,7 +236,22 @@ Page({
     }
   },
   onLoad: function(option) {
+
     let that = this;
+    let topicId = option.topicId;
+    let topicTitle = option.topicTitle;
+    let categoryId = option.categoryId;
+
+    if (topicId) {that.setData({topic_id: topicId})}
+    if (categoryId) {that.setData({category_id: categoryId})}
+    if (topicTitle) {
+      that.setData({
+        category_id: categoryId,
+        showTopicBtn: true,
+        topicBtnText: topicTitle
+      })
+    }
+
     tabBar.tabbar("tabBar", 2, that);//0表示第一个tabbar
 
     let model = isIphone.model;
@@ -868,11 +885,11 @@ Page({
       return {
         title: '选象 让选择简单点',
         path: `/pages/gcindex/gcindex`,
-        imageUrl:'/images/posterBg2.png',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
             // console.log(res, 'friends')
           })
+          Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
         complete() {
@@ -1040,7 +1057,7 @@ Page({
   cancleChoose () {
     let that = this;
     that.setData({
-      showCateList: false,hasUserInfo: true,choseBtnText: '选择分类'
+      showCateList: false,hasUserInfo: true
     })
   },
   chooseCate (e) {

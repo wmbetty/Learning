@@ -1,10 +1,10 @@
 <!--pages/topicques/topicques.wxml-->
 <view>
     <view class="banner-cont">
-        <image src="{{cateDetails.img_url || '../../images/cate_banner.png'}}" />
+        <image src="{{topicDetail.img_url}}" />
     </view>
     <view class="ques-tab-contanier">
-        <view class="flex-space-cont ques-tab-head">
+        <view class="{{fixedTabHead?'flex-space-cont ques-tab-head tab-head-fixed':'flex-space-cont ques-tab-head'}}">
             <view class="tab-head-item" data-type="1" bindtap="changeTab">
                 <view class="{{type*1===1?'tab-active':''}}">热门问题</view>
                 <view wx:if="{{type*1===1}}" class="black-line"></view>
@@ -17,7 +17,7 @@
 
         <view class="ques-tab-content" wx:if="{{showContent}}">
             <view class="ques-list-group" hidden="{{type*1===2}}">
-                <view class="ques-list-item" wx:for="{{list1}}">
+                <view class="ques-list-item" wx:for="{{list1}}" wx:key="key">
                     <view class="flex-space-cont list-item-head">
                         <view class="head-left">
                             <image src="{{item.member.avatar || '../../images/avatarDefault.png'}}" data-mid="{{item.mid}}" bindtap="gotoOther" class="m-avatar"></image>
@@ -65,7 +65,7 @@
                 </view>
             </view>
             <view class="ques-list-group" hidden="{{type*1===1}}">
-                <view class="ques-list-item" wx:for="{{list2}}">
+                <view class="ques-list-item" wx:for="{{list2}}" wx:key="key">
                     <view class="flex-space-cont list-item-head">
                         <view class="head-left">
                             <image src="{{item.member.avatar || '../../images/avatarDefault.png'}}" data-mid="{{item.mid}}" data-mid="{{item.mid}}" bindtap="gotoOther" class="m-avatar"></image>
@@ -120,4 +120,11 @@
 <view wx:if="{{showThumb}}" class="voted-thumb-box">
     <image src="../../images/thumb2.png" class="thumb2" />
     <image src="../../images/vote_circle.png" class="vote-circle" />
+</view>
+
+<view class="fixed-botom-container">
+    <button open-type="share" class="topic-botom-btn share-btn-botom left-btn">
+        <image src="../../images/topic_sharebtn.png"></image>
+    </button>
+    <image src="../../images/topic_askbtn.png" class="topic-botom-btn right-btn" data-tid="{{topicId}}" data-cid="{{topicDetail.category_id}}" data-title="{{pageTitle}}" bindtap="gotoSendTopic"></image>
 </view>

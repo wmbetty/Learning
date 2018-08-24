@@ -21,7 +21,8 @@ Page({
     list3: [],
     list4: [],
     list5: [],
-    showContent: false
+    showContent: false,
+    fixedTabHead: false
   },
 
   onLoad: function (options) {
@@ -213,6 +214,17 @@ Page({
   },
 
   onShareAppMessage: function () {
+    return {
+      title: '排行榜',
+      path: `/pages/gcindex/gcindex?isRank=1`,
+      success() {
+        Api.wxShowToast('分享成功~', 'none', 2000);
+      },
+      fail() {},
+      complete() {
+
+      }
+    }
   
   },
   changeTab (e) {
@@ -306,6 +318,15 @@ Page({
       wx.navigateTo({
         url: `/pages/others/others?mid=${mid}`
       })
+    }
+  },
+  onPageScroll (e) {
+    let that = this;
+    if (e.scrollTop*1>=200) {
+      that.setData({fixedTabHead:true});
+    }
+    if (e.scrollTop*1<=116) {
+      that.setData({fixedTabHead:false});
     }
   }
 })

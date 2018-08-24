@@ -341,13 +341,10 @@ Page({
 
     if (res.from === 'menu') {
       return {
-        title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        imageUrl: '/images/posterBg2.png',
+        title: '广场',
+        path: `/pages/gcindex/gcindex?isMain=1`,
         success() {
-          Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            // console.log(res, 'friends')
-          })
+          Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
         complete() {
@@ -360,6 +357,7 @@ Page({
         path: `/pages/gcindex/gcindex?qid=${questId}`,
         imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
         success() {
+          Api.wxShowToast('分享成功~', 'none', 2000);
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
             // console.log(res, 'friends')
           })

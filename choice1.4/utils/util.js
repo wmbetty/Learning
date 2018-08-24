@@ -60,6 +60,7 @@ const cateQuesApi =  `${http}v1/category/question?access-token=`
 const topicDetail = `${http}v1/topic/`
 const topicQues = `${http}v1/topic/question?access-token=`
 const rankApi = `${http}v1/ranking?access-token=`
+const activityApi = `${http}v1/activity/`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -125,5 +126,6 @@ module.exports = {
   cateQuesApi: cateQuesApi,
   topicDetail: topicDetail,
   topicQues: topicQues,
-  rankApi: rankApi
+  rankApi: rankApi,
+  activityApi: activityApi
 }

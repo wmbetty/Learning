@@ -4,6 +4,7 @@ const Api = require('../../wxapi/wxApi');
 
 Page({
   data: {
+    pageTitle: '',
     type:1,
     topicId: '',
     page1: 1,
@@ -18,14 +19,15 @@ Page({
     showBotomText2: false,
     noList1: false,
     noList2: false,
-    showThumb: false
+    showThumb: false,
+    fixedTabHead: false
   },
   onLoad: function (options) {
     let that = this;
     let title = options.title;
     let topicId = options.id*1;
     let topicDetailsApi = backApi.topicDetail+topicId;
-    that.setData({topicId: topicId});
+    that.setData({topicId: topicId,pageTitle:title});
     wx.setNavigationBarTitle({
       title: title
     });
@@ -140,7 +142,19 @@ Page({
   
   },
   onShareAppMessage: function () {
-  
+    let that = this;
+    return {
+      title: that.data.pageTitle,
+      path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}`,
+      success() {
+        // wx.setStorageSync('topicId', that.data.topicId);
+        Api.wxShowToast('分享成功', 'none', 2000);
+      },
+      fail() {
+        Api.wxShowToast('分享失败', 'none', 2000);
+      },
+      complete() {}
+    }
   },
   changeTab (e) {
     let that = this;
@@ -162,12 +176,32 @@ Page({
     let idx = e.currentTarget.dataset.index;
     let item = e.currentTarget.dataset.item;
     let qid = item.id;
+    let isVote = item.is_vote;
+
+    if (isVote*1===1 && type*1===1) {
+      for (let i=0;i<list1.length;i++) {
+        list1[i].isVoted = true;
+        that.setData({
+          list1: list1
+        })
+      }
+      Api.wxShowToast('投过票了', 'none', 300);
+    }
+    if (isVote*1===1 && type*1===2) {
+      for (let i=0;i<list2.length;i++) {
+        list2[i].isVoted = true;
+        that.setData({
+          list2: list2
+        })
+      }
+      Api.wxShowToast('投过票了', 'none', 300);
+    }
 
     let answerApi = backApi.u_answer;
     answerData.qid = qid;
     let showThumb = that.data.showThumb;
 
-    if (direct === 'left' && type*1===1) {
+    if (direct === 'left' && type*1===1 && isVote*1===0) {
       answerData.choose = 1;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
@@ -199,7 +233,7 @@ Page({
       })
 
     }
-    if (direct === 'right' && type*1===1) {
+    if (direct === 'right' && type*1===1 && isVote*1===0) {
       answerData.choose = 2;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
@@ -230,7 +264,7 @@ Page({
         }
       })
     }
-    if (direct === 'left' && type*1===2) {
+    if (direct === 'left' && type*1===2 && isVote*1===0) {
       answerData.choose = 1;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
@@ -262,7 +296,7 @@ Page({
       })
 
     }
-    if (direct === 'right' && type*1===2) {
+    if (direct === 'right' && type*1===2 && isVote*1===0) {
       answerData.choose = 2;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
@@ -315,4 +349,21 @@ Page({
       Api.wxShowToast('该问题为空~', 'none', 2000)
     }
   },
+  gotoSendTopic (e) {
+    let tid = e.currentTarget.dataset.tid;
+    let title = e.currentTarget.dataset.title;
+    let cid = e.currentTarget.dataset.cid;
+    wx.navigateTo({
+      url: `/pages/index/index?topicId=${tid}&topicTitle=${title}&categoryId=${cid}`
+    })
+  },
+  onPageScroll (e) {
+    let that = this;
+    if (e.scrollTop*1>=200) {
+      that.setData({fixedTabHead:true});
+    }
+    if (e.scrollTop*1<=116) {
+      that.setData({fixedTabHead:false});
+    }
+  }
 })
