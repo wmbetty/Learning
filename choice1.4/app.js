@@ -2,7 +2,7 @@
 const Api = require('wxapi/wxApi');
 const backApi = require('utils/util');
 // var aldstat = require("utils/ald-stat.js");
-let isUser = 1;
+// let isUser = 1;
 
 App({
   globalData: {
@@ -12,10 +12,10 @@ App({
     userbase: 1
   },
   onLaunch: function () {
-    if (isUser*1!==2) {
-      wx.setStorageSync('userInfo', '');
-      isUser = 2;
-    }
+    // if (isUser*1!==2) {
+    //   wx.setStorageSync('userInfo', '');
+    //   isUser = 2;
+    // }
   },
   onShow (options) {
     // wx.login({
