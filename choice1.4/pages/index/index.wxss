@@ -54,7 +54,7 @@ button[class="baocun"]::after {border:0}
 .poster-arrow {width:20rpx;height:12rpx;margin:4rpx auto 20rpx;display:block}
 .poster-code {width:92rpx;height:92rpx;border-radius:50%;margin:0 auto;display:block}
 .poster-close-icon {position:absolute;width:60rpx;height:60rpx;z-index:100;top:140rpx;right:100rpx}
-.text-val {width:84%;height:80%;text-align:center;font-size:40rpx;color:#888;padding:0 7% 0;margin:10% auto 0}
+.text-val {width:84%;height:80%;text-align:center;font-size:36rpx;color:#888;padding:0 7% 0;margin:10% auto 0}
 .text-holder {color:#888;text-align:center;font-size:40rpx}
 .textarea-has-text {color:#343434}
 .index-tab-head {padding-top:40rpx;padding-bottom:16rpx;background:#fff}

@@ -1,8 +1,7 @@
 //app.js
 const Api = require('wxapi/wxApi');
 const backApi = require('utils/util');
-// var aldstat = require("utils/ald-stat.js");
-// let isUser = 1;
+var aldstat = require("utils/ald-stat.js");
 
 App({
   globalData: {
@@ -12,10 +11,6 @@ App({
     userbase: 1
   },
   onLaunch: function () {
-    // if (isUser*1!==2) {
-    //   wx.setStorageSync('userInfo', '');
-    //   isUser = 2;
-    // }
   },
   onShow (options) {
     // wx.login({
@@ -65,19 +60,19 @@ App({
         wx.setStorageSync('isIphone', true)
       }
     })
-    wx.getSetting({
-      success: (res) => {
-        // console.log(res, 'minemine')
-        let authSetting = res.authSetting;
-        let userInfoSet = authSetting["scope.userInfo"] || '';
-
-        if (userInfoSet) {
-
-        } else {
-          wx.setStorageSync('userInfo', '');
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success: (res) => {
+    //     // console.log(res, 'minemine')
+    //     let authSetting = res.authSetting;
+    //     let userInfoSet = authSetting["scope.userInfo"] || '';
+    //
+    //     if (userInfoSet) {
+    //
+    //     } else {
+    //       wx.setStorageSync('userInfo', '');
+    //     }
+    //   }
+    // })
   },
   onHide () {
   }

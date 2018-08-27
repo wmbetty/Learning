@@ -36,8 +36,6 @@ Page({
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
     let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',

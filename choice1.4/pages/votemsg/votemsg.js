@@ -22,11 +22,12 @@ Page({
         that.setData({token: token});
 
         let localUserInfo = wx.getStorageSync('userInfo');
-        let userInfoApi = backApi.userInfo+token;
-        Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
-          let localuser_id = res.data.data.id;
-          that.setData({localuser_id:localuser_id});
-        });
+        that.setData({localuser_id:localUserInfo.id});
+        // let userInfoApi = backApi.userInfo+token;
+        // Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
+        //   let localuser_id = res.data.data.id;
+        //   that.setData({localuser_id:localuser_id});
+        // });
         let voteMsgApi = backApi.voteMsg+token;
         wx.showLoading({
           title: '加载中',

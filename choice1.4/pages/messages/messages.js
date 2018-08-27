@@ -50,6 +50,7 @@ Page({
                 if (res.data.data.user_base_lock*1===2) {
                   that.setData({showRedDot: true})
                 }
+                Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
                 backApi.getToken().then(function(response) {
                   let token = response.data.data.access_token;
                   that.setData({token: token});
@@ -117,7 +118,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       backApi.getToken().then(function(response) {
         let token = response.data.data.access_token;
         that.setData({token: token,showDialog: true});
@@ -190,7 +191,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       that.setData({
         showDialog: true
       })
@@ -208,7 +209,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       that.setData({
         showDialog: true
       })

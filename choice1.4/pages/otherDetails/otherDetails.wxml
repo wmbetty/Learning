@@ -102,7 +102,7 @@
         </view>
         <view class="gohome-view" bindtap="goHome">
             <image class="comm-gohome-icon" src="../../images/gohome1.png"></image>
-            <view>主页</view>
+            <view>首页</view>
         </view>
     </view>
     <view class="comment-fixed-area" hidden="{{!showInput}}">

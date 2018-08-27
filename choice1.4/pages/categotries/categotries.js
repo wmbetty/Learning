@@ -18,7 +18,8 @@ Page({
     showContent: false,
     showBotomBtn1: false,
     showBotomBtn2: false,
-    fixedTabHead: false
+    fixedTabHead: false,
+    showDialog: false
   },
   onLoad: function (options) {
     let that = this;
@@ -92,14 +93,6 @@ Page({
   
   },
 
-  onHide: function () {
-  
-  },
-
-  onUnload: function () {
-  
-  },
-
   onPullDownRefresh: function () {
   
   },
@@ -162,30 +155,52 @@ Page({
   changeTab (e) {
     let that = this;
     let type = e.currentTarget.dataset.type;
-    that.setData({type: type})
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      that.setData({type: type})
+    } else {
+      that.setData({showDialog: false})
+    }
   },
   // 去广场
   gotoMain () {
-    wx.navigateTo({
-      url: '/pages/main/main'
-    })
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: '/pages/main/main'
+      })
+    } else {
+      that.setData({showDialog: false})
+    }
   },
   gotoDetail (e) {
+    let that = this;
     let qid = e.currentTarget.dataset.qid;
   // &my=${my}
-    wx.navigateTo({
-      url: `/pages/details/details?id=${qid}`
-    })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: `/pages/details/details?id=${qid}`
+      })
+    } else {
+      that.setData({showDialog: false})
+    }
   },
   gotoOther (e) {
+    let that = this;
     let mid = e.currentTarget.dataset.mid;
     let userInfo = wx.getStorageSync('userInfo');
-    if (mid*1===userInfo.id*1) {
-      wx.reLaunch({url:`/pages/mine/mine`})
+    if (userInfo.id) {
+      if (mid*1===userInfo.id*1) {
+        wx.reLaunch({url:`/pages/mine/mine`})
+      } else {
+        wx.navigateTo({
+          url: `/pages/others/others?mid=${mid}`
+        })
+      }
     } else {
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
+      that.setData({showDialog: false})
     }
   },
   onPageScroll (e) {
@@ -196,5 +211,41 @@ Page({
     if (e.scrollTop*1<=116) {
       that.setData({fixedTabHead:false});
     }
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({showDialog: false});
+  },
+  confirmDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
+            }
+            backApi.getToken().then(function (response) {
+              if (response.data.status * 1 === 200) {
+                let token = response.data.data.access_token;
+                let userInfoApi = backApi.userInfo + token;
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
+                  if (res.data.status*1===200) {
+                    wx.setStorageSync('userInfo', res.data.data);
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
   }
 })

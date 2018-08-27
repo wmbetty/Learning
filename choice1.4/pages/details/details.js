@@ -75,6 +75,7 @@ Page({
                       if (baseLock*1===2) {
                         that.setData({baseRedDot: 1});
                       }
+                      Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
                     } else {
                       Api.wxShowToast('更新用户信息失败', 'none', 2000);
                     }
@@ -192,7 +193,7 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
+    if (userInfo.id) {
       that.setData({myAvatar: userInfo.avatar});
 
       backApi.getToken().then(function(response) {
@@ -399,7 +400,7 @@ Page({
     let that = this;
     let token = that.data.token;
     let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
+    if (userInfo.id) {
       let shareApi = backApi.shareApi+token;
       let postData = {
         type: 'friend',
@@ -435,7 +436,7 @@ Page({
   gotoDelete () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
+    if (userInfo.id) {
       that.setData({
         isDelete: true,
         isShare: false,
@@ -497,11 +498,12 @@ shareToMoment () {
   goVote (e) {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
-      let userInfoApi = backApi.userInfo+that.data.token;
-      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-        that.setData({uInfo:res.data.data})
-      })
+    if (userInfo.id) {
+      // let userInfoApi = backApi.userInfo+that.data.token;
+      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+      //   that.setData({uInfo:res.data.data})
+      // })
+      that.setData({uInfo:userInfo})
 
       let hasVoted = that.data.hasVoted;
       let chooseItem = e.currentTarget.dataset.choose;
@@ -618,9 +620,10 @@ shareToMoment () {
   gotoOthers (e) {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    let language = userInfo.language || '';
-    let local_userId = userInfo.id;
-    if (language) {
+    // let language = userInfo.language || '';
+
+    if (userInfo.id) {
+      let local_userId = userInfo.id;
       let mid = e.currentTarget.dataset.mid;
       if (local_userId*1===mid*1) {
         wx.reLaunch({
@@ -651,10 +654,11 @@ shareToMoment () {
     let cid = e.currentTarget.dataset.cid;
     let idx = e.currentTarget.dataset.index;
     let commList = that.data.commentList;
-    if (userInfo.language) {
-      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-        that.setData({uInfo:res.data.data})
-      });
+    if (userInfo.id) {
+      that.setData({uInfo:userInfo})
+      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+      //   that.setData({uInfo:res.data.data})
+      // });
       let praiseApi = backApi.praiseApi+token;
       Api.wxRequest(praiseApi,'GET',{cid:cid},(res)=>{
         let status = res.data.status*1;
@@ -689,9 +693,10 @@ shareToMoment () {
     let userInfo = wx.getStorageSync('userInfo');
     let userInfoApi = backApi.userInfo+token;
     let details = that.data.details;
-    Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-      that.setData({uInfo:res.data.data})
-    });
+    that.setData({uInfo:userInfo})
+    // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+    //   that.setData({uInfo:res.data.data})
+    // });
 
     if (!content) {
       Api.wxShowToast('请填写内容哦', 'none', 2000);
@@ -757,7 +762,7 @@ shareToMoment () {
   gotoReply (e) {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (userInfo.language) {
+    if (userInfo.id) {
       let pid = e.currentTarget.dataset.pid || '';
       let commentType = e.currentTarget.dataset.type;
       let atename = e.currentTarget.dataset.atename;
@@ -767,9 +772,10 @@ shareToMoment () {
 
       that.setData({pid:pid,commentType:commentType,showClickBtn:false,idx:idx,showInput:true});
 
-      Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-        that.setData({uInfo:res.data.data});
-      });
+      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
+      //   that.setData({uInfo:res.data.data});
+      // });
+      that.setData({uInfo:userInfo});
 
       if (commentType==='reply') {
         that.setData({atename:atename});

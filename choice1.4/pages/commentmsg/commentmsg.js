@@ -28,11 +28,12 @@ Page({
         let token = response.data.data.access_token;
         that.setData({token: token});
         let localUserInfo = wx.getStorageSync('userInfo');
-        let userInfoApi = backApi.userInfo+token;
-        Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
-          let localuser_id = res.data.data.id;
-          that.setData({localuser_id:localuser_id});
-        });
+        that.setData({localuser_id:localUserInfo.id});
+        // let userInfoApi = backApi.userInfo+token;
+        // Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
+        //   let localuser_id = res.data.data.id;
+        //   that.setData({localuser_id:localuser_id});
+        // });
 
         let commentApi = backApi.commMsgListApi+token;
         wx.showLoading({
@@ -98,8 +99,6 @@ Page({
   },
   onShareAppMessage: function (res) {
     let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',

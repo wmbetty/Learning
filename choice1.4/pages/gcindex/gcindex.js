@@ -1,4 +1,7 @@
 // pages/gcindex/gcindex.js
+// const Page = require('../../utils/ald-stat.js').Page;
+const app = getApp();
+
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -287,6 +290,7 @@ Page({
                 Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                   if (res.data.status*1===200) {
                     wx.setStorageSync('userInfo', res.data.data);
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
                   }
                 })
               }
@@ -301,22 +305,27 @@ Page({
     let that = this;
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
-      if (userInfo.language) {
+      if (userInfo.id) {
         let title = e.currentTarget.dataset.title;
         let cid = e.currentTarget.dataset.id;
+        app.aldstat.sendEvent(`用户在首页点击了-${title}-这个分类`,{
+          play : ""
+        });
         wx.navigateTo({
           url: `/pages/categotries/categotries?title=${title}&id=${cid}`
         })
       } else {
         that.setData({showDialog: true});
       }
-    },200)
+    },200);
   },
   goRank () {
     let that = this;
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
-      if (userInfo.language) {
+      if (userInfo.id) {
+        app.aldstat.sendEvent(`用户在首页点击了排行榜`,{
+          play : ""});
         wx.navigateTo({
           url: `/pages/rankboard/rankboard`
         })
@@ -329,7 +338,7 @@ Page({
     let that = this;
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
-      if (userInfo.language) {
+      if (userInfo.id) {
         let link = e.currentTarget.dataset.link;
         if (link) {
           wx.navigateTo({
@@ -347,7 +356,10 @@ Page({
     let title = e.currentTarget.dataset.title;
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
-      if (userInfo.language) {
+      if (userInfo.id) {
+        app.aldstat.sendEvent(`用户在首页点击了-${title}-这个话题`,{
+          play : ""
+        });
         wx.navigateTo({
           url: `/pages/topicques/topicques?id=${tid}&title=${title}`
         })

@@ -1,8 +1,6 @@
 // pages/votemsg/votemsg.js
 const Api = require('../../wxapi/wxApi');
 const backApi = require('../../utils/util');
-const app = getApp();
-// let token = '';
 
 Page({
   data: {
@@ -99,8 +97,6 @@ Page({
   },
   onShareAppMessage: function (res) {
     let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',

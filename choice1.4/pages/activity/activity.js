@@ -7,7 +7,8 @@ Page({
   data: {
     token: '',
     actId: '',
-    activity: {}
+    activity: {},
+    showDialog: false
   },
 
   onLoad: function (options) {
@@ -38,24 +39,12 @@ Page({
   onShow: function () {
   
   },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
   onHide: function () {
   
   },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
   onUnload: function () {
   
   },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh: function () {
   
   },
@@ -77,8 +66,50 @@ Page({
     }
   },
   gotoJoin () {
-    wx.navigateTo({
-      url: '/pages/index/index'
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: '/pages/index/index'
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({showDialog: false});
+  },
+  confirmDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
+            }
+            backApi.getToken().then(function (response) {
+              if (response.data.status * 1 === 200) {
+                let token = response.data.data.access_token;
+                let userInfoApi = backApi.userInfo + token;
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
+                  if (res.data.status*1===200) {
+                    wx.setStorageSync('userInfo', res.data.data);
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
     })
   }
 })

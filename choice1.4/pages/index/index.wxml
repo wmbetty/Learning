@@ -9,7 +9,7 @@
 </view>
 <view hidden="{{!hasUserInfo}}">
     <view hidden="{{!showTitleNum}}" class="idx-text-num">
-        <text>{{hadTitleNum}}</text>/<text>60</text>
+        <text>{{hadTitleNum}}</text>/<text>100</text>
     </view>
     <view wx:if="{{!showCropper}}" class="{{pagePad?'title-box title-box-sm':'title-box'}}">
         
@@ -23,13 +23,13 @@
         <view class="pub-cont">
             <view class="pub-cont-box" data-txt="left" bindtouchend="textFocus">
                 <view hidden="{{!showLeftNum}}" class="idx-text-num">
-                    <text>{{leftHadWrite}}</text>/<text>36</text>
+                    <text>{{leftHadWrite}}</text>/<text>56</text>
                 </view>
                 <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showLeft?'text-val bd-right textarea-has-text':'text-val bd-right'}}" data-direct="left" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{leftHolder}}" bindtouchstart="textTap" />
             </view>
             <view class="pub-cont-box" data-txt="right" bindtouchend="textFocus">
                 <view hidden="{{!showRightNum}}" class="idx-text-num">
-                    <text>{{rightHadWrite}}</text>/<text>36</text>
+                    <text>{{rightHadWrite}}</text>/<text>56</text>
                 </view>
                 <textarea adjust-position="{{adjustPosi}}" cursor-spacing="{{spacing}}" class="{{showRight?'text-val textarea-has-text':'text-val'}}" data-direct="right" bindfocus="contFocus" bindinput="titlePut" bindblur="textBlur" value="{{rightHolder}}" bindtouchstart="textTap" />
             </view>

@@ -30,10 +30,6 @@ Page({
       }
     })
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     wx.setNavigationBarColor({
       frontColor:'#000000',
@@ -96,9 +92,6 @@ Page({
     }
   },
   onShareAppMessage: function (res) {
-    let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',

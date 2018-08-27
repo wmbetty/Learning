@@ -213,6 +213,7 @@ Page({
                         that.setData({
                           uavatar: res.data.data.avatar
                         });
+                        Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
                       } else {
                         Api.wxShowToast('更新用户信息失败', 'none', 2000)
                       }
@@ -294,7 +295,7 @@ Page({
   onShow () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    if (!userInfo.language) {
+    if (!userInfo.id) {
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
@@ -436,7 +437,7 @@ Page({
           titleText: val,
           shareTitle: val
         });
-        if (strlen<=60) {
+        if (strlen<=100) {
           that.setData({
             disTitle: val,
             hadTitleNum: strlen,
@@ -450,7 +451,7 @@ Page({
           } else {
             that.setData({andrToastTop:false});
           }
-          that.setData({titleText: titleTxt,isWeToast:true,toastText:'标题不超过60个字符'});
+          that.setData({titleText: titleTxt,isWeToast:true,toastText:'标题不超过100个字符'});
           setTimeout(()=>{
             that.setData({isWeToast:false});
           },2000)
@@ -467,7 +468,7 @@ Page({
             leftText: val
           });
           let strlen = that.strlen(val);
-          if (strlen<=36) {
+          if (strlen<=56) {
             that.setData({disLeft: val,leftHadWrite: strlen,isWeToast:false})
           } else {
             let leftTxt = that.data.disLeft;
@@ -477,7 +478,7 @@ Page({
             } else {
               that.setData({andrToastTop:false});
             }
-            that.setData({leftHolder: leftTxt,isWeToast:true,toastText:'左选项不超过36个字符'});
+            that.setData({leftHolder: leftTxt,isWeToast:true,toastText:'左选项不超过56个字符'});
             setTimeout(()=>{
               that.setData({isWeToast:false});
             },2000)
@@ -900,7 +901,7 @@ Page({
       return {
         title: that.data.shareTitle,
         path: `/pages/gcindex/gcindex?qid=${questId}`,
-        imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
+        imageUrl: shareFriImg?shareFriImg:'',
         success() {
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
             // console.log(res, 'friends')
@@ -1059,17 +1060,21 @@ Page({
     that.setData({
       showCateList: false,hasUserInfo: true
     })
+    let choseBtnText = that.data.choseBtnText;
+    setTimeout(()=>{
+      if (choseBtnText === '选择分类') {
+        that.setData({choseBtnText: '其他分类'})
+      }
+    },200)
   },
   chooseCate (e) {
     let that = this;
     let cid = e.currentTarget.dataset.cid;
     let cname = e.currentTarget.dataset.cname;
-    console.log(cname, 'eee')
     setTimeout(()=>{
       that.setData({
         showCateList: false,hasUserInfo: true,choseBtnText: cname,category_id: cid
       })
     },200)
-    console.log(that.data.choseBtnText,'text')
   }
 });

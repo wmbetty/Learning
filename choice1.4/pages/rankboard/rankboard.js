@@ -22,7 +22,9 @@ Page({
     list4: [],
     list5: [],
     showContent: false,
-    fixedTabHead: false
+    fixedTabHead: false,
+    myid: '',
+    showDialog: false
   },
 
   onLoad: function (options) {
@@ -100,15 +102,11 @@ Page({
   },
 
   onShow: function () {
-  
-  },
-
-  onHide: function () {
-  
-  },
-
-  onUnload: function () {
-  
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      that.setData({myid: userInfo.id})
+    }
   },
 
   onPullDownRefresh: function () {
@@ -235,89 +233,105 @@ Page({
     let isWeekUp = that.data.isWeekUp;
     let isMonthUp = that.data.isMonthUp;
 
-    if (isWeek) {
-      if (isWeekUp) {
-        that.setData({isWeekUp: false,type:1})
-      } else {
-        that.setData({isWeekUp: true,type:2})
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      if (isWeek) {
+        if (isWeekUp) {
+          that.setData({isWeekUp: false,type:1})
+        } else {
+          that.setData({isWeekUp: true,type:2})
+        }
       }
-    }
-    if (isMonth) {
-      if (isMonthUp) {
-        that.setData({isMonthUp: false,type:3})
-      } else {
-        that.setData({isMonthUp: true,type:4})
+      if (isMonth) {
+        if (isMonthUp) {
+          that.setData({isMonthUp: false,type:3})
+        } else {
+          that.setData({isMonthUp: true,type:4})
+        }
       }
-    }
 
-    if (title==='isWeek' && !isWeek && !isWeekUp) {
-      if (isMonthUp) {
-        that.setData({isMonthUp: true,type:4})
-      } else {
-        that.setData({isMonthUp: false,type:3})
+      if (title==='isWeek' && !isWeek && !isWeekUp) {
+        if (isMonthUp) {
+          that.setData({isMonthUp: true,type:4})
+        } else {
+          that.setData({isMonthUp: false,type:3})
+        }
+        that.setData({isWeek: true,isMonth:false,isAllRank:false,type: 1})
       }
-      that.setData({isWeek: true,isMonth:false,isAllRank:false,type: 1})
-    }
-    if (title==='isWeek' && !isWeek && isWeekUp) {
-      if (isMonthUp) {
-        that.setData({isMonthUp: true,type:4})
-      } else {
-        that.setData({isMonthUp: false,type:3})
-      }
-      that.setData({isWeek: true,isMonth:false,isAllRank:false,type: 2})
+      if (title==='isWeek' && !isWeek && isWeekUp) {
+        if (isMonthUp) {
+          that.setData({isMonthUp: true,type:4})
+        } else {
+          that.setData({isMonthUp: false,type:3})
+        }
+        that.setData({isWeek: true,isMonth:false,isAllRank:false,type: 2})
 
-    }
-    if (title==='isMonth' && !isMonth && !isMonthUp) {
-      if (isWeekUp) {
-        that.setData({isWeekUp: true,type:2})
-      } else {
-        that.setData({isWeekUp: false,type:1})
       }
-      that.setData({isMonth: true,isWeek:false,isAllRank:false,type: 3})
-    }
-    if (title==='isMonth' && !isMonth && isMonthUp) {
-      if (isWeekUp) {
-        that.setData({isWeekUp: true,type:2})
-      } else {
-        that.setData({isWeekUp: false,type:1})
+      if (title==='isMonth' && !isMonth && !isMonthUp) {
+        if (isWeekUp) {
+          that.setData({isWeekUp: true,type:2})
+        } else {
+          that.setData({isWeekUp: false,type:1})
+        }
+        that.setData({isMonth: true,isWeek:false,isAllRank:false,type: 3})
       }
-      that.setData({isMonth: true,isWeek:false,isAllRank:false,type: 4})
-    }
+      if (title==='isMonth' && !isMonth && isMonthUp) {
+        if (isWeekUp) {
+          that.setData({isWeekUp: true,type:2})
+        } else {
+          that.setData({isWeekUp: false,type:1})
+        }
+        that.setData({isMonth: true,isWeek:false,isAllRank:false,type: 4})
+      }
 
-    if (title==='isAllRank') {
-      if (isWeekUp) {
-        that.setData({isWeekUp: true,type:2})
-      } else {
-        that.setData({isWeekUp: false,type:1})
+      if (title==='isAllRank') {
+        if (isWeekUp) {
+          that.setData({isWeekUp: true,type:2})
+        } else {
+          that.setData({isWeekUp: false,type:1})
+        }
+        if (isMonthUp) {
+          that.setData({isMonthUp: true,type:4})
+        } else {
+          that.setData({isMonthUp: false,type:3})
+        }
+        that.setData({isAllRank: true,isMonth: false,isWeek:false,type:5})
       }
-      if (isMonthUp) {
-        that.setData({isMonthUp: true,type:4})
-      } else {
-        that.setData({isMonthUp: false,type:3})
-      }
-      that.setData({isAllRank: true,isMonth: false,isWeek:false,type:5})
+    } else {
+      that.setData({showDialog: true});
     }
   },
   // 去问题详情
   goQuesDetails (e) {
+    let that = this;
     let id = e.currentTarget.dataset.id;
-    if (id) {
-      wx.navigateTo({
-        url: `/pages/details/details?id=${id}`
-      })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      if (id) {
+        wx.navigateTo({
+          url: `/pages/details/details?id=${id}`
+        })
+      } else {
+        Api.wxShowToast('该问题为空~', 'none', 2000)
+      }
     } else {
-      Api.wxShowToast('该问题为空~', 'none', 2000)
+      that.setData({showDialog: true});
     }
   },
   gotoOthers (e) {
+    let that = this;
     let mid = e.currentTarget.dataset.mid;
     let userInfo = wx.getStorageSync('userInfo');
-    if (mid*1===userInfo.id*1) {
-      wx.reLaunch({url:`/pages/mine/mine`})
+    if (userInfo.id) {
+      if (mid*1===userInfo.id*1) {
+        wx.reLaunch({url:`/pages/mine/mine`})
+      } else {
+        wx.navigateTo({
+          url: `/pages/others/others?mid=${mid}`
+        })
+      }
     } else {
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
+      that.setData({showDialog: true});
     }
   },
   onPageScroll (e) {
@@ -328,5 +342,41 @@ Page({
     if (e.scrollTop*1<=116) {
       that.setData({fixedTabHead:false});
     }
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({showDialog: false});
+  },
+  confirmDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
+            }
+            backApi.getToken().then(function (response) {
+              if (response.data.status * 1 === 200) {
+                let token = response.data.data.access_token;
+                let userInfoApi = backApi.userInfo + token;
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
+                  if (res.data.status*1===200) {
+                    wx.setStorageSync('userInfo', res.data.data);
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
   }
 })

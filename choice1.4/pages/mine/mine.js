@@ -74,6 +74,7 @@ Page({
                     that.setData({
                       userInfo: res.data.data
                     });
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
 
                     let questionApi = backApi.my_question+token;
                     let joinApi = backApi.my_join+token;
@@ -178,7 +179,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
 
-    if (userInfo.language) {
+    if (userInfo.id) {
       that.setData({
         userInfo: userInfo
       });

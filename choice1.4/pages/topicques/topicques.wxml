@@ -36,6 +36,18 @@
                         </view>
                     </view>
                     <view class="list-item-title" data-qid="{{item.id}}" bindtap="gotoDetail">{{item.question}}</view>
+                    <view class="flex-space-cont list-item-percent" wx:if="{{item.is_vote*1 !== 0}}">
+                        <view class="voter-left-box" wx:if="{{item.is_vote*1 === 1}}">
+                            <image class="voter-img" src="{{localUser.avatar || '../../images/avatarDefault.png'}}"></image>
+                            <image class="vote-down-arrow" src="../../images/posterArrow.png"></image>
+                        </view>
+                        <view class="voter-right-box" wx:if="{{item.is_vote*1 === 2}}">
+                            <image class="voter-img" src="{{localUser.avatar || '../../images/avatarDefault.png'}}"></image>
+                            <image class="vote-down-arrow" src="../../images/posterArrow.png"></image>
+                        </view>
+                        <view class="percent-item green-font">{{item.choose1_per}}%</view>
+                        <view class="percent-item purple-font">{{item.choose2_per}}%</view>
+                    </view>
                     <view class="flex-space-cont list-item-options">
                         <view class="options-container" bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="options-item green-bg">{{item.option1}}</view>
@@ -54,8 +66,8 @@
                             </view>
                         </view>
                     </view>
-                    <view class="list-item-botom" wx:if="{{item.comment!==''}}">
-                        <view class="botom-title">编辑寄予</view>
+                    <view class="list-item-botom" wx:if="{{item.comment}}">
+                        <view class="botom-title">编辑寄语</view>
                         <view>{{item.comment}}</view>
                     </view>
                 </view>
@@ -84,6 +96,18 @@
                         </view>
                     </view>
                     <view class="list-item-title" data-qid="{{item.id}}" bindtap="gotoDetail">{{item.question}}</view>
+                    <view class="flex-space-cont list-item-percent" wx:if="{{item.is_vote*1 !== 0}}">
+                        <view class="voter-left-box" wx:if="{{item.is_vote*1 === 1}}">
+                            <image class="voter-img" src="{{localUser.avatar || '../../images/avatarDefault.png'}}"></image>
+                            <image class="vote-down-arrow" src="../../images/posterArrow.png"></image>
+                        </view>
+                        <view class="voter-right-box" wx:if="{{item.is_vote*1 === 2}}">
+                            <image class="voter-img" src="{{localUser.avatar || '../../images/avatarDefault.png'}}"></image>
+                            <image class="vote-down-arrow" src="../../images/posterArrow.png"></image>
+                        </view>
+                        <view class="percent-item green-font">{{item.choose1_per}}%</view>
+                        <view class="percent-item purple-font">{{item.choose2_per}}%</view>
+                    </view>
                     <view class="flex-space-cont list-item-options">
                         <view class="options-container" bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="options-item green-bg">{{item.option1}}</view>
@@ -102,10 +126,10 @@
                             </view>
                         </view>
                     </view>
-                    <view class="list-item-botom" wx:if="{{item.comment!==''}}">
-                        <view class="botom-title">编辑寄予</view>
-                        <view>{{item.comment}}</view>
-                    </view>
+                    <!--<view class="list-item-botom" wx:if="{{item.comment}}">-->
+                        <!--<view class="botom-title">编辑寄语</view>-->
+                        <!--<view>{{item.comment}}</view>-->
+                    <!--</view>-->
                 </view>
                 <view class="nomore-text" wx:if="{{showBotomText2}}">选象，让选择简单一点</view>
                 <view wx:if="{{list2.length===0}}" class="tab-content-empty">
@@ -128,3 +152,5 @@
     </button>
     <image src="../../images/topic_askbtn.png" class="topic-botom-btn right-btn" data-tid="{{topicId}}" data-cid="{{topicDetail.category_id}}" data-title="{{pageTitle}}" bindtap="gotoSendTopic"></image>
 </view>
+
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

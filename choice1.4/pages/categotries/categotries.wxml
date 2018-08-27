@@ -48,3 +48,5 @@
         </view>
     </view>
 </view>
+
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>

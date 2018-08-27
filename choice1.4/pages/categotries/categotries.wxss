@@ -1,5 +1,5 @@
 /* pages/categotries/categotries.wxss */
-page{background: #fff;}
+page{background: #fff;position: relative}
 .banner-cont{
     width: 750rpx;height: 320rpx;margin: 0 auto;background: #f1f1f1;
 }
@@ -24,7 +24,7 @@ page{background: #fff;}
 }
 .ques-cont{
     width: 650rpx;min-height: 56rpx;border-radius: 10rpx;margin: 16rpx auto 0;
-    background: #F5F6F8;font-size: 40rpx;color: #343434;
+    background: #F5F6F8;font-size: 40rpx;color: #343434;word-break: break-all;
 }
 .ques-title{padding: 40rpx;}
 .tab-content-empty{padding-top:80rpx;margin-bottom:140rpx}

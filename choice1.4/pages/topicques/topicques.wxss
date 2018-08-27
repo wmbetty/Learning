@@ -89,3 +89,11 @@ button::after{border: none;}
 .share-btn-botom{background: #62559D;border-radius: 0;padding: 0;}
 .topic-botom-btn image{display: block;width: 330rpx;height: 72rpx;}
 .tab-head-fixed{position: fixed;width: 100%;left: 0;top: 0;background: #fff;z-index: 999}
+.list-item-percent{position: relative;padding-bottom: 24rpx}
+.percent-item{width: 330rpx;text-align: center;font-size: 52rpx;}
+.green-font{color: #11B591}
+.purple-font{color: #62559D}
+.voter-left-box{width: 52rpx;height: 74rpx;position: absolute;left: 0;top:4rpx;}
+.voter-right-box{width: 52rpx;height: 74rpx;position: absolute;right: 0;top:4rpx;}
+.voter-img{display: block;width: 52rpx;height: 52rpx;margin-bottom: 10rpx;border-radius: 50%;border: 2rpx solid #f1f1f1;background: #f1f1f1}
+.vote-down-arrow{display: block;width: 20rpx;height: 12rpx;margin: 0 auto;}

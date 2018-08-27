@@ -172,8 +172,8 @@ Page({
     let that = this;
     tabBar.tabbar("tabBar", 1, that);
 
-    let userInfo = wx.getStorageSync('userInfo', userInfo);
-    if (userInfo.language) {
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
       // 获取token
       backApi.getToken().then(function(response){
         console.log(response, 'ss')
@@ -355,7 +355,7 @@ Page({
       return {
         title: that.data.question,
         path: `/pages/gcindex/gcindex?qid=${questId}`,
-        imageUrl: shareFriImg?shareFriImg:'/images/posterBg2.png',
+        imageUrl: shareFriImg?shareFriImg:'',
         success() {
           Api.wxShowToast('分享成功~', 'none', 2000);
           Api.wxRequest(shareFriends,'POST',{},(res)=>{
@@ -441,6 +441,7 @@ Page({
                       if (baseLock*1===2) {
                         that.setData({baseRedDot: 1});
                       }
+                      Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
 
                       wx.showLoading({
                         title: '加载中',
@@ -628,9 +629,9 @@ Page({
     let token = that.data.token;
     let local_userId = '';
     let mid = e.target.dataset.mid;
-    let userInfoApi = backApi.userInfo+token;
-    Api.wxRequest(userInfoApi,'POST',userInfo,(res)=> {
-      local_userId = res.data.data.id;
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      local_userId = userInfo.id;
       if (local_userId*1===mid*1) {
         wx.reLaunch({
           url: `/pages/mine/mine`
@@ -640,7 +641,11 @@ Page({
           url: `/pages/others/others?mid=${mid}`
         })
       }
-    });
+    } else {
+      that.setData({
+        showDialog: true
+      })
+    }
   },
   goShare (e) {
     let that = this;
@@ -653,30 +658,44 @@ Page({
       qid: quesId
     };
 
-    Api.wxRequest(shareApi,'POST',postData,(res)=>{
-      console.log(res.data.data.url,'friends');
-      if (res.data.status*1===201) {
-        that.setData({shareFriImg:res.data.data.url})
-      }
-    });
-
-    that.setData({
-      showShare: true,
-      quesId: quesId,
-      question: question,
-      isSlidedown: false
-    });
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      Api.wxRequest(shareApi,'POST',postData,(res)=>{
+        console.log(res.data.data.url,'friends');
+        if (res.data.status*1===201) {
+          that.setData({shareFriImg:res.data.data.url})
+        }
+      });
+      that.setData({
+        showShare: true,
+        quesId: quesId,
+        question: question,
+        isSlidedown: false
+      });
+    } else {
+      that.setData({
+        showDialog: true
+      })
+    }
   },
   gotoDetails (e) {
+    let that = this;
     let id = e.currentTarget.dataset.id;
     let myid = e.currentTarget.dataset.mid;
     let my = '';
     if (myid==mid) {
       my = 1;
     }
-    wx.navigateTo({
-      url: `/pages/details/details?id=${id}&my=${my}`
-    })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: `/pages/details/details?id=${id}&my=${my}`
+      })
+    } else {
+      that.setData({
+        showDialog: true
+      })
+    }
   }
 
 })

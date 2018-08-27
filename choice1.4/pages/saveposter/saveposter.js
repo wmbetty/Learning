@@ -7,10 +7,6 @@ const Api = require('../../wxapi/wxApi');
 // const imgUrlThumbnail = 'https://fabu.choosen.79643.com/images/share_img/2018/08/01/6aae0da5d57e3a335be3a3e8faecf21d.jpg';
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     showDialog: false,
     openType: 'openSetting',
@@ -134,8 +130,6 @@ Page({
   },
   onShareAppMessage: function (res) {
     let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',

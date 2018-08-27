@@ -20,7 +20,9 @@ Page({
     noList1: false,
     noList2: false,
     showThumb: false,
-    fixedTabHead: false
+    fixedTabHead: false,
+    localUser:{},
+    showDialog: false
   },
   onLoad: function (options) {
     let that = this;
@@ -89,7 +91,10 @@ Page({
   
   },
   onShow: function () {
-  
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+    that.setData({localUser: userInfo})
+
   },
   onHide: function () {
   
@@ -168,7 +173,6 @@ Page({
       qid: 0,
       choose: ''
     };
-
     let list1 = that.data.list1;
     let list2 = that.data.list2;
     let type = that.data.type;
@@ -178,184 +182,193 @@ Page({
     let qid = item.id;
     let isVote = item.is_vote;
 
-    if (isVote*1===1 && type*1===1) {
-      for (let i=0;i<list1.length;i++) {
-        list1[i].isVoted = true;
-        that.setData({
-          list1: list1
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      if (isVote*1===1 && type*1===1) {
+        Api.wxShowToast('投过票了', 'none', 300);
+      }
+      if (isVote*1===1 && type*1===2) {
+        Api.wxShowToast('投过票了', 'none', 300);
+      }
+      let answerApi = backApi.u_answer;
+      answerData.qid = qid;
+      // let showThumb = that.data.showThumb;
+
+      if (direct === 'left' && type*1===1 && isVote*1===0) {
+        answerData.choose = 1;
+        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+          let status = res.data.status*1;
+          // 投票成功后
+          if (status === 201) {
+            that.setData({showThumb: true})
+            setTimeout(()=>{
+              that.setData({showThumb: false})
+            },1200)
+            let afterChoose = res.data.data;
+            for (let i=0;i<list1.length;i++) {
+              if (idx===i) {
+                list1[i].choose_left = true;
+                list1[i].showMask = true;
+                list1[i].hots = afterChoose.hots;
+                list1[i].choose1_per = afterChoose.choose1_per;
+                list1[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    list1: list1
+                  })
+                },600)
+              }
+            }
+          } else {
+            that.setData({showThumb: false})
+            Api.wxShowToast('投过票了', 'none', 300);
+          }
+        })
+
+      }
+      if (direct === 'right' && type*1===1 && isVote*1===0) {
+        answerData.choose = 2;
+        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+          let status = res.data.status*1;
+          // 投票成功后
+          if (status === 201) {
+            that.setData({showThumb: true})
+            setTimeout(()=>{
+              that.setData({showThumb: false})
+            },1200)
+            let afterChoose = res.data.data;
+            for (let i=0;i<list1.length;i++) {
+              if (idx === i) {
+                list1[i].choose_right = true;
+                list1[i].showMask = true;
+                list1[i].hots = afterChoose.hots;
+                list1[i].choose1_per = afterChoose.choose1_per;
+                list1[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    list1: list1
+                  })
+                },600)
+              }
+            }
+          } else {
+            that.setData({showThumb: false,noShowThumb: true})
+            Api.wxShowToast('投过票了', 'none', 2000);
+          }
         })
       }
-      Api.wxShowToast('投过票了', 'none', 300);
-    }
-    if (isVote*1===1 && type*1===2) {
-      for (let i=0;i<list2.length;i++) {
-        list2[i].isVoted = true;
-        that.setData({
-          list2: list2
+      if (direct === 'left' && type*1===2 && isVote*1===0) {
+        answerData.choose = 1;
+        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+          let status = res.data.status*1;
+          // 投票成功后
+          if (status === 201) {
+            that.setData({showThumb: true})
+            setTimeout(()=>{
+              that.setData({showThumb: false})
+            },1200)
+            let afterChoose = res.data.data;
+            for (let i=0;i<list2.length;i++) {
+              if (idx===i) {
+                list2[i].choose_left = true;
+                list2[i].showMask = true;
+                list2[i].hots = afterChoose.hots;
+                list2[i].choose1_per = afterChoose.choose1_per;
+                list2[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    list2: list2
+                  })
+                },600)
+              }
+            }
+          } else {
+            that.setData({showThumb: false})
+            Api.wxShowToast('投过票了', 'none', 300);
+          }
+        })
+
+      }
+      if (direct === 'right' && type*1===2 && isVote*1===0) {
+        answerData.choose = 2;
+        Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
+          let status = res.data.status*1;
+          // 投票成功后
+          if (status === 201) {
+            that.setData({showThumb: true})
+            setTimeout(()=>{
+              that.setData({showThumb: false})
+            },1200)
+            let afterChoose = res.data.data;
+            for (let i=0;i<list2.length;i++) {
+              if (idx === i) {
+                list2[i].choose_right = true;
+                list2[i].showMask = true;
+                list2[i].hots = afterChoose.hots;
+                list2[i].choose1_per = afterChoose.choose1_per;
+                list2[i].choose2_per = afterChoose.choose2_per;
+                setTimeout(()=>{
+                  that.setData({
+                    list2: list2
+                  })
+                },600)
+              }
+            }
+          } else {
+            that.setData({showThumb: false})
+            Api.wxShowToast('投过票了', 'none', 2000);
+          }
         })
       }
-      Api.wxShowToast('投过票了', 'none', 300);
-    }
-
-    let answerApi = backApi.u_answer;
-    answerData.qid = qid;
-    let showThumb = that.data.showThumb;
-
-    if (direct === 'left' && type*1===1 && isVote*1===0) {
-      answerData.choose = 1;
-      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-        let status = res.data.status*1;
-        // 投票成功后
-        if (status === 201) {
-          that.setData({showThumb: true})
-          setTimeout(()=>{
-            that.setData({showThumb: false})
-          },1200)
-          let afterChoose = res.data.data;
-          for (let i=0;i<list1.length;i++) {
-            if (idx===i) {
-              list1[i].choose_left = true;
-              list1[i].showMask = true;
-              list1[i].hots = afterChoose.hots;
-              list1[i].choose1_per = afterChoose.choose1_per;
-              list1[i].choose2_per = afterChoose.choose2_per;
-              setTimeout(()=>{
-                that.setData({
-                  list1: list1
-                })
-              },600)
-            }
-          }
-        } else {
-          that.setData({showThumb: false})
-          Api.wxShowToast('投过票了', 'none', 300);
-        }
-      })
-
-    }
-    if (direct === 'right' && type*1===1 && isVote*1===0) {
-      answerData.choose = 2;
-      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-        let status = res.data.status*1;
-        // 投票成功后
-        if (status === 201) {
-          that.setData({showThumb: true})
-          setTimeout(()=>{
-            that.setData({showThumb: false})
-          },1200)
-          let afterChoose = res.data.data;
-          for (let i=0;i<list1.length;i++) {
-            if (idx === i) {
-              list1[i].choose_right = true;
-              list1[i].showMask = true;
-              list1[i].hots = afterChoose.hots;
-              list1[i].choose1_per = afterChoose.choose1_per;
-              list1[i].choose2_per = afterChoose.choose2_per;
-              setTimeout(()=>{
-                that.setData({
-                  list1: list1
-                })
-              },600)
-            }
-          }
-        } else {
-          that.setData({showThumb: false,noShowThumb: true})
-          Api.wxShowToast('投过票了', 'none', 2000);
-        }
-      })
-    }
-    if (direct === 'left' && type*1===2 && isVote*1===0) {
-      answerData.choose = 1;
-      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-        let status = res.data.status*1;
-        // 投票成功后
-        if (status === 201) {
-          that.setData({showThumb: true})
-          setTimeout(()=>{
-            that.setData({showThumb: false})
-          },1200)
-          let afterChoose = res.data.data;
-          for (let i=0;i<list2.length;i++) {
-            if (idx===i) {
-              list2[i].choose_left = true;
-              list2[i].showMask = true;
-              list2[i].hots = afterChoose.hots;
-              list2[i].choose1_per = afterChoose.choose1_per;
-              list2[i].choose2_per = afterChoose.choose2_per;
-              setTimeout(()=>{
-                that.setData({
-                  list2: list2
-                })
-              },600)
-            }
-          }
-        } else {
-          that.setData({showThumb: false})
-          Api.wxShowToast('投过票了', 'none', 300);
-        }
-      })
-
-    }
-    if (direct === 'right' && type*1===2 && isVote*1===0) {
-      answerData.choose = 2;
-      Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
-        let status = res.data.status*1;
-        // 投票成功后
-        if (status === 201) {
-          that.setData({showThumb: true})
-          setTimeout(()=>{
-            that.setData({showThumb: false})
-          },1200)
-          let afterChoose = res.data.data;
-          for (let i=0;i<list2.length;i++) {
-            if (idx === i) {
-              list2[i].choose_right = true;
-              list2[i].showMask = true;
-              list2[i].hots = afterChoose.hots;
-              list2[i].choose1_per = afterChoose.choose1_per;
-              list2[i].choose2_per = afterChoose.choose2_per;
-              setTimeout(()=>{
-                that.setData({
-                  list2: list2
-                })
-              },600)
-            }
-          }
-        } else {
-          that.setData({showThumb: false})
-          Api.wxShowToast('投过票了', 'none', 2000);
-        }
-      })
+    } else {
+      that.setData({showDialog: true});
     }
   },
   gotoOther (e) {
+    let that = this;
     let mid = e.currentTarget.dataset.mid;
     let userInfo = wx.getStorageSync('userInfo');
-    if (mid*1===userInfo.id*1) {
-      wx.reLaunch({url:`/pages/mine/mine`})
+    if (userInfo.id) {
+      if (mid*1===userInfo.id*1) {
+        wx.reLaunch({url:`/pages/mine/mine`})
+      } else {
+        wx.navigateTo({
+          url: `/pages/others/others?mid=${mid}`
+        })
+      }
     } else {
-      wx.navigateTo({
-        url: `/pages/others/others?mid=${mid}`
-      })
+      that.setData({showDialog: true});
     }
   },
   gotoDetail (e) {
+    let that = this;
     let id = e.currentTarget.dataset.qid;
-    if (id) {
-      wx.navigateTo({
-        url: `/pages/details/details?id=${id}`
-      })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      if (id) {
+        wx.navigateTo({
+          url: `/pages/details/details?id=${id}`
+        })
+      } else {
+        Api.wxShowToast('该问题为空~', 'none', 2000)
+      }
     } else {
-      Api.wxShowToast('该问题为空~', 'none', 2000)
+      that.setData({showDialog: true});
     }
   },
   gotoSendTopic (e) {
+    let that = this;
     let tid = e.currentTarget.dataset.tid;
     let title = e.currentTarget.dataset.title;
     let cid = e.currentTarget.dataset.cid;
-    wx.navigateTo({
-      url: `/pages/index/index?topicId=${tid}&topicTitle=${title}&categoryId=${cid}`
-    })
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      wx.navigateTo({
+        url: `/pages/index/index?topicId=${tid}&topicTitle=${title}&categoryId=${cid}`
+      })
+    } else {
+      that.setData({showDialog: true});
+    }
   },
   onPageScroll (e) {
     let that = this;
@@ -365,5 +378,41 @@ Page({
     if (e.scrollTop*1<=116) {
       that.setData({fixedTabHead:false});
     }
+  },
+  cancelDialog () {
+    let that = this;
+    that.setData({showDialog: false});
+  },
+  confirmDialog () {
+    let that = this;
+    that.setData({
+      showDialog: false
+    });
+    wx.login({
+      success: function (res) {
+        let code = res.code;
+        wx.getUserInfo({
+          success: (res) => {
+            let userData = {
+              encryptedData: res.encryptedData,
+              iv: res.iv,
+              code: code
+            }
+            backApi.getToken().then(function (response) {
+              if (response.data.status * 1 === 200) {
+                let token = response.data.data.access_token;
+                let userInfoApi = backApi.userInfo + token;
+                Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
+                  if (res.data.status*1===200) {
+                    wx.setStorageSync('userInfo', res.data.data);
+                    Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    })
   }
 })

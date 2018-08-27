@@ -10,5 +10,7 @@
     <button open-type="share" class="topic-botom-btn share-btn-botom left-btn">
         <image src="../../images/topic_sharebtn.png"></image>
     </button>
-    <image src="../../images/topic_askbtn.png" class="topic-botom-btn right-btn" data-title="{{pageTitle}}" bindtap="gotoJoin"></image>
+    <image src="../../images/topic_joinbtn.png" class="topic-botom-btn right-btn" data-title="{{pageTitle}}" bindtap="gotoJoin"></image>
 </view>
+
+<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
