@@ -1,4 +1,3 @@
-<!--pages/categotries/categotries.wxml-->
 <view>
     <view class="banner-cont">
         <image src="{{cateDetails.img_url}}" />

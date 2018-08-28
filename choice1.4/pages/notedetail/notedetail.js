@@ -1,5 +1,3 @@
-// pages/notedetail/notedetail.js
-
 Page({
   data: {
     content: '',
@@ -43,7 +41,6 @@ Page({
         opLeftRed: opLeftRed,
         opRightRed: opRightRed
       })
-
     }
     if (msg !== 'null' && item.template_type===5 && item.type===2) {
       let reg = /\{{(.+?)\}}/g;
@@ -53,7 +50,6 @@ Page({
         that.setData({msg:msg})
       }
     }
-
     if (item.id) {
       let time = item.created_time;
       that.setData({
@@ -66,20 +62,11 @@ Page({
       backgroundColor:'#F5F6F8'
     })
   },
-  onReady: function () {
-
-  },
-  onShow: function () {
-
-  },
-  onPullDownRefresh: function () {
-
-  },
-  onReachBottom: function () {
-
-  },
+  onReady: function () {},
+  onShow: function () {},
+  onPullDownRefresh: function () {},
+  onReachBottom: function () {},
   onShareAppMessage: function (res) {
-    let that = this;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -88,9 +75,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },

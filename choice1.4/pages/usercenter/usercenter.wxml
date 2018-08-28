@@ -1,4 +1,3 @@
-<!--pages/usercenter/usercenter.wxml-->
 <view class="page-head">用户基地</view>
 <view class="welcome-info">欢迎年轻的你加入选象基地</view>
 <view class="main-box">

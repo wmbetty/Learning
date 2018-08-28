@@ -1,4 +1,3 @@
-<!--pages/details/details.wxml-->
 <view style="min-height: {{winHeight}}px;position: relative;" class="{{commentList.length===0?'page-no-comment':''}}">
     <view class="page-head">详情</view>
     <view class="main-container" wx:if="{{maskHidden==false}}">

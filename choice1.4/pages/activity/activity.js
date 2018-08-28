@@ -1,16 +1,13 @@
-// pages/activity/activity.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
 Page({
-
   data: {
     token: '',
     actId: '',
     activity: {},
     showDialog: false
   },
-
   onLoad: function (options) {
     let that = this;
     backApi.getToken().then(function(response) {
@@ -33,24 +30,9 @@ Page({
       }
     })
   },
-  onReady: function () {
-  
-  },
-  onShow: function () {
-  
-  },
-  onHide: function () {
-  
-  },
-  onUnload: function () {
-  
-  },
-  onPullDownRefresh: function () {
-  
-  },
-  onReachBottom: function () {
-  
-  },
+  onShow: function () {},
+  onPullDownRefresh: function () {},
+  onReachBottom: function () {},
   onShareAppMessage: function () {
     let that = this;
     return {
@@ -60,9 +42,7 @@ Page({
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
       fail() {},
-      complete() {
-
-      }
+      complete() {}
     }
   },
   gotoJoin () {

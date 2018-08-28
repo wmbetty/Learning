@@ -1,4 +1,3 @@
-// pages/topicques/topicques.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -81,30 +80,18 @@ Page({
             Api.wxShowToast('问题数据获取失败~', 'none', 2000)
           }
         })
-
       } else {
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
     })
   },
-  onReady: function () {
-  
-  },
+  onReady: function () {},
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
     that.setData({localUser: userInfo})
-
   },
-  onHide: function () {
-  
-  },
-  onUnload: function () {
-  
-  },
-  onPullDownRefresh: function () {
-  
-  },
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let type = that.data.type;
@@ -144,7 +131,6 @@ Page({
         })
       }
     }
-  
   },
   onShareAppMessage: function () {
     let that = this;
@@ -152,7 +138,6 @@ Page({
       title: that.data.pageTitle,
       path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}`,
       success() {
-        // wx.setStorageSync('topicId', that.data.topicId);
         Api.wxShowToast('分享成功', 'none', 2000);
       },
       fail() {
@@ -181,7 +166,6 @@ Page({
     let item = e.currentTarget.dataset.item;
     let qid = item.id;
     let isVote = item.is_vote;
-
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
       if (isVote*1===1 && type*1===1) {
@@ -192,8 +176,6 @@ Page({
       }
       let answerApi = backApi.u_answer;
       answerData.qid = qid;
-      // let showThumb = that.data.showThumb;
-
       if (direct === 'left' && type*1===1 && isVote*1===0) {
         answerData.choose = 1;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
@@ -224,7 +206,6 @@ Page({
             Api.wxShowToast('投过票了', 'none', 300);
           }
         })
-
       }
       if (direct === 'right' && type*1===1 && isVote*1===0) {
         answerData.choose = 2;
@@ -287,7 +268,6 @@ Page({
             Api.wxShowToast('投过票了', 'none', 300);
           }
         })
-
       }
       if (direct === 'right' && type*1===2 && isVote*1===0) {
         answerData.choose = 2;

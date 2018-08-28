@@ -66,10 +66,8 @@ Page({
       that.setData({hadUp: true,showUserbase: false});
     }
   },
-
   //事件处理函数
   slidethis (index, qid, card) {
-
     let that = this;
     let page = that.data.page;
     let notopPage = that.data.notopPage;
@@ -154,7 +152,6 @@ Page({
         Api.wxRequest(showBaseApi,'GET',{},(res)=>{
           // console.log(res,'base')
         });
-
         // 更新基地状态
         setTimeout(()=>{
           Api.wxRequest(myinfoApi,'GET',{},(res)=>{
@@ -167,11 +164,9 @@ Page({
       that.setData({downList: downList})
     }, 200);
   },
-
   onLoad: function () {
     let that = this;
     tabBar.tabbar("tabBar", 1, that);
-
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
       // 获取token
@@ -180,7 +175,6 @@ Page({
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
           that.setData({token: token});
-
           wx.showLoading({
             title: '加载中',
           });
@@ -188,7 +182,6 @@ Page({
           let noTopQuesApi = backApi.noTopQues+token;
           let page = that.data.page;
           let notopPage = that.data.notopPage;
-
           // 取首页数据
           Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
             let status = res.data.status*1;
@@ -241,7 +234,6 @@ Page({
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
         }
-
       }).catch(function(err){
         //错误处理
         console.log(err,'token err')
@@ -255,7 +247,6 @@ Page({
   },
   onShow () {
     let that = this;
-
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -289,7 +280,6 @@ Page({
             }
           }
         });
-
         setInterval(()=>{
           // 获取投票信息
           Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
@@ -322,7 +312,6 @@ Page({
         Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
       }
     })
-
   },
   onReady () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
@@ -347,9 +336,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     } else {
       return {
@@ -363,9 +350,7 @@ Page({
           })
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
 
     }
@@ -374,7 +359,6 @@ Page({
     let that = this;
     let token = that.data.token;
     let qid = that.data.quesId;
-
     that.setData({
       showShare: false
     });
@@ -382,11 +366,6 @@ Page({
       url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
     })
   },
-
-  //保存至相册
-
-  //
-
   shareToFriends () {
     let that = this;
     that.setData({
@@ -411,7 +390,6 @@ Page({
   confirmDialog (e) {
     let that = this;
     let openType = that.data.openType;
-
     that.setData({
       showDialog: false
     });
@@ -531,7 +509,6 @@ Page({
       qid: 0,
       choose: ''
     };
-
     let qList = that.data.questionList;
     let direct = e.currentTarget.dataset.direct;
     let idx = e.currentTarget.dataset.index;
@@ -539,11 +516,9 @@ Page({
     if (e.currentTarget.dataset.item) {
       qid = e.currentTarget.dataset.item.id;
     }
-
     let answerApi = backApi.u_answer;
     answerData.qid = qid;
     let showThumb = that.data.showThumb;
-
     if (direct === 'left') {
       answerData.choose = 1;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
@@ -573,7 +548,6 @@ Page({
           Api.wxShowToast('投过票了', 'none', 300);
         }
       })
-
     }
     if (direct === 'right') {
       answerData.choose = 2;
@@ -611,14 +585,12 @@ Page({
         url: `/pages/usercenter/usercenter`
       })
     }
-
     if (direct==='nobase') {
       that.setData({showbaseMask:true});
       setTimeout(()=>{
         that.setData({showUserbase: false})
       },3200)
     }
-
     setTimeout(()=>{
       that.slidethis(idx,qid,e.currentTarget.dataset.item);
     },4000)
@@ -626,7 +598,6 @@ Page({
   // 到他人中心
   gotoOthers (e) {
     let that = this;
-    let token = that.data.token;
     let local_userId = '';
     let mid = e.target.dataset.mid;
     let userInfo = wx.getStorageSync('userInfo');
@@ -657,7 +628,6 @@ Page({
       type: 'friend',
       qid: quesId
     };
-
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
       Api.wxRequest(shareApi,'POST',postData,(res)=>{
@@ -697,13 +667,12 @@ Page({
       })
     }
   }
-
 })
 
 //获得角度
 function getAngle(angx, angy) {
   return Math.atan2(angy, angx) * 180 / Math.PI;
-};
+}
 //根据起点终点返回方向 1向上 2向下 3向左 4向右 0未滑动
 function getDirection(startx, starty, endx, endy) {
   var angx = endx - startx;
@@ -713,13 +682,11 @@ function getDirection(startx, starty, endx, endy) {
   if (Math.abs(angx) < 2 && Math.abs(angy) < 2) {
     return result;
   }
-
   var angle = getAngle(angx, angy);
   if (angle <= -50) {
     result = 1;
   } else if (angle >= 50) {
     result = 2;
   }
-
   return result;
 }

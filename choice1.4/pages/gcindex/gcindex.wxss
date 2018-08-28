@@ -1,4 +1,3 @@
-/* pages/gcindex/gcindex.wxss */
 page{background: #F5F6F8;}
 .page{padding-bottom: 130rpx;}
 .banner-container{

@@ -1,4 +1,3 @@
-// pages/votemsg/votemsg.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -20,20 +19,13 @@ Page({
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
-
         let localUserInfo = wx.getStorageSync('userInfo');
         that.setData({localuser_id:localUserInfo.id});
-        // let userInfoApi = backApi.userInfo+token;
-        // Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
-        //   let localuser_id = res.data.data.id;
-        //   that.setData({localuser_id:localuser_id});
-        // });
         let voteMsgApi = backApi.voteMsg+token;
         wx.showLoading({
           title: '加载中',
         });
         Api.wxRequest(voteMsgApi,'GET',{},(res)=> {
-          // console.log(res, 'sssss')
           if (res.data.status*1===200) {
             wx.hideLoading();
             let totalPage = res.header['X-Pagination-Page-Count'];
@@ -70,10 +62,6 @@ Page({
   },
   onReady: function () {},
   onShow: function () {},
-  onHide: function () {
-
-  },
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
@@ -97,35 +85,19 @@ Page({
     }
   },
   onShareAppMessage: function (res) {
-    let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
         path: `/pages/gcindex/gcindex`,
         success() {
           Api.wxShowToast('分享成功~', 'none', 2000);
-          // Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          //   console.log(res, 'friends')
-          // })
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },
-  onPageScroll () {
-    // wx.setNavigationBarTitle({
-    //   title: "消息"
-    // })
-    // wx.setNavigationBarColor({
-    //   frontColor:'#ffffff',
-    //   backgroundColor:'#E64340'
-    // })
-  },
+  onPageScroll () {},
   // 到他人中心
   gotoOthers (e) {
     let that = this;
@@ -152,6 +124,5 @@ Page({
       })
     }
     // let my = e.currentTarget.dataset.my;
-
   }
 })

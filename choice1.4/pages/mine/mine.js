@@ -1,5 +1,3 @@
-// pages/mine/mine.js
-
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
@@ -47,7 +45,6 @@ Page({
     that.setData({
       showDialog: false
     });
-
     wx.login({
       success: function (res) {
         let code = res.code
@@ -119,7 +116,6 @@ Page({
                     let voteUnreadApi = backApi.voteUnreadApi+token;
                     let msgTotalApi = backApi.msgUnreadTotal+token;
                     let commTotalApi = backApi.commentUnreadApi+token;
-
                     Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
                       if (res.data.status*1===200) {
                         if (res.data.data.vote) {
@@ -127,7 +123,6 @@ Page({
                         }
                       }
                     });
-
                     Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
                       if (res.data.status*1===200) {
                         let msgTotal = res.data.data.total;
@@ -144,7 +139,6 @@ Page({
                         }
                       }
                     });
-
                   } else {
                     Api.wxShowToast('更新用户信息失败', 'none', 2000);
                   }
@@ -159,7 +153,6 @@ Page({
   onLoad: function (options) {
     let that = this;
     tabBar.tabbar("tabBar", 4, that);
-    
     let isIphone = wx.getStorageSync('isIphone');
     if (isIphone) {
       that.setData({isIphone: true})
@@ -173,12 +166,10 @@ Page({
         that.setData({viewHeight: res.windowHeight});
       }
     })
-    
   },
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-
     if (userInfo.id) {
       that.setData({
         userInfo: userInfo
@@ -253,7 +244,6 @@ Page({
               }
             }
           });
-
           Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
             if (res.data.status*1===200) {
               let msgTotal = res.data.data.total;
@@ -262,7 +252,6 @@ Page({
               }
             }
           });
-
           Api.wxRequest(commTotalApi,'GET',{},(res)=>{
             if (res.data.status*1===200) {
               let commTotal = res.data.data.total;
@@ -294,17 +283,11 @@ Page({
       userInfo: userInfo
     })
   },
-  onUnload: function () {
-  
-  },
-  onPullDownRefresh: function () {
-  
-  },
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let isMine = that.data.isMine;
     let myCurrPage = that.data.myCurrPage*1+1;
-    
     let joinCurrPage = that.data.joinCurrPage*1+1;
     let token = that.data.token;
     let questionApi = backApi.my_question+token;
@@ -344,9 +327,6 @@ Page({
     }
   },
   onShareAppMessage: function (res) {
-    let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -355,9 +335,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },

@@ -1,4 +1,3 @@
-// pages/commentmsg/commentmsg.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -70,10 +69,6 @@ Page({
       }
     });
   },
-  onHide: function () {
-
-  },
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
@@ -148,6 +143,5 @@ Page({
       })
     }
     // let my = e.currentTarget.dataset.my;
-
   }
 })

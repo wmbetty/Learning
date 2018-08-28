@@ -1,4 +1,3 @@
-<!--pages/commentmsg/commentmsg.wxml-->
 <view class="page-head">评论</view>
 <view class="vote-list-group" wx:if="{{commLists.length>0}}">
     <view wx:for="{{commLists}}" wx:key="{{index}}" class="{{item.question.status===4?'vote-list-item delete-bg':'vote-list-item'}}" data-qid="{{item.qid}}" data-stat="{{item.status}}" catchtap="gotoDetail">

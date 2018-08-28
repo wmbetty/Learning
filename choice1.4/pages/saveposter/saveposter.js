@@ -1,10 +1,5 @@
-
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-// const ImgLoader = require('../../components/img-loader/img-loader.js');
-
-//缩略图 80x50 3KB
-// const imgUrlThumbnail = 'https://fabu.choosen.79643.com/images/share_img/2018/08/01/6aae0da5d57e3a335be3a3e8faecf21d.jpg';
 
 Page({
   data: {
@@ -31,10 +26,6 @@ Page({
       }
     })
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     wx.showToast({
       title: '海报生成中...',
@@ -42,7 +33,6 @@ Page({
       duration: 1200
     });
     let that = this;
-
     let shareApi = backApi.shareApi+options.token;
     let qid = options.qid;
     that.setData({token: options.token});
@@ -61,7 +51,6 @@ Page({
         }
       });
     },1200)
-
   },
   savePhoto () {
     let that = this;
@@ -70,7 +59,6 @@ Page({
     let token = that.data.token;
     let IMG_URL = that.data.imagePath;
     let prevPage=that.data.prevPage;
-
     wx.showToast({
       title: '保存中...',
       icon: 'loading',
@@ -124,12 +112,10 @@ Page({
             console.log('fail')
           }
         })
-
       },3300)
     }
   },
   onShareAppMessage: function (res) {
-    let that = this;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -138,9 +124,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },

@@ -1,4 +1,3 @@
-<!--pages/activity/activity.wxml-->
 <view>
     <view class="img-comtainer">
         <image class="activity-img" mode="widthFix" src="{{activity.img_url}}"></image>

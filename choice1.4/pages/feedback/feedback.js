@@ -1,4 +1,3 @@
-// pages/feedback/feedback.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -30,8 +29,6 @@ Page({
   },
   onReady: function () {},
   onShow: function () {},
-  onHide: function () {},
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
@@ -50,7 +47,6 @@ Page({
       }
     }
   },
-  onPageScroll () {},
   putMobile (e) {
     let val =  (e.detail.value).replace(/\s+/g,"");
     let mobileReg=/^[1][3,4,5,7,8][0-9]{9}$/;

@@ -1,4 +1,3 @@
-<!--pages/rankboard/rankboard.wxml-->
 <view>
     <view class="banner-cont" hidden="{{fixedTabHead}}">
         <image src="../../images/rank_banner.png" />

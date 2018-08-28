@@ -1,4 +1,3 @@
-<!--pages/gcintro/gcintro.wxml-->
 <view>
     <view class="text-center intro1">
         <view class="color-34 h1 text-botom">“选象”</view>

@@ -1,5 +1,3 @@
-<!--index.wxml-->
-<!-- <import src="../../components/tabBar/tabBar.wxml"/> -->
 <import src="../../components/we-cropper/we-cropper.wxml"/>
 <view hidden="{{!hasUserInfo}}" class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
     <view class="tab-item-box">

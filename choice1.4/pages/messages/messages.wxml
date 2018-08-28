@@ -1,4 +1,3 @@
-<!--pages/messages/messages.wxml-->
  <import src="../../components/tabBar/tabBar.wxml"/>
 <view class="page-head">消息中心</view>
 <view class="msg-list-group">

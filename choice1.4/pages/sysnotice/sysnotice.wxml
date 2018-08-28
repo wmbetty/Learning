@@ -1,4 +1,3 @@
-<!--pages/sysnotice/sysnotice.wxml-->
 <view class="page-head">通知</view>
 
 <view wx:if="{{noticeLists.length>0}}">

@@ -1,4 +1,3 @@
-/* pages/activity/activity.wxss */
 page{position: relative;background: #F5F6F8;padding-bottom: 120rpx}
 .img-comtainer{width: 100%;min-height: 200rpx;overflow-x: hidden;overflow-y: auto;
     display: flex;align-items: center;justify-content: center;

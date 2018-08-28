@@ -327,8 +327,6 @@ Page({
       });
     }
   },
-  onHide: function () {},
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
@@ -472,7 +470,6 @@ Page({
     })
   },
 shareToMoment () {
-
   let that = this;
   let token = that.data.token;
   let qid = that.data.quesId;
@@ -483,7 +480,6 @@ shareToMoment () {
     url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
   })
 },
-  
   shareToFriends () {
     setTimeout(()=>{
       this.setData({
@@ -492,8 +488,6 @@ shareToMoment () {
       })
     },600)
   },
-  //保存至相册
-
   //  投票
   goVote (e) {
     let that = this;
@@ -615,12 +609,10 @@ shareToMoment () {
     } else {
       that.setData({showDialog: true})
     }
-    
   },
   gotoOthers (e) {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-    // let language = userInfo.language || '';
 
     if (userInfo.id) {
       let local_userId = userInfo.id;
@@ -767,22 +759,13 @@ shareToMoment () {
       let commentType = e.currentTarget.dataset.type;
       let atename = e.currentTarget.dataset.atename;
       let idx = e.currentTarget.dataset.index || '';
-      let userInfoApi = backApi.userInfo+that.data.token;
       let content = that.data.content;
-
-      that.setData({pid:pid,commentType:commentType,showClickBtn:false,idx:idx,showInput:true});
-
-      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-      //   that.setData({uInfo:res.data.data});
-      // });
-      that.setData({uInfo:userInfo});
-
+      that.setData({pid:pid,commentType:commentType,showClickBtn:false,idx:idx,showInput:true,uInfo:userInfo});
       if (commentType==='reply') {
         that.setData({atename:atename});
       } else {
         that.setData({atename:''});
       }
-
       if (commentType==='reply' && content!=='' && isComment) {
         that.setData({inputVal:''});
         isComment = false
@@ -802,7 +785,6 @@ shareToMoment () {
     this.setData({showInput:false})
   }
 });
-
 // 获取评论列表
 function getCommentList(commentApi,qid,page,that) {
   Api.wxRequest(commentApi,'GET',{qid:qid,page:page},(res)=>{

@@ -1,9 +1,7 @@
-// pages/categotries/categotries.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
 Page({
-
   data: {
     categoryId: '',
     token: '',
@@ -84,19 +82,8 @@ Page({
       }
     })
   },
-
-  onReady: function () {
-  
-  },
-
-  onShow: function () {
-  
-  },
-
-  onPullDownRefresh: function () {
-  
-  },
-
+  onShow: function () {},
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let type = that.data.type;
@@ -137,7 +124,6 @@ Page({
       }
     }
   },
-
   onShareAppMessage: function () {
     let that = this;
     return {

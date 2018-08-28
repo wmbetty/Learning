@@ -1,4 +1,3 @@
-<!--pages/feedback/feedback.wxml-->
 <view class="page-head">建议反馈</view>
 <view class="advice-container">
     <textarea class="advice-cont" bindinput="putAdvice" placeholder-class="placeholder" value="{{contVal}}" placeholder="有任何产品建议或反馈，请给选小象留言哦～" maxlength="200"/>

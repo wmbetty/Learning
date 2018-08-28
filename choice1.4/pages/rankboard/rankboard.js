@@ -1,4 +1,3 @@
-// pages/rankboard/rankboard.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -26,7 +25,6 @@ Page({
     myid: '',
     showDialog: false
   },
-
   onLoad: function (options) {
     let that = this;
     wx.showLoading({
@@ -89,18 +87,12 @@ Page({
             Api.wxShowToast('数据获取失败~', 'none', 2000)
           }
         })
-
       } else {
         wx.hideLoading();
       }
     })
-
   },
-
-  onReady: function () {
-  
-  },
-
+  onReady: function () {},
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
@@ -108,11 +100,7 @@ Page({
       that.setData({myid: userInfo.id})
     }
   },
-
-  onPullDownRefresh: function () {
-  
-  },
-
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let page1 = that.data.page1*1+1;
@@ -210,7 +198,6 @@ Page({
       }
     }
   },
-
   onShareAppMessage: function () {
     return {
       title: '排行榜',
@@ -219,11 +206,8 @@ Page({
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
       fail() {},
-      complete() {
-
-      }
+      complete() {}
     }
-  
   },
   changeTab (e) {
     let that = this;
@@ -232,7 +216,6 @@ Page({
     let isMonth = that.data.isMonth;
     let isWeekUp = that.data.isWeekUp;
     let isMonthUp = that.data.isMonthUp;
-
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
       if (isWeek) {
@@ -249,7 +232,6 @@ Page({
           that.setData({isMonthUp: true,type:4})
         }
       }
-
       if (title==='isWeek' && !isWeek && !isWeekUp) {
         if (isMonthUp) {
           that.setData({isMonthUp: true,type:4})
@@ -265,7 +247,6 @@ Page({
           that.setData({isMonthUp: false,type:3})
         }
         that.setData({isWeek: true,isMonth:false,isAllRank:false,type: 2})
-
       }
       if (title==='isMonth' && !isMonth && !isMonthUp) {
         if (isWeekUp) {
@@ -283,7 +264,6 @@ Page({
         }
         that.setData({isMonth: true,isWeek:false,isAllRank:false,type: 4})
       }
-
       if (title==='isAllRank') {
         if (isWeekUp) {
           that.setData({isWeekUp: true,type:2})

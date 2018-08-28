@@ -1,4 +1,3 @@
-// pages/votemsg/votemsg.js
 const Api = require('../../wxapi/wxApi');
 const backApi = require('../../utils/util');
 
@@ -18,7 +17,6 @@ Page({
       frontColor:'#000000',
       backgroundColor:'#F5F6F8'
     })
-
   },
   onReady: function () {},
   onShow: function () {
@@ -28,7 +26,6 @@ Page({
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
         that.setData({token: token});
-
         let noticeMsg = backApi.noticeMsg+token;
         wx.showLoading({
           title: '加载中',
@@ -57,9 +54,7 @@ Page({
               })
             }
           }
-
         })
-
         let readNoticeApi = backApi.readNoticeApi+token;
         Api.wxRequest(readNoticeApi,'PUT',{},(res)=> {
           console.log('read');
@@ -69,10 +64,6 @@ Page({
       }
     })
   },
-  onHide: function () {
-
-  },
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
@@ -105,21 +96,11 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },
-  onPageScroll () {
-    // wx.setNavigationBarTitle({
-    //   title: "通知"
-    // })
-    // wx.setNavigationBarColor({
-    //   frontColor:'#ffffff',
-    //   backgroundColor:'#E64340'
-    // })
-  },
+  onPageScroll () {},
   gotoDetails (e) {
     let msg = e.currentTarget.dataset.msg;
     let item = JSON.stringify(e.currentTarget.dataset.item);

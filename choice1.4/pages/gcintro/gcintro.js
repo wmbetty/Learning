@@ -1,40 +1,14 @@
-// pages/gcintro/gcintro.js
-
 const Api = require('../../wxapi/wxApi');
 
 Page({
 
-  data: {
-  
-  },
+  data: {},
 
-  onLoad: function (options) {
-  
-  },
-  onReady: function () {
-  
-  },
-
-  onShow: function () {
-  
-  },
-
-  onHide: function () {
-  
-  },
-
-  onUnload: function () {
-  
-  },
-
-  onPullDownRefresh: function () {
-  
-  },
-
-  onReachBottom: function () {
-  
-  },
-
+  onLoad: function (options) {},
+  onReady: function () {},
+  onShow: function () {},
+  onPullDownRefresh: function () {},
+  onReachBottom: function () {},
   onShareAppMessage: function () {
     return {
       title: '选象简介',
@@ -43,9 +17,7 @@ Page({
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
       fail() {},
-      complete() {
-
-      }
+      complete() {}
     }
   }
 })

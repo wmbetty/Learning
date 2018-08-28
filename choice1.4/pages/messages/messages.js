@@ -1,13 +1,8 @@
-// pages/messages/messages.js
 const tabBar = require('../../components/tabBar/tabBar.js');
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     msgNum: 9,
     voteUnreadCount: 0,
@@ -19,7 +14,6 @@ Page({
     token: '',
     showRedDot: false,
     baseRedDot: 0
-
   },
   cancelDialog () {
     let that = this;
@@ -84,7 +78,6 @@ Page({
                     })
                   });
                 })
-
               } else {
                 Api.wxShowToast('更新用户信息出错了', 'none', 2000);
               }
@@ -100,7 +93,6 @@ Page({
   onLoad: function (options) {
     let that = this;
     tabBar.tabbar("tabBar", 3, that);
-
     wx.setNavigationBarColor({
       frontColor:'#000000',
       backgroundColor:'#F5F6F8'
@@ -117,7 +109,6 @@ Page({
   onShow: function () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-
     if (!userInfo.id) {
       backApi.getToken().then(function(response) {
         let token = response.data.data.access_token;
@@ -160,14 +151,12 @@ Page({
     }
 
   },
-  onHide: function () {},
-  onUnload: function () {},
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
-    let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
+    // let that = this;
+    // let token = that.data.token;
+    // let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -179,18 +168,13 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
-  },
-  onPageScroll () {
   },
   gotoVotemsg () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-
     if (!userInfo.id) {
       that.setData({
         showDialog: true
@@ -208,7 +192,6 @@ Page({
   gotoNotice () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-
     if (!userInfo.id) {
       that.setData({
         showDialog: true
@@ -226,7 +209,6 @@ Page({
   gotoFeed () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
-
     if (!userInfo.language) {
       that.setData({
         showDialog: true

@@ -1,13 +1,8 @@
-// pages/usercenter/usercenter.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 const app = getApp();
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     userBaseInfo: {},
     showDialog: false,
@@ -36,7 +31,6 @@ Page({
        backgroundColor:'#F5F6F8'
     });
     let that = this;
-
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -50,7 +44,6 @@ Page({
         Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
       }
     })
-
   },
   savePhoto () {
     let that = this;
@@ -87,7 +80,6 @@ Page({
             console.log('fail')
           }
         })
-
       },2900)
     }
   },
@@ -100,9 +92,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   }

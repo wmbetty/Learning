@@ -1,4 +1,3 @@
-<!--pages/maintests/maintests.wxml-->
 <import src="../../components/tabBar/tabBar.wxml"/>
 <view class="m-container">
     <view class="{{isDown?'card_wrap card_wrap_overhide':'card_wrap'}}">

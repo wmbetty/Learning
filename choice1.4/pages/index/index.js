@@ -146,8 +146,7 @@ Page({
     })
   },
   uploadTap () {
-    const self = this
-
+    const self = this;
     wx.chooseImage({
       count: 1, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -237,7 +236,6 @@ Page({
     }
   },
   onLoad: function(option) {
-
     let that = this;
     let topicId = option.topicId;
     let topicTitle = option.topicTitle;
@@ -252,14 +250,11 @@ Page({
         topicBtnText: topicTitle
       })
     }
-
     tabBar.tabbar("tabBar", 2, that);//0表示第一个tabbar
-
     let model = isIphone.model;
     if (model.indexOf('iPhone') == -1) {
       that.setData({adjustPosi:true,spacing:40,andrToast:true});
     }
-
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
       if (res.windowHeight) {
@@ -267,7 +262,6 @@ Page({
       }
     })
     const { cropperOpt } = that.data.cropperData;
-
     new WeCropper(cropperOpt)
       .on('ready', (ctx) => {
         console.log(`wecropper is ready for work!`)
@@ -305,7 +299,6 @@ Page({
             hasUserInfo: false,
             token: token
           })
-
           Api.wxRequest(categoryListApi,'GET',{},(res)=>{
             if (res.data.status*1===201) {
               let category = res.data.data;
@@ -318,7 +311,6 @@ Page({
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
         }
       })
-
     } else {
       that.setData({
         uavatar: userInfo.avatar
@@ -329,7 +321,6 @@ Page({
           that.setData({token: token});
           let myInfo = backApi.myInfo+token;
           let categoryListApi = backApi.categoryListApi+token;
-
           Api.wxRequest(myInfo,'GET',{},(res)=>{
             if (res.data.status*1===200) {
               myPoint = res.data.data.points;
@@ -513,13 +504,11 @@ Page({
         }
       }
     }
-
   },
   // 上传图片
   chooseImg (e) {
     let that = this;
     let imgopt = e.currentTarget.dataset.imgopt;
-
     wx.chooseImage({
       sizeType: ['compressed'],
       count: 1,
@@ -582,11 +571,9 @@ Page({
         category_id: that.data.category_id,
         topic_id: that.data.topic_id
       };
-
       that.setData({
         btnDis: true
       });
-
       if (isPublish) {
         that.setData({showClickBtn: true});
         Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
@@ -874,7 +861,6 @@ Page({
       })
     },300)
   },
-
   onShareAppMessage (res) {
     let that = this;
     let questId = that.data.qid;
@@ -929,8 +915,6 @@ Page({
       url: `/pages/saveposter/saveposter?qid=${qid}&token=${token}`
     })
   },
-  //保存至相册
-
   shareToFriend () {
     setTimeout(()=> {
       wx.navigateBack({
@@ -976,7 +960,6 @@ Page({
         showRight: false
       })
     }
-
     if (that.data.txtActive) {
       that.setData({pagePad: false});
       if (title===''||leftText===''||rightText===''){
@@ -990,7 +973,6 @@ Page({
         })
       }
     }
-
   },
   changeTab (e) {
     let that = this;
@@ -1006,7 +988,6 @@ Page({
       if ((titleText !== '点击输入标题' && titleText !== '') && that.data.leftText !== '' && that.data.rightText !== '') {
         that.setData({isPublish:true,btnDis:false})
       }
-
     } else {
       if (ImgLock===1) {
         Api.wxShowToast("发文字选项，获3票 解锁发图", 'none', 2200)
@@ -1020,7 +1001,6 @@ Page({
           that.setData({isPublish:true,btnDis:false})
         }
       }
-
     }
   },
   // 删除图片

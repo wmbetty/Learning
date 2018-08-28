@@ -1,4 +1,3 @@
-// pages/others/others.js
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 
@@ -23,12 +22,6 @@ Page({
         let localUserInfo = wx.getStorageSync('userInfo');
         let localuser_id = localUserInfo.id;
         that.setData({localuser_id:localuser_id});
-        // let userInfoApi = backApi.userInfo+token;
-        // Api.wxRequest(userInfoApi,'PUT',localUserInfo,(res)=> {
-        //   let localuser_id = res.data.data.id;
-        //   that.setData({localuser_id:localuser_id});
-        // });
-
         let infoApi = backApi.othersInfo+token;
         let otherPublishQues = backApi.otherPublishQues+token;
         let mid = options.mid;
@@ -84,8 +77,6 @@ Page({
       url: `/pages/otherDetails/otherDetails?id=${id}&my=${my}&other=${other}`
     })
   },
-
-
   onPageScroll (e) {
     if (e.scrollTop*1>=this.data.viewHeight/3) {
       wx.setNavigationBarColor({
@@ -100,10 +91,6 @@ Page({
     }
 
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady: function () {
     let wxGetSystemInfo = Api.wxGetSystemInfo();
     wxGetSystemInfo().then(res => {
@@ -112,11 +99,8 @@ Page({
       }
     })
   },
-  onShow: function () {
-  },
-  onPullDownRefresh: function () {
-
-  },
+  onShow: function () {},
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let currPage = that.data.currPage*1+1;
@@ -140,9 +124,6 @@ Page({
     }
   },
   onShareAppMessage: function (res) {
-    let that = this;
-    let token = that.data.token;
-    let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -151,9 +132,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },

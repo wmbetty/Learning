@@ -1,13 +1,7 @@
-// pages/gcindex/gcindex.js
-// const Page = require('../../utils/ald-stat.js').Page;
 const app = getApp();
-
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-
 const tabBar = require('../../components/tabBar/tabBar.js');
-let baseLock = '';
-
 
 Page({
   data: {
@@ -30,13 +24,10 @@ Page({
     noList: false,
     showContent: false
   },
-
   onLoad: function (options) {
     let that = this;
     tabBar.tabbar("tabBar", 0, that);
-
     let questId = wx.getStorageSync('quesid');
-    // let topicId = wx.getStorageSync('topicId');
     let topicId = options.topicId;
     let cid = options.cid;
     let cname = options.cname;
@@ -49,30 +40,26 @@ Page({
     if (questId) {
       wx.navigateTo({
         url: `/pages/details/details?id=${questId}`
-      })
+      });
       setTimeout(()=> {
         wx.setStorageSync('quesid', '');
       }, 300)
     }
-
     if (topicId) {
       wx.navigateTo({
         url: `/pages/topicques/topicques?id=${topicId}`
       })
     }
-
     if (cid) {
       wx.navigateTo({
         url: `/pages/categotries/categotries?title=${cname}&id=${cid}`
       })
     }
-
     if (isMain) {
       wx.navigateTo({
         url: `/pages/main/main`
       })
     }
-
     if (isRank) {
       wx.navigateTo({
         url: `/pages/rankboard/rankboard`
@@ -93,16 +80,13 @@ Page({
         url: '/pages/usercenter/usercenter'
       })
     }
-
     wx.setNavigationBarColor({
       frontColor:'#000000',
       backgroundColor:'#F5F6F8'
     });
-
     wx.showLoading({
       title: '加载中'
     });
-
     backApi.getToken().then(function(response) {
       if (response.data.status * 1 === 200) {
         let token = response.data.data.access_token;
@@ -118,7 +102,7 @@ Page({
             wx.hideLoading();
             Api.wxShowToast('轮播图获取失败~', 'none', 2000)
           }
-        })
+        });
         Api.wxRequest(categoryListApi,'GET',{},(res)=>{
           if (res.data.status*1===201) {
             let category = res.data.data;
@@ -126,7 +110,7 @@ Page({
           } else {
             Api.wxShowToast('分类获取失败~', 'none', 2000)
           }
-        })
+        });
         Api.wxRequest(topicListApi,'GET',{page: that.data.page},(res)=>{
           if (res.data.status*1===200) {
             let totalPage = res.header['X-Pagination-Page-Count'];
@@ -140,14 +124,10 @@ Page({
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
     })
-
   },
-
-  onReady: function () {
-  },
-
+  onReady: function () {},
   onShow: function () {
-    let that = this
+    let that = this;
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
@@ -155,7 +135,6 @@ Page({
         let voteUnreadApi = backApi.voteUnreadApi+token;
         let msgTotalApi = backApi.msgUnreadTotal+token;
         let commTotalApi = backApi.commentUnreadApi+token;
-
         // 获取投票信息
         Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
           if (res.data.status*1===200) {
@@ -182,7 +161,6 @@ Page({
             }
           }
         });
-
         setInterval(()=>{
           // 获取投票信息
           Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
@@ -216,19 +194,7 @@ Page({
       }
     })
   },
-
-  onHide: function () {
-  
-  },
-
-  onUnload: function () {
-  
-  },
-
-  onPullDownRefresh: function () {
-  
-  },
-
+  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let page = that.data.page*1+1;
@@ -247,9 +213,7 @@ Page({
         }
       })
     }
-  }
-  ,
-
+  },
   onShareAppMessage: function () {
     return {
       title: '选象 让选择简单点',
@@ -258,11 +222,8 @@ Page({
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
       fail() {},
-      complete() {
-
-      }
+      complete() {}
     }
-  
   },
   cancelDialog () {
     let that = this;
@@ -282,7 +243,7 @@ Page({
               encryptedData: res.encryptedData,
               iv: res.iv,
               code: code
-            }
+            };
             backApi.getToken().then(function (response) {
               if (response.data.status * 1 === 200) {
                 let token = response.data.data.access_token;
@@ -306,8 +267,9 @@ Page({
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
       if (userInfo.id) {
-        let title = e.currentTarget.dataset.title;
-        let cid = e.currentTarget.dataset.id;
+        let item = e.currentTarget.dataset.item;
+        let title = item.name;
+        let cid = item.id;
         app.aldstat.sendEvent(`用户在首页点击了-${title}-这个分类`,{
           play : ""
         });
@@ -352,8 +314,9 @@ Page({
   },
   gotoTopic (e) {
     let that = this;
-    let tid = e.currentTarget.dataset.tid;
-    let title = e.currentTarget.dataset.title;
+    let item = e.currentTarget.dataset.item;
+    let tid = item.id;
+    let title = item.title;
     setTimeout(()=>{
       let userInfo = wx.getStorageSync('userInfo');
       if (userInfo.id) {
