@@ -153,7 +153,7 @@ Page({
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
-      wx.navigateTo({
+      wx.reLaunch({
         url: '/pages/main/main'
       })
     } else {

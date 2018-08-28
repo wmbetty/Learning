@@ -1,5 +1,5 @@
 <import src="../../components/we-cropper/we-cropper.wxml"/>
-<view hidden="{{!hasUserInfo}}" class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
+<view class="{{pagePad?'index-tab-head index-tab-head-sm':'index-tab-head'}}">
     <view class="tab-item-box">
         <view class="{{txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="text" bindtouchend="changeTab"><image src="{{txtActive?'../../images/text_icon.png':'../../images/text_act_icon.png'}}" class="tab-item-img"></image></view>
         <view class="{{!txtActive?'tab-item tab-item-active':'tab-item'}}" data-tab="image" bindtouchend="changeTab"><image src="{{!txtActive?'../../images/img_icon.png':'../../images/img_act_icon.png'}}" class="tab-item-img"></image></view>
@@ -15,7 +15,7 @@
         </view>
     <view class="choose-btn-container">
         <view hidden="{{showTopicBtn}}" class="chose-cate-btn" bindtap="showChooseCate">{{choseBtnText}}</view>
-        <view hidden="{{!showTopicBtn}}" class="chose-cate-btn topic-btn"># <text class="btn-text">{{topicBtnText}}</text> #</view>
+        <view hidden="{{!showTopicBtn}}" class="chose-cate-btn topic-btn" bindtap="tapTopic"># <text class="btn-text">{{topicBtnText}}</text> #</view>
     </view>
     <view hidden="{{!txtActive}}">
         <view class="pub-cont">

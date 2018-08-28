@@ -1,6 +1,5 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
-const app = getApp();
 
 Page({
   data: {

@@ -29,6 +29,8 @@ Page({
     tabBar.tabbar("tabBar", 0, that);
     let questId = wx.getStorageSync('quesid');
     let topicId = options.topicId;
+    let tptitle = options.tptitle;
+    console.log(tptitle, 'eee')
     let cid = options.cid;
     let cname = options.cname;
     let isMain = options.isMain;
@@ -47,7 +49,7 @@ Page({
     }
     if (topicId) {
       wx.navigateTo({
-        url: `/pages/topicques/topicques?id=${topicId}`
+        url: `/pages/topicques/topicques?id=${topicId}&title=${tptitle}`
       })
     }
     if (cid) {

@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "话题",
+  "navigationBarTitleText": "",
   "usingComponents": {
     "empty-wxml": "../../components/empty/empty",
     "dialog-wxml": "../../components/dialog/dialog"

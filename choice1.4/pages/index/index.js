@@ -14,6 +14,7 @@ let optionLtImage = '';
 
 Page({
   data: {
+    prevPage: '',
     categoryList: [],
     showCateList: false,
     choseBtnText: '选择分类',
@@ -288,6 +289,9 @@ Page({
   },
   onShow () {
     let that = this;
+    let pages = getCurrentPages();
+    let prevPage = pages[pages.length-2]['__route__'];
+    that.setData({prevPage:prevPage});
     let userInfo = wx.getStorageSync('userInfo');
     if (!userInfo.id) {
       backApi.getToken().then(function(response) {
@@ -481,7 +485,7 @@ Page({
             rightText: val
           });
           let strlen = that.strlen(val);
-          if (strlen<=36) {
+          if (strlen<=56) {
             that.setData({disRight: val,rightHadWrite: strlen,isWeToast:false})
           } else {
             let rightTxt = that.data.disRight;
@@ -491,7 +495,7 @@ Page({
             } else {
               that.setData({andrToastTop:false});
             }
-            that.setData({rightHolder: rightTxt,isWeToast:true,toastText:'右选项不超过36个字符'});
+            that.setData({rightHolder: rightTxt,isWeToast:true,toastText:'右选项不超过56个字符'});
             setTimeout(()=>{
               that.setData({isWeToast:false});
             },2000)
@@ -564,9 +568,9 @@ Page({
       }
 
       let postData = {
-        question: that.data.titleText.replace(/\s/g, "").substring(0,30),
-        option1: that.data.leftText.replace(/\s/g, "").substring(0,36),
-        option2: that.data.rightText.replace(/\s/g, "").substring(0,36),
+        question: that.data.titleText.replace(/\s/g, ""),
+        option1: that.data.leftText.replace(/\s/g, ""),
+        option2: that.data.rightText.replace(/\s/g, ""),
         type: 1,
         category_id: that.data.category_id,
         topic_id: that.data.topic_id
@@ -721,7 +725,7 @@ Page({
       if (isPublish) {
         setTimeout(()=>{
           let postData = {
-            question: that.data.titleText.replace(/\s/g, "").substring(0,30),
+            question: that.data.titleText.replace(/\s/g, ""),
             option1: optionLtImage,
             option2: optionRtImage,
             type: 2,
@@ -849,17 +853,26 @@ Page({
   },
   // 取消分享
   cancelShare () {
-    this.setData({
+    let that = this;
+    let prevPage = that.data.prevPage;
+    that.setData({
       isShare: false,
       maskHidden: false,
       hasUserInfo: true,
       isToastCancle: true
     });
-    setTimeout(()=>{
-      wx.reLaunch({
-        url: `/pages/mine/mine`
+    if (prevPage==='pages/topicques/topicques') {
+      wx.setStorageSync('myNewTopic', '1');
+      wx.navigateBack({
+        delta: 1
       })
-    },300)
+    } else {
+      setTimeout(()=>{
+        wx.reLaunch({
+          url: `/pages/mine/mine`
+        })
+      },300)
+    }
   },
   onShareAppMessage (res) {
     let that = this;
@@ -867,7 +880,6 @@ Page({
     let token = that.data.token;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
     let shareFriImg = that.data.shareFriImg || '';
-
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -879,9 +891,7 @@ Page({
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     } else {
       return {
@@ -894,9 +904,7 @@ Page({
           })
         },
         fail() {},
-        complete() {
-
-        }
+        complete() {}
       }
     }
   },
@@ -1040,12 +1048,12 @@ Page({
     that.setData({
       showCateList: false,hasUserInfo: true
     })
-    let choseBtnText = that.data.choseBtnText;
-    setTimeout(()=>{
-      if (choseBtnText === '选择分类') {
-        that.setData({choseBtnText: '其他分类'})
-      }
-    },200)
+    // let choseBtnText = that.data.choseBtnText;
+    // setTimeout(()=>{
+    //   if (choseBtnText === '选择分类') {
+    //     that.setData({choseBtnText: '其他分类'})
+    //   }
+    // },200)
   },
   chooseCate (e) {
     let that = this;
@@ -1056,5 +1064,8 @@ Page({
         showCateList: false,hasUserInfo: true,choseBtnText: cname,category_id: cid
       })
     },200)
+  },
+  tapTopic () {
+    Api.wxShowToast("快基于此话题提问吧", 'none', 2200)
   }
 });

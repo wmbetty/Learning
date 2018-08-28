@@ -24,7 +24,7 @@
                         <view class="ques-title" data-qid="{{item.id}}" bindtap="gotoDetail">{{item.question}}</view>
                     </view>
                 </view>
-                <view wx:if="{{showBotomBtn1}}" class="list-botom-btn" bindtap="gotoMain">到底啦，去看看问题广场吧</view>
+                <view wx:if="{{showBotomBtn1}}" class="list-botom-btn" bindtap="gotoMain">到底啦，点击去看看问题广场吧</view>
                 <view wx:if="{{topicList1.length===0}}" class="tab-content-empty">
                     <empty-wxml empty-info="暂无热门问题"></empty-wxml>
                 </view>

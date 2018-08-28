@@ -1,5 +1,6 @@
 const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
+let tid = '';
 
 Page({
   data: {
@@ -27,21 +28,54 @@ Page({
     let that = this;
     let title = options.title;
     let topicId = options.id*1;
+    tid = topicId;
     let topicDetailsApi = backApi.topicDetail+topicId;
     that.setData({topicId: topicId,pageTitle:title});
     wx.setNavigationBarTitle({
       title: title
     });
-    let type = that.data.type;
+    backApi.getToken().then(function(response) {
+      if (response.data.status * 1 === 200) {
+        let token = response.data.data.access_token;
+        that.setData({token: token});
+        Api.wxRequest(topicDetailsApi, 'GET', {}, (res) => {
+          if (res.data.status * 1 === 200) {
+            that.setData({topicDetail: res.data.data})
+          } else {
+            Api.wxShowToast('话题详情获取失败~', 'none', 2000)
+          }
+        });
+      } else {
+        Api.wxShowToast('token获取失败~', 'none', 2000)
+      }
+    })
+  },
+  onReady: function () {},
+  onShow: function () {
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo');
+    that.setData({localUser: userInfo});
+    let type = '';
+    let myNewTopic = wx.getStorageSync('myNewTopic');
+    setTimeout(()=>{
+      wx.setStorageSync('myNewTopic', '');
+    },200);
+    if (myNewTopic) {
+      type = 2;
+      that.setData({type: 2})
+    } else {
+      type = that.data.type;
+    }
+    // let type = that.data.type;
     let page1 = that.data.page1;
     let page2 = that.data.page2;
     let getQuesData1 = {
-      topic_id: topicId,
+      topic_id: tid,
       type: type,
       page: page1
     };
     let getQuesData2 = {
-      topic_id: topicId,
+      topic_id: tid,
       type: 2,
       page: page2
     };
@@ -54,13 +88,6 @@ Page({
         let token = response.data.data.access_token;
         that.setData({token: token});
         let topicQuesApi = backApi.topicQues+token;
-        Api.wxRequest(topicDetailsApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            that.setData({topicDetail: res.data.data})
-          } else {
-            Api.wxShowToast('话题详情获取失败~', 'none', 2000)
-          }
-        });
         Api.wxRequest(topicQuesApi,'GET',getQuesData1,(res)=>{
           if (res.data.status*1===200) {
             wx.hideLoading();
@@ -84,12 +111,6 @@ Page({
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
     })
-  },
-  onReady: function () {},
-  onShow: function () {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    that.setData({localUser: userInfo})
   },
   onPullDownRefresh: function () {},
   onReachBottom: function () {
@@ -136,7 +157,7 @@ Page({
     let that = this;
     return {
       title: that.data.pageTitle,
-      path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}`,
+      path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}&tptitle=${that.data.pageTitle}`,
       success() {
         Api.wxShowToast('分享成功', 'none', 2000);
       },

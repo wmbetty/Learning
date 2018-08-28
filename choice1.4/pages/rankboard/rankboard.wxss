@@ -26,7 +26,7 @@ background-size: 100% 100%;}
 .rank-medal{
     width: 46rpx;height: 72rpx;margin-right: 26rpx;text-align: center;
 }
-.tab-cont{padding: 40rpx 30rpx 0;}
+.tab-cont{padding: 40rpx 30rpx 20rpx;}
 .rank-list-item{display: flex;margin-bottom: 40rpx;}
 .ques-user-info{
     display: flex;align-items: center;color: #62559D;font-size: 28rpx;
@@ -48,7 +48,7 @@ background-size: 100% 100%;}
     color: #E64340;font-size: 44rpx;
 }
 .three-num{
-    color: #E64340;font-size: 32rpx;
+    color: #E64340;width: 62rpx;font-size: 44rpx;
 }
 .tab-content-empty{padding-top:80rpx;margin-bottom:140rpx}
 .nomore-text{color:#c7c7c7;font-size:24rpx;text-align:center;padding:20rpx 0}
