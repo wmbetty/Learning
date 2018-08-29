@@ -169,7 +169,6 @@ Page({
     tabBar.tabbar("tabBar", 1, that);
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
-      // 获取token
       backApi.getToken().then(function(response){
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
@@ -238,7 +237,6 @@ Page({
         console.log(err,'token err')
       });
     } else {
-      // 微信授权
       that.setData({
         showDialog: true
       })
@@ -524,7 +522,6 @@ Page({
       answerData.choose = 1;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
-        // 投票成功后
         if (status === 201) {
           if (!showThumb) {
             that.setData({showThumb: true})
@@ -554,7 +551,6 @@ Page({
       answerData.choose = 2;
       Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
         let status = res.data.status*1;
-        // 投票成功后
         if (status === 201) {
           if (!showThumb) {
             that.setData({showThumb: true})
@@ -596,7 +592,6 @@ Page({
       that.slidethis(idx,qid,e.currentTarget.dataset.item);
     },4000)
   },
-  // 到他人中心
   gotoOthers (e) {
     let that = this;
     let local_userId = '';

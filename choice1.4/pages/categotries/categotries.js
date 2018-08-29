@@ -145,7 +145,6 @@ Page({
       that.setData({showDialog: false})
     }
   },
-  // 去广场
   gotoMain () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');

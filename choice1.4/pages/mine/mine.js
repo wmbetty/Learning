@@ -264,7 +264,6 @@ Page({
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
         }
       });
-
     } else {
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
@@ -283,7 +282,6 @@ Page({
       userInfo: userInfo
     })
   },
-  onPullDownRefresh: function () {},
   onReachBottom: function () {
     let that = this;
     let isMine = that.data.isMine;
@@ -334,8 +332,9 @@ Page({
         success() {
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
-        fail() {},
-        complete() {}
+        fail() {
+          Api.wxShowToast('分享失败~', 'none', 2000);
+        }
       }
     }
   },
@@ -353,7 +352,6 @@ Page({
     } else {
       wx.setNavigationBarColor({
         frontColor:'#ffffff',
-        // backgroundColor:'#d7d7d9'
         backgroundColor:'#E2DCCE'
       });
       wx.setNavigationBarTitle({
@@ -388,7 +386,6 @@ Page({
         url: `/pages/details/details?id=${id}&my=${my}`
       })
     }
-    
   },
   gotoMsg () {
     let that = this;

@@ -66,7 +66,6 @@ Page({
     } else {
       type = that.data.type;
     }
-    // let type = that.data.type;
     let page1 = that.data.page1;
     let page2 = that.data.page2;
     let getQuesData1 = {
@@ -163,8 +162,7 @@ Page({
       },
       fail() {
         Api.wxShowToast('分享失败', 'none', 2000);
-      },
-      complete() {}
+      }
     }
   },
   changeTab (e) {
@@ -201,7 +199,6 @@ Page({
         answerData.choose = 1;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          // 投票成功后
           if (status === 201) {
             that.setData({showThumb: true})
             setTimeout(()=>{
@@ -232,7 +229,6 @@ Page({
         answerData.choose = 2;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          // 投票成功后
           if (status === 201) {
             that.setData({showThumb: true})
             setTimeout(()=>{
@@ -263,7 +259,6 @@ Page({
         answerData.choose = 1;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          // 投票成功后
           if (status === 201) {
             that.setData({showThumb: true})
             setTimeout(()=>{
@@ -294,7 +289,6 @@ Page({
         answerData.choose = 2;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          // 投票成功后
           if (status === 201) {
             that.setData({showThumb: true})
             setTimeout(()=>{

@@ -149,10 +149,7 @@ Page({
         });
       })
     }
-
   },
-  onPullDownRefresh: function () {},
-  onReachBottom: function () {},
   onShareAppMessage: function (res) {
     if (res.from === 'menu') {
       return {

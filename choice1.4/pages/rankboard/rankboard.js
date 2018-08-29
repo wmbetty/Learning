@@ -122,7 +122,7 @@ Page({
       Api.wxRequest(rankApi,'GET',{type:5,page:page5},(res)=>{
         if (res.data.status*1===200) {
           if (res.data.data.length===0) {
-            // 没有更多了
+            // no more
             that.setData({noList5:true})
           } else {
             list5 = list5.concat(res.data.data);
@@ -138,7 +138,7 @@ Page({
         Api.wxRequest(rankApi,'GET',{type:3,page:page3},(res)=>{
           if (res.data.status*1===200) {
             if (res.data.data.length===0) {
-              // 没有更多了
+              // no more
               that.setData({noList3:true})
             } else {
               list3 = list3.concat(res.data.data);
@@ -153,7 +153,7 @@ Page({
         Api.wxRequest(rankApi,'GET',{type:4,page:page4},(res)=>{
           if (res.data.status*1===200) {
             if (res.data.data.length===0) {
-              // 没有更多了
+              // no more
               that.setData({noList4:true})
             } else {
               list4 = list4.concat(res.data.data);
@@ -170,7 +170,7 @@ Page({
         Api.wxRequest(rankApi,'GET',{type:1,page:page1},(res)=>{
           if (res.data.status*1===200) {
             if (res.data.data.length===0) {
-              // 没有更多了
+              // no more
               that.setData({noList1:true})
             } else {
               list1 = list1.concat(res.data.data);
@@ -185,7 +185,7 @@ Page({
         Api.wxRequest(rankApi,'GET',{type:2,page:page2},(res)=>{
           if (res.data.status*1===200) {
             if (res.data.data.length===0) {
-              // 没有更多了
+              // no more
               that.setData({noList2:true})
             } else {
               list2 = list2.concat(res.data.data);
@@ -205,8 +205,9 @@ Page({
       success() {
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
-      fail() {},
-      complete() {}
+      fail() {
+        Api.wxShowToast('分享失败~', 'none', 2000);
+      }
     }
   },
   changeTab (e) {
@@ -281,7 +282,7 @@ Page({
       that.setData({showDialog: true});
     }
   },
-  // 去问题详情
+  // details
   goQuesDetails (e) {
     let that = this;
     let id = e.currentTarget.dataset.id;
