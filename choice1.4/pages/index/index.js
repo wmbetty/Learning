@@ -388,11 +388,9 @@ Page({
       })
     }
     if (direct==='left') {
-      // console.log('left focusss')
       that.setData({showLeftNum: true,showRightNum:false})
     }
     if (direct==='right') {
-      // console.log('right focusss')
       that.setData({showRightNum: true,showLeftNum:false})
     }
   },
@@ -890,8 +888,7 @@ Page({
           })
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
-        fail() {},
-        complete() {}
+        fail() {}
       }
     } else {
       return {
@@ -903,8 +900,9 @@ Page({
             // console.log(res, 'friends')
           })
         },
-        fail() {},
-        complete() {}
+        fail() {
+          Api.wxShowToast('分享成功~', 'none', 2000);
+        }
       }
     }
   },

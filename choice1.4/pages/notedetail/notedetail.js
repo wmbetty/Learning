@@ -18,7 +18,6 @@ Page({
     let titleRed = '';
     let opLeftRed = '';
     let opRightRed = '';
-    console.log(msg, item)
     that.setData({
       item: item
     });

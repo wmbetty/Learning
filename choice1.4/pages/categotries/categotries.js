@@ -62,7 +62,6 @@ Page({
             wx.hideLoading();
             let totalPage1 = res.header['X-Pagination-Page-Count'];
             that.setData({topicList1: res.data.data, showContent:true,totalPage1:totalPage1})
-
           } else {
             wx.hideLoading();
             Api.wxShowToast('问题数据获取失败~', 'none', 2000)
@@ -76,7 +75,6 @@ Page({
             Api.wxShowToast('问题数据获取失败~', 'none', 2000)
           }
         })
-
       } else {
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
@@ -132,9 +130,8 @@ Page({
       success() {
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
-      fail() {},
-      complete() {
-
+      fail() {
+        Api.wxShowToast('分享失败~', 'none', 2000);
       }
     }
   },

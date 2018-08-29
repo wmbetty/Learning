@@ -370,8 +370,9 @@ Page({
         })
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
-      fail() {},
-      complete() {}
+      fail() {
+        Api.wxShowToast('分享成功~', 'none', 2000);
+      }
     }
   },
   onPageScroll (e) {
@@ -406,7 +407,6 @@ Page({
       };
 
       Api.wxRequest(shareApi,'POST',postData,(res)=>{
-        console.log(res.data.data.url,'friends');
         if (res.data.status*1===201) {
           that.setData({shareFriImg:res.data.data.url})
         }
@@ -456,7 +456,6 @@ Page({
     Api.wxShowModal('', '删除后不可恢复，是否确认删除？', true, (res) => {
       if (res.confirm) {
         Api.wxRequest(deleMyQues,'DELETE',{},(res)=>{
-          // console.log(res,' DELETE')
           if (res.data.status*1 === 200) {
             Api.wxShowToast('删除成功', 'none', 2000);
             setTimeout(()=> {
@@ -544,8 +543,6 @@ shareToMoment () {
         let showThumb = that.data.showThumb;
         Api.wxRequest(answerApi+token,'POST',answerData,(res)=>{
           let status = res.data.status*1;
-          console.log(res.data, 'choose');
-          // 
           if (status === 201) {
             if (!showThumb) {
               details.hots = res.data.data.hots;

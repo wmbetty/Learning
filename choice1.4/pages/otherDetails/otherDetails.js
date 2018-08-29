@@ -338,7 +338,6 @@ Page({
       qid: that.data.details.id
     };
     Api.wxRequest(shareApi,'POST',postData,(res)=>{
-      console.log(res.data.data.url,'friends');
       if (res.data.status*1===201) {
         that.setData({shareFriImg:res.data.data.url})
       }
@@ -480,7 +479,6 @@ shareToMoment () {
               hasVoted: true
             });
             Api.wxRequest(watchQuesApi,'POST',{qid: res.data.data.id}, (res)=> {
-              console.log(res, 'ssss')
             });
             // 请求通知消息
             let msgTotalApi = backApi.msgUnreadTotal+token

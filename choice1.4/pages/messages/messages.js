@@ -154,21 +154,16 @@ Page({
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
-    // let that = this;
-    // let token = that.data.token;
-    // let shareFriends = backApi.shareFriends+'?access-token='+token;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
         path: `/pages/gcindex/gcindex`,
         success() {
-          // Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          //   console.log(res, 'friends')
-          // })
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
-        fail() {},
-        complete() {}
+        fail() {
+          Api.wxShowToast('分享成功~', 'none', 2000);
+        }
       }
     }
   },

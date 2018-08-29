@@ -27,7 +27,7 @@ page {background:#f4f4f8;position:relative}
 .share-toast-head {display:flex;flex-direction:row-reverse}
 .share-close {width:60rpx;height:60rpx;margin:30rpx 30rpx 0 0}
 .share-infos {text-align:center;margin:50rpx 0 48rpx;color:#343434;font-size:60rpx}
-.share-content {width:600rpx;height:200rpx;color:#888;font-size:40rpx;text-align:center;background:rgba(87,107,149,0.04);margin:0 auto;padding:12rpx 20rpx;display:flex;justify-content:center;align-items:center;position:relative;word-break:break-all}
+.share-content {width:600rpx;height:200rpx;color:#888;font-size:36rpx;text-align:center;background:rgba(87,107,149,0.04);margin:0 auto;padding:12rpx 20rpx;display:flex;justify-content:center;align-items:center;position:relative;word-break:break-all}
 .triangle-down {position:absolute;left:46%;bottom:-30rpx;width:0;height:0;border-left:28rpx solid transparent;border-right:28rpx solid transparent;border-top:34rpx solid #f3f4f7}
 .share-btn-box {padding:68rpx 116rpx 60rpx;display:flex;justify-content:space-between}
 .share-btn {width:152rpx;height:152rpx}

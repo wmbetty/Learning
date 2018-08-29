@@ -25,7 +25,7 @@
                         </view>
                         <view class="head-right">
                             <view class="comment-box" data-qid="{{item.id}}" bindtap="gotoDetail">
-                                <image src="../../images/main_commicon.png" class="comm-icon"></image>
+                                <image src="../../images/topic_commicon.png" class="comm-icon"></image>
                                 <view wx:if="{{item.total_comment}}">{{item.total_comment}}</view>
                             </view>
                             <view class="hot-box">
@@ -85,7 +85,7 @@
                         </view>
                         <view class="head-right">
                             <view class="comment-box" data-qid="{{item.id}}" bindtap="gotoDetail">
-                                <image src="../../images/main_commicon.png" class="comm-icon"></image>
+                                <image src="../../images/topic_commicon.png" class="comm-icon"></image>
                                 <view wx:if="{{item.total_comment}}">{{item.total_comment}}</view>
                             </view>
                             <view class="hot-box">

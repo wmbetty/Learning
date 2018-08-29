@@ -171,7 +171,6 @@ Page({
     if (userInfo.id) {
       // 获取token
       backApi.getToken().then(function(response){
-        console.log(response, 'ss')
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
           that.setData({token: token});
@@ -182,7 +181,7 @@ Page({
           let noTopQuesApi = backApi.noTopQues+token;
           let page = that.data.page;
           let notopPage = that.data.notopPage;
-          // 取首页数据
+
           Api.wxRequest(backApi.questions+token, 'GET', {page: page}, (res)=>{
             let status = res.data.status*1;
             if (status===200) {
@@ -335,8 +334,9 @@ Page({
         success() {
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
-        fail() {},
-        complete() {}
+        fail() {
+          Api.wxShowToast('分享失败~', 'none', 2000);
+        }
       }
     } else {
       return {
@@ -349,8 +349,9 @@ Page({
             // console.log(res, 'friends')
           })
         },
-        fail() {},
-        complete() {}
+        fail() {
+          Api.wxShowToast('分享失败~', 'none', 2000);
+        }
       }
 
     }
@@ -631,7 +632,6 @@ Page({
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
       Api.wxRequest(shareApi,'POST',postData,(res)=>{
-        console.log(res.data.data.url,'friends');
         if (res.data.status*1===201) {
           that.setData({shareFriImg:res.data.data.url})
         }

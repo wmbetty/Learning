@@ -30,7 +30,6 @@ Page({
     let questId = wx.getStorageSync('quesid');
     let topicId = options.topicId;
     let tptitle = options.tptitle;
-    console.log(tptitle, 'eee')
     let cid = options.cid;
     let cname = options.cname;
     let isMain = options.isMain;
@@ -96,7 +95,8 @@ Page({
         let categoryListApi = backApi.categoryListApi+token;
         let topicListApi = backApi.topicListApi+token;
         that.setData({token: token});
-        Api.wxRequest(bannerApi,'GET',{},(res)=>{
+
+        getBanner(bannerApi).then(function (res) {
           if (res.data.status*1===201) {
             wx.hideLoading();
             that.setData({bannerList: res.data.data,showPage: true})
@@ -104,24 +104,22 @@ Page({
             wx.hideLoading();
             Api.wxShowToast('轮播图获取失败~', 'none', 2000)
           }
-        });
-        Api.wxRequest(categoryListApi,'GET',{},(res)=>{
+        })
+
+        getCategory(categoryListApi).then(function (res) {
           if (res.data.status*1===201) {
             let category = res.data.data;
             that.setData({categoryList: category})
           } else {
             Api.wxShowToast('分类获取失败~', 'none', 2000)
           }
-        });
-        Api.wxRequest(topicListApi,'GET',{page: that.data.page},(res)=>{
-          if (res.data.status*1===200) {
-            let totalPage = res.header['X-Pagination-Page-Count'];
-            let topic = res.data.data;
-            that.setData({topicList: topic,totalPage: totalPage,showContent:true})
-          } else {
-            Api.wxShowToast('话题获取失败~', 'none', 2000)
-          }
         })
+
+        getTopicList(topicListApi,that.data.page).then(function (res) {
+          let totalPage = res.header['X-Pagination-Page-Count'];
+          let topic = res.data.data;
+          that.setData({topicList: topic,totalPage: totalPage,showContent:true})
+        });
       } else {
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
@@ -206,12 +204,12 @@ Page({
     if (page>totalPage) {
       that.setData({noList: true})
     } else {
-      Api.wxRequest(topicListApi,'GET',{page: page},(res)=>{
+      getTopicList(topicListApi,page).then(function (res) {
         if (res.data.status*1===200) {
           topicList = topicList.concat(res.data.data);
           that.setData({topicList: topicList,page: page})
         } else {
-          Api.wxShowToast('话题获取失败~', 'none', 2000)
+          Api.wxShowToast('获取更多话题失败~', 'none', 2000)
         }
       })
     }
@@ -223,8 +221,9 @@ Page({
       success() {
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
-      fail() {},
-      complete() {}
+      fail() {
+        Api.wxShowToast('分享失败~', 'none', 2000);
+      }
     }
   },
   cancelDialog () {
@@ -334,3 +333,40 @@ Page({
     },200)
   }
 })
+
+function getTopicList(api,page) {
+  return new Promise(function(resolve,reject){
+    Api.wxRequest(api,'GET',{page: page},(res)=>{
+      if (res.data.status*1===200) {
+        resolve(res)
+      } else {
+        Api.wxShowToast('话题获取失败~', 'none', 2000)
+        reject(res)
+      }
+    })
+  })
+}
+function getBanner(api) {
+  return new Promise(function(resolve,reject){
+    Api.wxRequest(api,'GET',{},(res)=>{
+      if (res.data.status*1===201) {
+        resolve(res)
+      } else {
+        Api.wxShowToast('轮播图获取失败~', 'none', 2000)
+        reject(res)
+      }
+    });
+  })
+}
+function getCategory(api) {
+  return new Promise(function(resolve,reject){
+    Api.wxRequest(api,'GET',{},(res)=>{
+      if (res.data.status*1===201) {
+        resolve(res)
+      } else {
+        Api.wxShowToast('分类获取失败~', 'none', 2000)
+        reject(res)
+      }
+    });
+  })
+}

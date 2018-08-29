@@ -39,7 +39,6 @@ Page({
           title: '加载中',
         });
         Api.wxRequest(commentApi,'GET',{page:1},(res)=> {
-          // console.log(res, 'sssss')
           if (res.data.status*1===200) {
             wx.hideLoading();
             let totalPage = res.header['X-Pagination-Page-Count'];
