@@ -419,7 +419,6 @@ Page({
                         that.setData({baseRedDot: 1});
                       }
                       Api.wxShowToast('授权成功，可进行操作了', 'none', 2000);
-
                       wx.showLoading({
                         title: '加载中',
                       });

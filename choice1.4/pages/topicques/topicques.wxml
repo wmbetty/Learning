@@ -26,11 +26,11 @@
                         <view class="head-right">
                             <view class="comment-box" data-qid="{{item.id}}" bindtap="gotoDetail">
                                 <image src="../../images/topic_commicon.png" class="comm-icon"></image>
-                                <view wx:if="{{item.total_comment}}">{{item.total_comment}}</view>
+                                <view>{{item.total_comment}}</view>
                             </view>
                             <view class="hot-box">
                                 <view class="hot-icon"></view>
-                                <view wx:if="{{item.hots}}">{{item.hots}}</view>
+                                <view>{{item.hots}}</view>
                             </view>
                         </view>
                     </view>
@@ -86,11 +86,11 @@
                         <view class="head-right">
                             <view class="comment-box" data-qid="{{item.id}}" bindtap="gotoDetail">
                                 <image src="../../images/topic_commicon.png" class="comm-icon"></image>
-                                <view wx:if="{{item.total_comment}}">{{item.total_comment}}</view>
+                                <view>{{item.total_comment}}</view>
                             </view>
                             <view class="hot-box">
                                 <view class="hot-icon"></view>
-                                <view wx:if="{{item.hots}}">{{item.hots}}</view>
+                                <view>{{item.hots}}</view>
                             </view>
                         </view>
                     </view>
