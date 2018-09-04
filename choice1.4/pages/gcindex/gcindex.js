@@ -37,6 +37,7 @@ Page({
     let isIntro = options.isIntro;
     let actId = options.actId;
     let isUser = options.isUser;
+    let isReward = options.isReward;
 
     if (questId) {
       wx.navigateTo({
@@ -79,6 +80,11 @@ Page({
     if (isUser) {
       wx.navigateTo({
         url: '/pages/usercenter/usercenter'
+      })
+    }
+    if (isReward) {
+      wx.navigateTo({
+        url: '/pages/getprize/getprize'
       })
     }
     wx.setNavigationBarColor({

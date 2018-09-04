@@ -19,7 +19,8 @@
     "pages/activity/activity",
     "pages/categotries/categotries",
     "pages/rankboard/rankboard",
-    "pages/topicques/topicques"
+    "pages/topicques/topicques",
+    "pages/getprize/getprize"
   ],
   "window": {
     "backgroundTextStyle": "light",

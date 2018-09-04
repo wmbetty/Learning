@@ -17,12 +17,11 @@ Page({
     list2: [],
     showBotomText1: false,
     showBotomText2: false,
-    noList1: false,
-    noList2: false,
     showThumb: false,
     fixedTabHead: false,
     localUser:{},
-    showDialog: false
+    showDialog: false,
+    myNewTopicId: ''
   },
   onLoad: function (options) {
     let that = this;
@@ -34,6 +33,22 @@ Page({
     wx.setNavigationBarTitle({
       title: title
     });
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    });
+    let page1 = that.data.page1;
+    let page2 = that.data.page2;
+    let getQuesData1 = {
+      topic_id: tid,
+      type: 1,
+      page: page1
+    };
+    let getQuesData2 = {
+      topic_id: tid,
+      type: 2,
+      page: page2
+    };
     backApi.getToken().then(function(response) {
       if (response.data.status * 1 === 200) {
         let token = response.data.data.access_token;
@@ -45,47 +60,6 @@ Page({
             Api.wxShowToast('话题详情获取失败~', 'none', 2000)
           }
         });
-      } else {
-        Api.wxShowToast('token获取失败~', 'none', 2000)
-      }
-    })
-  },
-  onReady: function () {},
-  onShow: function () {
-    let that = this;
-    let userInfo = wx.getStorageSync('userInfo');
-    that.setData({localUser: userInfo});
-    let type = '';
-    let myNewTopic = wx.getStorageSync('myNewTopic');
-    setTimeout(()=>{
-      wx.setStorageSync('myNewTopic', '');
-    },200);
-    if (myNewTopic) {
-      type = 2;
-      that.setData({type: 2})
-    } else {
-      type = that.data.type;
-    }
-    let page1 = that.data.page1;
-    let page2 = that.data.page2;
-    let getQuesData1 = {
-      topic_id: tid,
-      type: type,
-      page: page1
-    };
-    let getQuesData2 = {
-      topic_id: tid,
-      type: 2,
-      page: page2
-    };
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    });
-    backApi.getToken().then(function(response) {
-      if (response.data.status * 1 === 200) {
-        let token = response.data.data.access_token;
-        that.setData({token: token});
         let topicQuesApi = backApi.topicQues+token;
         Api.wxRequest(topicQuesApi,'GET',getQuesData1,(res)=>{
           if (res.data.status*1===200) {
@@ -101,7 +75,7 @@ Page({
         Api.wxRequest(topicQuesApi,'GET',getQuesData2,(res)=>{
           if (res.data.status*1===200) {
             let totalPage2 = res.header['X-Pagination-Page-Count'];
-            that.setData({list2: res.data.data,totalPage2:totalPage2})
+            that.setData({list2: res.data.data,totalPage2:totalPage2,showContent:true})
           } else {
             Api.wxShowToast('问题数据获取失败~', 'none', 2000)
           }
@@ -110,6 +84,36 @@ Page({
         Api.wxShowToast('token获取失败~', 'none', 2000)
       }
     })
+  },
+  onReady: function () {},
+  onShow: function () {
+    let that = this;
+    let list2 = that.data.list2;
+    let userInfo = wx.getStorageSync('userInfo');
+    that.setData({localUser: userInfo});
+    let type = '';
+    let myNewTopicId = wx.getStorageSync('myNewTopicId');
+    if (myNewTopicId) {
+      type = 2;
+      that.setData({type: type, myNewTopicId: myNewTopicId})
+    }
+    if (list2.length>0 && myNewTopicId) {
+      let detailUrl = backApi.quesDetail+myNewTopicId;
+      Api.wxRequest(detailUrl,'GET',{},(res)=>{
+        if (res.data.data.id) {
+          if (res.data.data.status*1===4) {
+            Api.wxShowToast('该话题已被删', 'none', 3000);
+          } else {
+            that.setData({item: res.data.data});
+            setTimeout(()=>{
+              wx.setStorageSync('myNewTopicId','');
+            },3000)
+          }
+        } else {
+          Api.wxShowToast('网络错误，请重试', 'none', 2000);
+        }
+      });
+    }
   },
   onPullDownRefresh: function () {},
   onReachBottom: function () {

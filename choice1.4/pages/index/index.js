@@ -615,6 +615,7 @@ Page({
           }
           if (status === 201) {
             publishedPoint = res.data.data.member.points;
+            wx.setStorageSync('myNewTopicId', res.data.data.id);
             wx.hideLoading();
             if (publishedPoint===myPoint) {
               Api.wxShowToast('发布成功', 'success', 2000);
@@ -769,6 +770,7 @@ Page({
             }
             if (status === 201) {
               publishedPoint = res.data.data.member.points;
+              wx.setStorageSync('myNewTopicId', res.data.data.id);
               wx.hideLoading();
               that.setData({showClickBtn: false});
               if (publishedPoint===myPoint) {
@@ -859,18 +861,18 @@ Page({
       hasUserInfo: true,
       isToastCancle: true
     });
-    if (prevPage==='pages/topicques/topicques') {
-      wx.setStorageSync('myNewTopic', '1');
-      wx.navigateBack({
-        delta: 1
-      })
-    } else {
-      setTimeout(()=>{
+    setTimeout(()=>{
+      if (prevPage==='pages/topicques/topicques') {
+        wx.setStorageSync('myNewTopic', '1');
+        wx.navigateBack({
+          delta: 1
+        })
+      } else {
         wx.reLaunch({
           url: `/pages/mine/mine`
         })
-      },300)
-    }
+      }
+    },300)
   },
   onShareAppMessage (res) {
     let that = this;

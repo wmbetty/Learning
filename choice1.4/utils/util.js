@@ -61,6 +61,8 @@ const topicDetail = `${http}v1/topic/`
 const topicQues = `${http}v1/topic/question?access-token=`
 const rankApi = `${http}v1/ranking?access-token=`
 const activityApi = `${http}v1/activity/`
+const rewardItemApi = `${http}v1/reward?access-token=`
+const lotteryApi = `${http}v1/reward/lottery?access-token=`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -127,5 +129,7 @@ module.exports = {
   topicDetail: topicDetail,
   topicQues: topicQues,
   rankApi: rankApi,
-  activityApi: activityApi
+  activityApi: activityApi,
+  rewardItemApi: rewardItemApi,
+  lotteryApi: lotteryApi
 }

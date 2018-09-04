@@ -32,7 +32,6 @@ Page({
   onPullDownRefresh: function () {},
   onReachBottom: function () {},
   onShareAppMessage: function (res) {
-    let that = this;
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
@@ -40,9 +39,8 @@ Page({
         success() {
           Api.wxShowToast('分享成功~', 'none', 2000);
         },
-        fail() {},
-        complete() {
-
+        fail() {
+          Api.wxShowToast('分享失败~', 'none', 2000);
         }
       }
     }
@@ -107,7 +105,7 @@ Page({
             wx.navigateBack({
               delta: 1
             })
-          }, 600)
+          }, 2000)
         }
       })
     } else {

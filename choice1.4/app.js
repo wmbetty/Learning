@@ -10,8 +10,7 @@ App({
     getUserInfo: null,
     userbase: 1
   },
-  onLaunch: function () {
-  },
+  onLaunch: function () {},
   onShow (options) {
     // wx.login({
     //   success: function(res) {

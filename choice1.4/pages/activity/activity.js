@@ -18,9 +18,9 @@ Page({
         Api.wxRequest(activityApi,'GET',{},(res)=>{
           if (res.data.status*1===200) {
             that.setData({activity: res.data.data})
-            wx.setNavigationBarTitle({
-              title: res.data.data.title
-            });
+            // wx.setNavigationBarTitle({
+            //   title: res.data.data.title
+            // });
           } else {
             Api.wxShowToast('活动获取失败~', 'none', 2000)
           }
@@ -35,13 +35,18 @@ Page({
   onReachBottom: function () {},
   onShareAppMessage: function () {
     let that = this;
+    let img = that.data.activity.share_url || '';
+    let title = that.data.activity.title || '活动专题';
     return {
-      title: '活动',
+      title: title,
       path: `/pages/gcindex/gcindex?actId=${that.data.actId}`,
+      imageUrl: `${img}`,
       success() {
         Api.wxShowToast('分享成功~', 'none', 2000);
       },
-      fail() {},
+      fail() {
+        Api.wxShowToast('分享失败~', 'none', 2000);
+      },
       complete() {}
     }
   },
