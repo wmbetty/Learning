@@ -2,6 +2,7 @@ const backApi = require('../../utils/util');
 const Api = require('../../wxapi/wxApi');
 let qid = '';
 let isComment = false;
+const app = getApp();
 
 Page({
   data: {
@@ -37,7 +38,8 @@ Page({
     commentList: [],
     toastText:'评论最多可输入80字符~',
     isWeToast: false,
-    nomoreList:true
+    nomoreList:true,
+    audit: ''
   },
   cancelDialog () {
     let that = this;
@@ -65,8 +67,9 @@ Page({
               backApi.getToken().then(function(response){
                 if (response.data.status*1===200) {
                   let token = response.data.data.access_token;
+                  let audit = response.data.data.status;
                   let userInfoApi = backApi.userInfo+token;
-                  that.setData({token: token});
+                  that.setData({token: token, audit: audit});
                   Api.wxRequest(userInfoApi,'POST',userData,(res)=> {
                     if (res.data.status*1===200) {
                       wx.setStorageSync('userInfo', res.data.data);
@@ -195,7 +198,8 @@ Page({
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
-          that.setData({token: token});
+          let audit = response.data.data.status;
+          that.setData({token: token, audit: audit});
           let detailUrl = backApi.quesDetail+qid;
           let myChooseTagApi = backApi.myChooseTagApi+token;
           let commentApi = backApi.commentApi+token;
@@ -256,7 +260,8 @@ Page({
       backApi.getToken().then(function(response) {
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
-          that.setData({token: token,showDialog: true});
+          let audit = response.data.data.status;
+          that.setData({token: token,showDialog: true, audit: audit});
         } else {
           Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
         }
@@ -295,6 +300,11 @@ Page({
     let questId = that.data.quesId;
     let shareFriends = backApi.shareFriends+'?access-token='+token;
     let friend_img_url = that.data.details.friend_img_url || '';
+    app.tdsdk.share({
+      title: '查看-'+that.data.details.question,
+      path: `/pages/gcindex/gcindex?qid=${questId}`
+    });
+
     return {
       title: that.data.details.question,
       path: `/pages/gcindex/gcindex?qid=${questId}`,
@@ -478,6 +488,10 @@ shareToMoment () {
             that.setData({
               hasVoted: true
             });
+            app.tdsdk.event({
+              id: 'odvote',
+              label: `问题详情页投票`
+            });
             Api.wxRequest(watchQuesApi,'POST',{qid: res.data.data.id}, (res)=> {
             });
             // 请求通知消息
@@ -575,6 +589,7 @@ shareToMoment () {
   publishComment () {
     let that = this;
     let token = that.data.token;
+    let audit = that.data.audit;
     let pid = that.data.pid;
     let content = that.data.content;
     let commentApi = backApi.commentApi+token;
@@ -597,28 +612,32 @@ shareToMoment () {
       } else {
         postData = {qid: qid,content:content}
       }
-      Api.wxRequest(commentApi,'POST',postData,(res)=>{
-        let status = res.data.status*1;
-        if (status===201) {
-          wx.showLoading({
-            title:'发表中'
-          });
-          let item = res.data.data;
-          setTimeout(()=>{
+      if (audit === 'audit') {
+        Api.wxShowToast('检测违禁词中，暂时无法提交', 'none', 2000);
+      } else {
+        Api.wxRequest(commentApi,'POST',postData,(res)=>{
+          let status = res.data.status*1;
+          if (status===201) {
+            wx.showLoading({
+              title:'发表中'
+            });
+            let item = res.data.data;
+            setTimeout(()=>{
+              wx.hideLoading();
+              commentList.unshift(item);
+              that.setData({commentList:commentList,showInput:false,inputVal:'',content:'',isRed:false});
+              if (idx==='') {
+                details.total_comment = details.total_comment*1+1;
+                that.setData({details:details});
+              }
+              Api.wxShowToast('评论成功', 'none', 2000);
+            },1000)
+          } else {
             wx.hideLoading();
-            commentList.unshift(item);
-            that.setData({commentList:commentList,showInput:false,inputVal:'',content:'',isRed:false});
-            if (idx==='') {
-              details.total_comment = details.total_comment*1+1;
-              that.setData({details:details});
-            }
-            Api.wxShowToast('评论成功', 'none', 2000);
-          },1000)
-        } else {
-          wx.hideLoading();
-          Api.wxShowToast(res.data.msg, 'none', 2000);
-        }
-      });
+            Api.wxShowToast(res.data.msg, 'none', 2000);
+          }
+        })
+      }
     }
   },
   // 获取键盘高度

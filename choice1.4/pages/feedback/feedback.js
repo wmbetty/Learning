@@ -10,7 +10,8 @@ Page({
     content: '',
     contVal: '',
     submitDis: false,
-    token: ''
+    token: '',
+    audit: ''
   },
   onLoad: function (options) {
     wx.setNavigationBarColor({
@@ -21,7 +22,8 @@ Page({
     backApi.getToken().then(function(response) {
       if (response.data.status*1===200) {
         let token = response.data.data.access_token;
-        that.setData({token: token});
+        let audit = response.data.data.status;
+        that.setData({token: token, audit: audit});
       } else {
         Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000);
       }
@@ -53,7 +55,7 @@ Page({
     } else {
       this.setData({mobile: val})
     }
-    
+
   },
   putAdvice (e) {
     let that = this;
@@ -78,36 +80,41 @@ Page({
     let textNum = this.data.textNum;
     let token = that.data.token;
     let feedApi = backApi.feedback+token;
+    let audit = that.data.audit;
     let feedData = {
       content: that.data.content,
       mobile: that.data.mobile
     }
-    
+
     if (textNum) {
       that.setData({
         submitDis: true
       })
-      Api.wxRequest(feedApi,'POST',feedData,(res)=> {
-        that.setData({
-          isSubmit: false
-        })
-        wx.showLoading({
-          title: '提交中',
-          mask: true
-        });
-        if (res.data.status*1===201 && res.data.data.id) {
-          wx.hideLoading();
+      if (audit === 'audit') {
+        Api.wxShowToast('检测违禁词中，暂时无法提交', 'none', 2000);
+      } else {
+        Api.wxRequest(feedApi,'POST',feedData,(res)=> {
           that.setData({
-            submitDis: false
+            isSubmit: false
           })
-          Api.wxShowToast('感谢你的建议，小象会及时跟进哟~', 'none', 2200);
-          setTimeout(()=> {
-            wx.navigateBack({
-              delta: 1
+          wx.showLoading({
+            title: '提交中',
+            mask: true
+          });
+          if (res.data.status*1===201 && res.data.data.id) {
+            wx.hideLoading();
+            that.setData({
+              submitDis: false
             })
-          }, 2000)
-        }
-      })
+            Api.wxShowToast('感谢你的建议，小象会及时跟进哟~', 'none', 2200);
+            setTimeout(()=> {
+              wx.navigateBack({
+                delta: 1
+              })
+            }, 2000)
+          }
+        })
+      }
     } else {
       Api.wxShowToast('填写建议反馈后方能提交哦', 'none', 2000);
     }

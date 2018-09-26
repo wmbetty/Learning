@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/gcindex/gcindex",
+    "pages/main/main",
+    "pages/messages/messages",
+    "pages/index/index",
+    "pages/mine/mine",
+    "pages/others/others",
+    "pages/votemsg/votemsg",
+    "pages/sysnotice/sysnotice",
+    "pages/details/details",
+    "pages/otherDetails/otherDetails",
+    "pages/feedback/feedback",
+    "pages/notedetail/notedetail",
+    "pages/usercenter/usercenter",
+    "pages/commentmsg/commentmsg",
+    "pages/saveposter/saveposter",
+    "pages/gcintro/gcintro",
+    "pages/activity/activity",
+    "pages/categotries/categotries",
+    "pages/rankboard/rankboard",
+    "pages/topicques/topicques",
+    "pages/getprize/getprize"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#E64340",
+    "backgroundColor": "#F5F6F8",
+    "navigationBarTitleText": "选象",
+    "navigationBarTextStyle": "#F5F6F8"
+  }
+}

@@ -62,5 +62,5 @@
         </view>
     </view>
 </view>
-<dialog-wxml dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
+<dialog-wxml catchtouchmove="ture" dialog-show="{{showDialog}}" bind:cancelDialog="cancelDialog" bind:confirmDialog="confirmDialog"></dialog-wxml>
 <template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount,baseRedDot,commentTotal}}"/>

@@ -134,40 +134,15 @@ Page({
   onReady: function () {},
   onShow: function () {
     let that = this;
-    backApi.getToken().then(function(response) {
-      if (response.data.status*1===200) {
-        let token = response.data.data.access_token;
-        that.setData({token: token});
-        let voteUnreadApi = backApi.voteUnreadApi+token;
-        let msgTotalApi = backApi.msgUnreadTotal+token;
-        let commTotalApi = backApi.commentUnreadApi+token;
-        // 获取投票信息
-        Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            if (res.data.data.vote) {
-              that.setData({voteUnreadCount: res.data.data.vote});
-            }
-          }
-        });
-        // 获取通知数量
-        Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            let msgTotal = res.data.data.total;
-            if (msgTotal) {
-              that.setData({msgCount: msgTotal});
-            }
-          }
-        });
-        // 获取评论数量
-        Api.wxRequest(commTotalApi,'GET',{},(res)=>{
-          if (res.data.status*1===200) {
-            let commentTotal = res.data.data.total;
-            if (commentTotal) {
-              that.setData({commentTotal: commentTotal});
-            }
-          }
-        });
-        setInterval(()=>{
+    let userInfo = wx.getStorageSync('userInfo');
+    if (userInfo.id) {
+      backApi.getToken().then(function(response) {
+        if (response.data.status*1===200) {
+          let token = response.data.data.access_token;
+          that.setData({token: token});
+          let voteUnreadApi = backApi.voteUnreadApi+token;
+          let msgTotalApi = backApi.msgUnreadTotal+token;
+          let commTotalApi = backApi.commentUnreadApi+token;
           // 获取投票信息
           Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
             if (res.data.status*1===200) {
@@ -194,11 +169,43 @@ Page({
               }
             }
           });
-        },8000)
-      } else {
-        Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
-      }
-    })
+          setInterval(()=>{
+            // 获取投票信息
+            Api.wxRequest(voteUnreadApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                if (res.data.data.vote) {
+                  that.setData({voteUnreadCount: res.data.data.vote});
+                }
+              }
+            });
+            // 获取通知数量
+            Api.wxRequest(msgTotalApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                let msgTotal = res.data.data.total;
+                if (msgTotal) {
+                  that.setData({msgCount: msgTotal});
+                }
+              }
+            });
+            // 获取评论数量
+            Api.wxRequest(commTotalApi,'GET',{},(res)=>{
+              if (res.data.status*1===200) {
+                let commentTotal = res.data.data.total;
+                if (commentTotal) {
+                  that.setData({commentTotal: commentTotal});
+                }
+              }
+            });
+          },8000)
+        } else {
+          Api.wxShowToast('网络出错了，请稍后再试哦~', 'none', 2000)
+        }
+      })
+    } else {
+      setTimeout(()=>{
+        that.setData({showDialog: true})
+      }, 1500)
+    }
   },
   onPullDownRefresh: function () {},
   onReachBottom: function () {
@@ -221,6 +228,11 @@ Page({
     }
   },
   onShareAppMessage: function () {
+    app.tdsdk.share({
+      title: '首页分享选象',
+      path: `/pages/gcindex/gcindex`
+    });
+
     return {
       title: '选象 让选择简单点',
       path: `/pages/gcindex/gcindex`,
@@ -280,6 +292,10 @@ Page({
         app.aldstat.sendEvent(`用户在首页点击了-${title}-这个分类`,{
           play : ""
         });
+        app.tdsdk.event({
+          id: 'detail',
+          label: '查看分类'
+        });
         wx.navigateTo({
           url: `/pages/categotries/categotries?title=${title}&id=${cid}`
         })
@@ -295,6 +311,10 @@ Page({
       if (userInfo.id) {
         app.aldstat.sendEvent(`用户在首页点击了排行榜`,{
           play : ""});
+        app.tdsdk.event({
+          id: 'rank',
+          label: '查看排行'
+        });
         wx.navigateTo({
           url: `/pages/rankboard/rankboard`
         })
@@ -310,6 +330,10 @@ Page({
       if (userInfo.id) {
         let link = e.currentTarget.dataset.link;
         if (link) {
+          app.tdsdk.event({
+            id: 'banner',
+            label: `查看首页banner`
+          });
           wx.navigateTo({
             url: link
           })
@@ -329,6 +353,10 @@ Page({
       if (userInfo.id) {
         app.aldstat.sendEvent(`用户在首页点击了-${title}-这个话题`,{
           play : ""
+        });
+        app.tdsdk.event({
+          id: 'topic',
+          label: `查看-${title}-话题`
         });
         wx.navigateTo({
           url: `/pages/topicques/topicques?id=${tid}&title=${title}`

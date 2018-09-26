@@ -1,0 +1,35 @@
+page{background: #fff;position: relative}
+.banner-cont{
+    width: 750rpx;height: 320rpx;margin: 0 auto;background: #f1f1f1;
+}
+.banner-cont image{display: block;width: 100%;height: 100%;background: #f1f1f1;}
+.ques-tab-head{
+    width: 750rpx;height: 64rpx;margin: 0 auto;padding: 16rpx 0;
+}
+.flex-space-cont{display: flex;justify-content: space-between;}
+.tab-head-item{width: 50%;height: 100%;font-size: 36rpx;color: #999;text-align: center;}
+.black-line{
+    width: 80rpx;height: 10rpx;background: #343434;margin: 8rpx auto 0;
+}
+.tab-active{color: #343434;}
+.ques-tab-content{padding: 40rpx 30rpx 0;}
+.ques-list-item{margin-bottom: 40rpx;}
+.ques-user-info{
+    display: flex;align-items: center;color: #62559D;font-size: 28rpx;
+}
+.user-avatar{
+    width: 48rpx;height: 48rpx;border-radius:50%;border:2rpx solid #efefef;
+    background: #efefef;margin-right: 12rpx;
+}
+.ques-cont{
+    width: 650rpx;min-height: 56rpx;border-radius: 10rpx;margin: 16rpx auto 0;
+    background: #F5F6F8;font-size: 40rpx;color: #343434;word-break: break-all;
+}
+.ques-title{padding: 40rpx;}
+.tab-content-empty{padding-top:80rpx;margin-bottom:140rpx}
+.list-botom-btn{
+    font-size: 32rpx;color: #11B591;background: #F5F6F8;margin: 0 auto;border-radius: 10rpx;
+    width: 656rpx;height: 100rpx;display: flex;align-items: center;justify-content: center;
+}
+.tab-content-item{padding-bottom: 40rpx;}
+.tab-head-fixed{position: fixed;width: 100%;left: 0;top: 0;background: #fff;z-index: 999}
