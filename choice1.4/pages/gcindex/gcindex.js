@@ -101,7 +101,14 @@ Page({
         let categoryListApi = backApi.categoryListApi+token;
         let topicListApi = backApi.topicListApi+token;
         that.setData({token: token});
-
+        // let status = response.data.data.status;
+        // if (status === 'audit-1.4.8') {
+        //   wx.redirectTo({
+        //     url: '/pages/gcintro/gcintro'
+        //   })
+        // } else {
+        //
+        // }
         getBanner(bannerApi).then(function (res) {
           if (res.data.status*1===201) {
             wx.hideLoading();

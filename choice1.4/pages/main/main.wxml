@@ -91,7 +91,7 @@
                 </button>
                 <view wx:if="{{showShare}}" class="wechat-item-box" hover-stop-propagation="true" catchtap="shareToMoment">
                     <image src="../../images/moment_icon.png" class="wechat-icon moment-icon"/>
-                    <view class="wechat-text">生成朋友圈海报</view>
+                    <view class="wechat-text">生成海报</view>
                 </view>
             </view>
             <view class="cancel-btn" catchtap="cancelShare">取消</view>
@@ -105,4 +105,3 @@
     <text wx:if="{{!isEmpty}}" class="up-icon no-active" style="top:{{viewHeight-88}}px;"></text>
 
 <template is="tabBar" data="{{tabBar:bindData.tabBar,msgCount,voteUnreadCount,baseRedDot,commentTotal}}"/>
-

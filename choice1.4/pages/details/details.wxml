@@ -131,7 +131,7 @@
             </button>
             <view class="wechat-item-box" catchtap="shareToMoment">
                 <image src="../../images/moment_icon.png" class="wechat-icon" style="margin-top:-5px;" />
-                <view class="wechat-text">生成朋友圈海报</view>
+                <view class="wechat-text">生成海报</view>
             </view>
         </view>
         <view class="delete-btn" wx:if="{{isDelete}}" bindtap="deleteChoice">删除</view>

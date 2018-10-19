@@ -15,7 +15,6 @@ const app = getApp();
 
 Page({
   data: {
-    audit: '',
     prevPage: '',
     categoryList: [],
     showCateList: false,
@@ -200,8 +199,6 @@ Page({
                 backApi.getToken().then(function (response) {
                   if (response.data.status * 1 === 200) {
                     let token = response.data.data.access_token;
-                    let audit = response.data.data.status;
-                    that.setData({token: token, audit: audit});
                     let userInfoApi = backApi.userInfo+token;
                     let myInfo = backApi.myInfo+token;
                     Api.wxRequest(myInfo,'GET',{},(res)=>{
@@ -302,12 +299,10 @@ Page({
         if (response.data.status*1===200) {
           let token = response.data.data.access_token;
           let categoryListApi = backApi.categoryListApi+token;
-          let audit = response.data.data.status;
           that.setData({
             showDialog: true,
             hasUserInfo: false,
-            token: token,
-            audit: audit
+            token: token
           })
           Api.wxRequest(categoryListApi,'GET',{},(res)=>{
             if (res.data.status*1===201) {
@@ -329,8 +324,7 @@ Page({
         console.log(response, 'ssss');
         if (response.data.status * 1 === 200) {
           let token = response.data.data.access_token;
-          let audit = response.data.data.status;
-          that.setData({token: token, audit: audit});
+          that.setData({token: token});
           let myInfo = backApi.myInfo+token;
           let categoryListApi = backApi.categoryListApi+token;
           Api.wxRequest(myInfo,'GET',{},(res)=>{
@@ -554,7 +548,6 @@ Page({
     let token = that.data.token;
     let isPublish = that.data.isPublish;
     let shareApi = backApi.shareApi+token;
-    let audit = that.data.audit;
 
     if (txtActive) { //上传文字
       if (that.data.titleText === '点击输入标题' && that.data.leftText === '' && that.data.rightText === '') {
@@ -587,18 +580,47 @@ Page({
       });
       if (isPublish) {
         that.setData({showClickBtn: true});
-        if (audit === 'audit') {
-          Api.wxShowToast('检测违禁词中，暂时无法提交', 'none', 2000);
-        } else {
-          Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
-            wx.showLoading({
-              title: '发布中',
-              mask: true
+        Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+          wx.showLoading({
+            title: '发布中',
+            mask: true
+          });
+          let status = res.data.status*1;
+          if (status===200) {
+            wx.hideLoading();
+            Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
+            that.setData({
+              qid: res.data.data.id,
+              showToast: false,
+              leftHolder: '点击输入左选项',
+              rightHolder: '点击输入右选项',
+              titleText: '点击输入标题',
+              leftText: '',
+              rightText: '',
+              isPublish: false,
+              showTextarea: false,
+              showLeft: false,
+              showRight: false,
+              showTitleNum: false,
+              showLeftNum: false,
+              showRightNum: false
             });
-            let status = res.data.status*1;
-            if (status===200) {
-              wx.hideLoading();
-              Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
+            // 2s后消失
+            setTimeout(() => {
+              that.setData({
+                showToast: false,
+                hasUserInfo: false,
+                isShare: true,
+                btnDis: false
+              });
+            }, 2000)
+          }
+          if (status === 201) {
+            publishedPoint = res.data.data.member.points;
+            wx.setStorageSync('myNewTopicId', res.data.data.id);
+            wx.hideLoading();
+            if (publishedPoint===myPoint) {
+              Api.wxShowToast('发布成功', 'success', 2000);
               that.setData({
                 qid: res.data.data.id,
                 showToast: false,
@@ -623,17 +645,23 @@ Page({
                   isShare: true,
                   btnDis: false
                 });
-              }, 2000)
-            }
-            if (status === 201) {
-              publishedPoint = res.data.data.member.points;
-              wx.setStorageSync('myNewTopicId', res.data.data.id);
-              wx.hideLoading();
-              if (publishedPoint===myPoint) {
-                Api.wxShowToast('发布成功', 'success', 2000);
+              }, 2000);
+              setTimeout(()=>{
+                let postData = {
+                  type: 'friend',
+                  qid: res.data.data.id
+                };
+                Api.wxRequest(shareApi,'POST',postData,(res)=>{
+                  if (res.data.status*1===201) {
+                    that.setData({shareFriImg:res.data.data.url})
+                  }
+                });
+              },2100)
+            } else {
+              setTimeout(()=> {
                 that.setData({
                   qid: res.data.data.id,
-                  showToast: false,
+                  showToast: true,
                   leftHolder: '点击输入左选项',
                   rightHolder: '点击输入右选项',
                   titleText: '点击输入标题',
@@ -647,74 +675,35 @@ Page({
                   showLeftNum: false,
                   showRightNum: false
                 });
-                // 2s后消失
-                setTimeout(() => {
-                  that.setData({
-                    showToast: false,
-                    hasUserInfo: false,
-                    isShare: true,
-                    btnDis: false
-                  });
-                }, 2000);
-                setTimeout(()=>{
-                  let postData = {
-                    type: 'friend',
-                    qid: res.data.data.id
-                  };
-                  Api.wxRequest(shareApi,'POST',postData,(res)=>{
-                    if (res.data.status*1===201) {
-                      that.setData({shareFriImg:res.data.data.url})
-                    }
-                  });
-                },2100)
-              } else {
-                setTimeout(()=> {
-                  that.setData({
-                    qid: res.data.data.id,
-                    showToast: true,
-                    leftHolder: '点击输入左选项',
-                    rightHolder: '点击输入右选项',
-                    titleText: '点击输入标题',
-                    leftText: '',
-                    rightText: '',
-                    isPublish: false,
-                    showTextarea: false,
-                    showLeft: false,
-                    showRight: false,
-                    showTitleNum: false,
-                    showLeftNum: false,
-                    showRightNum: false
-                  });
 
-                }, 300);
-                // 2s后消失
-                setTimeout(() => {
-                  that.setData({
-                    showToast: false,
-                    hasUserInfo: false,
-                    isShare: true,
-                    btnDis: false
-                  });
-                }, 2000);
-                setTimeout(()=>{
-                  let postData = {
-                    type: 'friend',
-                    qid: res.data.data.id
-                  };
-                  Api.wxRequest(shareApi,'POST',postData,(res)=>{
-                    if (res.data.status*1===201) {
-                      that.setData({shareFriImg:res.data.data.url})
-                    }
-                  });
-                },2100)
-              }
-              app.tdsdk.event({
-                id: 'publish',
-                label: '发布问题'
-              });
+              }, 300);
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true,
+                  btnDis: false
+                });
+              }, 2000);
+              setTimeout(()=>{
+                let postData = {
+                  type: 'friend',
+                  qid: res.data.data.id
+                };
+                Api.wxRequest(shareApi,'POST',postData,(res)=>{
+                  if (res.data.status*1===201) {
+                    that.setData({shareFriImg:res.data.data.url})
+                  }
+                });
+              },2100)
             }
-          })
-        }
+            app.tdsdk.event({
+              id: 'publish',
+              label: '发布问题'
+            });
+          }
+        })
       } else {
         Api.wxShowToast('请填写完整哦', 'none', 2000);
       }
@@ -749,18 +738,49 @@ Page({
             topic_id: that.data.topic_id
           };
           that.setData({showClickBtn: true});
-          if (audit === 'audit') {
-            Api.wxShowToast('检测违禁词中，暂时无法提交', 'none', 2000);
-          } else {
-            Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
-              wx.showLoading({
-                title: '发布中',
-                mask: true
+          Api.wxRequest(publishApi+token,'POST',postData,(res)=>{
+            wx.showLoading({
+              title: '发布中',
+              mask: true
+            });
+            let status = res.data.status*1;
+            if (status===200) {
+              wx.hideLoading();
+              Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
+              that.setData({
+                qid: res.data.data.id,
+                showToast: false,
+                isPublish: false,
+                showTitleNum: false
               });
-              let status = res.data.status*1;
-              if (status===200) {
-                wx.hideLoading();
-                Api.wxShowToast('手速太快了吧，休息60分钟吧', 'none', 2000);
+              // 2s后消失
+              setTimeout(() => {
+                that.setData({
+                  showToast: false,
+                  hasUserInfo: false,
+                  isShare: true,
+                  btnDis: false
+                });
+              }, 2000);
+              setTimeout(()=>{
+                let postData = {
+                  type: 'friend',
+                  qid: res.data.data.id
+                };
+                Api.wxRequest(shareApi,'POST',postData,(res)=>{
+                  if (res.data.status*1===201) {
+                    that.setData({shareFriImg:res.data.data.url})
+                  }
+                });
+              },2100)
+            }
+            if (status === 201) {
+              publishedPoint = res.data.data.member.points;
+              wx.setStorageSync('myNewTopicId', res.data.data.id);
+              wx.hideLoading();
+              that.setData({showClickBtn: false});
+              if (publishedPoint===myPoint) {
+                Api.wxShowToast('发布成功', 'success', 2000);
                 that.setData({
                   qid: res.data.data.id,
                   showToast: false,
@@ -787,83 +807,48 @@ Page({
                     }
                   });
                 },2100)
-              }
-              if (status === 201) {
-                publishedPoint = res.data.data.member.points;
-                wx.setStorageSync('myNewTopicId', res.data.data.id);
-                wx.hideLoading();
-                that.setData({showClickBtn: false});
-                if (publishedPoint===myPoint) {
-                  Api.wxShowToast('发布成功', 'success', 2000);
+              } else {
+                setTimeout(()=> {
                   that.setData({
                     qid: res.data.data.id,
-                    showToast: false,
+                    showToast: true,
                     isPublish: false,
                     showTitleNum: false
                   });
-                  // 2s后消失
-                  setTimeout(() => {
-                    that.setData({
-                      showToast: false,
-                      hasUserInfo: false,
-                      isShare: true,
-                      btnDis: false
-                    });
-                  }, 2000);
-                  setTimeout(()=>{
-                    let postData = {
-                      type: 'friend',
-                      qid: res.data.data.id
-                    };
-                    Api.wxRequest(shareApi,'POST',postData,(res)=>{
-                      if (res.data.status*1===201) {
-                        that.setData({shareFriImg:res.data.data.url})
-                      }
-                    });
-                  },2100)
-                } else {
-                  setTimeout(()=> {
-                    that.setData({
-                      qid: res.data.data.id,
-                      showToast: true,
-                      isPublish: false,
-                      showTitleNum: false
-                    });
 
-                  }, 300)
-                  // 2s后消失
-                  setTimeout(() => {
-                    that.setData({
-                      showToast: false,
-                      hasUserInfo: false,
-                      isShare: true,
-                      btnDis: false
-                    });
-                  }, 2000);
-                  setTimeout(()=>{
-                    let postData = {
-                      type: 'friend',
-                      qid: res.data.data.id
-                    };
-                    Api.wxRequest(shareApi,'POST',postData,(res)=>{
-                      if (res.data.status*1===201) {
-                        that.setData({shareFriImg:res.data.data.url})
-                      }
-                    });
-                  },2100)
-                }
-                app.tdsdk.event({
-                  id: 'publish',
-                  label: '发布问题'
-                });
+                }, 300)
+                // 2s后消失
+                setTimeout(() => {
+                  that.setData({
+                    showToast: false,
+                    hasUserInfo: false,
+                    isShare: true,
+                    btnDis: false
+                  });
+                }, 2000);
+                setTimeout(()=>{
+                  let postData = {
+                    type: 'friend',
+                    qid: res.data.data.id
+                  };
+                  Api.wxRequest(shareApi,'POST',postData,(res)=>{
+                    if (res.data.status*1===201) {
+                      that.setData({shareFriImg:res.data.data.url})
+                    }
+                  });
+                },2100)
               }
-              if (status === 444) {
-                wx.hideLoading();
-                that.setData({showClickBtn: false});
-                Api.wxShowToast('出错了，请稍后再试哦', 'none', 2000);
-              }
-            })
-          }
+              app.tdsdk.event({
+                id: 'publish',
+                label: '发布问题'
+              });
+            }
+            if (status === 444) {
+              wx.hideLoading();
+              that.setData({showClickBtn: false});
+              Api.wxShowToast('出错了，请稍后再试哦', 'none', 2000);
+            }
+          })
         },2600)
       } else {
         Api.wxShowToast('请提交完整信息哦', 'none', 2000);

@@ -15,9 +15,9 @@ const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
-const http = "https://fabu.choosen.604f.cn/"
+// const http = "https://fabu.choosen.604f.cn/"
 // fabu.choosen.79643.com
-// const http = "https://choosen.79643.com/"
+const http = "https://choosen.79643.com/"
 const login = `${http}v1/member/login`
 const questop = `${http}v1/questions/top?access-token=`
 const noTopQues = `${http}v1/questions?access-token=`
@@ -64,6 +64,7 @@ const rankApi = `${http}v1/ranking?access-token=`
 const activityApi = `${http}v1/activity/`
 const rewardItemApi = `${http}v1/reward?access-token=`
 const lotteryApi = `${http}v1/reward/lottery?access-token=`
+const miniprogramApi = `${http}v1/miniprogram`
 
 function getToken(){
   return new Promise(function(resolve,reject){
@@ -132,5 +133,6 @@ module.exports = {
   rankApi: rankApi,
   activityApi: activityApi,
   rewardItemApi: rewardItemApi,
-  lotteryApi: lotteryApi
+  lotteryApi: lotteryApi,
+  miniprogramApi: miniprogramApi
 }
