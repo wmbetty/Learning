@@ -301,28 +301,7 @@ Page({
               Api.wxShowToast('网络错误，请重试', 'none', 2000);
             }
           });
-          // Api.wxRequest(myChooseTagApi,'GET',{qid:qid},(res)=> {
-          //
-          //   if (res.data === '') {
-          //     that.setData({
-          //       ismyVoted: false
-          //     })
-          //   }
-          //   if (res.data.status*1===200) {
-          //     that.setData({
-          //       ismyVoted: true
-          //     })
-          //     if (res.data.data.choose*1===1) {
-          //       that.setData({
-          //         isLeft: true
-          //       })
-          //     } else {
-          //       that.setData({
-          //         isRight: true
-          //       })
-          //     }
-          //   }
-          // });
+
           // 获取评论列表
           getCommentList(commentApi,qid,page,that);
 
@@ -370,19 +349,14 @@ Page({
       path: `/pages/gcindex/gcindex?qid=${questId}`
     });
 
+    Api.wxRequest(shareFriends,'POST',{},(res)=>{
+      // console.log(res, 'friends')
+    })
+
     return {
       title: that.data.details.question,
       path: `/pages/gcindex/gcindex?qid=${questId}`,
-      imageUrl: shareFriImg?shareFriImg:'',
-      success() {
-        Api.wxRequest(shareFriends,'POST',{},(res)=>{
-          // console.log(res, 'friends')
-        })
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      }
+      imageUrl: shareFriImg?shareFriImg:''
     }
   },
   onPageScroll (e) {
@@ -502,10 +476,6 @@ shareToMoment () {
     let that = this;
     let userInfo = wx.getStorageSync('userInfo');
     if (userInfo.id) {
-      // let userInfoApi = backApi.userInfo+that.data.token;
-      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-      //   that.setData({uInfo:res.data.data})
-      // })
       that.setData({uInfo:userInfo})
 
       let hasVoted = that.data.hasVoted;
@@ -658,10 +628,8 @@ shareToMoment () {
     let idx = e.currentTarget.dataset.index;
     let commList = that.data.commentList;
     if (userInfo.id) {
-      that.setData({uInfo:userInfo})
-      // Api.wxRequest(userInfoApi,'PUT',userInfo,(res)=> {
-      //   that.setData({uInfo:res.data.data})
-      // });
+      that.setData({uInfo:userInfo});
+
       let praiseApi = backApi.praiseApi+token;
       Api.wxRequest(praiseApi,'GET',{cid:cid},(res)=>{
         let status = res.data.status*1;

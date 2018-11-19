@@ -96,26 +96,11 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        success() {
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        },
-        fail() {},
-        complete() {
-
-        }
+        path: `/pages/gcindex/gcindex`
       }
     }
   },
-  onPageScroll () {
-    // wx.setNavigationBarTitle({
-    //   title: "消息"
-    // })
-    // wx.setNavigationBarColor({
-    //   frontColor:'#ffffff',
-    //   backgroundColor:'#E64340'
-    // })
-  },
+  onPageScroll () {},
   // 到他人中心
   gotoOthers (e) {
     let that = this;

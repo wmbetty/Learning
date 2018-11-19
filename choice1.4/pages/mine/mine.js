@@ -328,13 +328,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        success() {
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        },
-        fail() {
-          Api.wxShowToast('分享失败~', 'none', 2000);
-        }
+        path: `/pages/gcindex/gcindex`
       }
     }
   },
@@ -343,7 +337,7 @@ Page({
     if (e.scrollTop*1>=that.data.viewHeight*1/3) {
       wx.setNavigationBarColor({
         frontColor:'#ffffff',
-        backgroundColor:'#E64340'  
+        backgroundColor:'#E64340'
       });
       wx.setNavigationBarTitle({
         title: "我"
@@ -396,6 +390,5 @@ Page({
     wx.navigateTo({
       url: `/pages/messages/messages`
     })
-
   }
 })

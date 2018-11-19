@@ -11,7 +11,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.0.8",
+	"libVersion": "2.4.0",
 	"appid": "wx9fec8c5f7b92b271",
 	"projectname": "GC1.4",
 	"condition": {
@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 19,
+			"current": 21,
 			"list": [
 				{
 					"id": -1,
@@ -151,7 +151,19 @@
 				{
 					"id": -1,
 					"name": "applist",
-					"pathName": "pages/applist/applist"
+					"pathName": "pages/applist/applist",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "test",
+					"pathName": "pages/test/test",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "首页",
+					"pathName": "pages/gcindex/gcindex"
 				}
 			]
 		}

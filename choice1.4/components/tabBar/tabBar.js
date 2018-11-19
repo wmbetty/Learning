@@ -1,8 +1,5 @@
 // components/tabBar/tabBar.js
 Component({
-  /**
-   * 组件的属性列表
-   */
   properties: {
     msgCount: {
       type: Number,
@@ -27,14 +24,14 @@ function tabbarinit() {
   return [
       { "current":0,
         "pagePath": "/pages/gcindex/gcindex",
-        "iconPath": "/images/gcindex.png",
-        "selectedIconPath": "/images/gcindex_act.png",
+        "iconPath": "/images/main.png",
+        "selectedIconPath": "/images/main_act.png",
         "text": "首页"
       },
        { "current":0,
          "pagePath": "/pages/main/main",
-         "iconPath": "/images/main.png",
-         "selectedIconPath": "/images/main_act.png",
+         "iconPath": "/images/gcindex.png",
+         "selectedIconPath": "/images/gcindex_act.png",
          "text": "广场"
        },
        {
@@ -70,7 +67,7 @@ function tabbarinit() {
    bindData[bindName] = otabbar
    that.setData({ bindData });
  }
- 
+
  module.exports = {
    tabbar: tabbarmain
  }

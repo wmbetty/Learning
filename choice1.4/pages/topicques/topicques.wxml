@@ -50,7 +50,7 @@
                     <view class="flex-space-cont list-item-options">
                         <view class="options-container" bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="{{item.is_vote*1 !== 0 ?'options-item green-bg bg-opacity':'options-item green-bg'}}">{{item.option1}}</view>
-                            <image class="{{item.type*1===2 && item.option1_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option1}}" />
+                            <image class="{{item.type*1===2 && item.option1_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option1}}" mode="aspectFill" />
                             <image wx:if="{{item.type*1===2 && item.option1_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
                             <view wx:if="{{item.showMask}}" class="vote-mask">
                                 <view class="{{item.choose_left?'vote-selected':''}}"><text class="show-number">{{item.choose1_per}}%</text></view>
@@ -58,7 +58,7 @@
                         </view>
                         <view class="options-container" bindtap="gotoVote" data-direct="right" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="{{item.is_vote*1 !== 0 ?'options-item purple-bg bg-opacity':'options-item purple-bg'}}">{{item.option2}}</view>
-                            <image class="{{item.type*1===2 && item.option2_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option2}}" />
+                            <image class="{{item.type*1===2 && item.option2_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option2}}" mode="aspectFill" />
                             <image wx:if="{{item.type*1===2 && item.option2_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
                             <view wx:if="{{item.showMask}}" class="vote-mask">
                                 <view class="{{item.choose_right?'vote-selected':''}}"><text class="show-number">{{item.choose2_per}}%</text></view>
@@ -111,7 +111,7 @@
                     <view class="flex-space-cont list-item-options">
                         <view class="options-container" bindtap="gotoVote" data-direct="left" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="{{item.is_vote*1 !== 0 ?'options-item green-bg bg-opacity':'options-item green-bg'}}">{{item.option1}}</view>
-                            <image class="{{item.type*1===2 && item.option1_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option1}}" />
+                            <image class="{{item.type*1===2 && item.option1_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option1}}" mode="aspectFill" />
                             <image wx:if="{{item.type*1===2 && item.option1_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
                             <view wx:if="{{item.showMask}}" class="vote-mask">
                                 <view class="{{item.choose_left?'vote-selected':''}}"><text class="show-number">{{item.choose1_per}}%</text></view>
@@ -119,7 +119,7 @@
                         </view>
                         <view class="options-container" bindtap="gotoVote" data-direct="right" data-index="{{index}}" data-item="{{item}}">
                             <view wx:if="{{item.type*1===1}}" class="{{item.is_vote*1 !== 0 ?'options-item purple-bg bg-opacity':'options-item purple-bg'}}">{{item.option2}}</view>
-                            <image class="{{item.type*1===2 && item.option2_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option2}}" />
+                            <image class="{{item.type*1===2 && item.option2_check_status*1===3?'options-item-img delay-img':'options-item-img'}}" wx:if="{{item.type*1===2}}" src="{{item.option2}}" mode="aspectFill" />
                             <image wx:if="{{item.type*1===2 && item.option2_check_status*1===3}}" src="../../images/hexie.png" class="hexie-img" />
                             <view wx:if="{{item.showMask}}" class="vote-mask">
                                 <view class="{{item.choose_right?'vote-selected':''}}"><text class="show-number">{{item.choose2_per}}%</text></view>

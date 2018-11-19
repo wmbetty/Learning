@@ -154,13 +154,7 @@ Page({
     if (res.from === 'menu') {
       return {
         title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        success() {
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        },
-        fail() {
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        }
+        path: `/pages/gcindex/gcindex`
       }
     }
   },

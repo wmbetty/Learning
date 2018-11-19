@@ -359,11 +359,13 @@ Page({
     }
   },
   contFocus (e) {
+    console.log(0)
     let that = this;
     let title = that.data.titleText;
     let direct = e.target.dataset.direct;
     let leftHolder = that.data.leftHolder;
     let rightHolder = that.data.rightHolder;
+    let emptyStr = '';
     that.setData({pagePad: true});
     if (direct === 'left' && leftHolder === '点击输入左选项') {
       if (title==='') {
@@ -374,7 +376,7 @@ Page({
       }
       that.setData({
         showLeft: true,
-        leftHolder: ''
+        leftHolder: emptyStr
       })
     }
     if (direct === 'right' && rightHolder === '点击输入右选项') {
@@ -386,7 +388,7 @@ Page({
       }
       that.setData({
         showRight: true,
-        rightHolder: ''
+        rightHolder: emptyStr
       })
     }
     if (direct==='left') {
@@ -892,34 +894,26 @@ Page({
     let shareFriImg = that.data.shareFriImg || '';
 
     if (res.from === 'menu') {
+      Api.wxRequest(shareFriends,'POST',{},(res)=>{
+        // console.log(res, 'friends')
+      })
+
       return {
         title: '选象 让选择简单点',
-        path: `/pages/gcindex/gcindex`,
-        success() {
-          Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            // console.log(res, 'friends')
-          })
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        },
-        fail() {}
+        path: `/pages/gcindex/gcindex`
       }
     } else {
       app.tdsdk.share({
         title: '分享刚发布问题'+that.data.shareTitle,
         path: `/pages/gcindex/gcindex?qid=${questId}`
       });
+      Api.wxRequest(shareFriends,'POST',{},(res)=>{
+        // console.log(res, 'friends')
+      })
       return {
         title: that.data.shareTitle,
         path: `/pages/gcindex/gcindex?qid=${questId}`,
-        imageUrl: shareFriImg?shareFriImg:'',
-        success() {
-          Api.wxRequest(shareFriends,'POST',{},(res)=>{
-            // console.log(res, 'friends')
-          })
-        },
-        fail() {
-          Api.wxShowToast('分享成功~', 'none', 2000);
-        }
+        imageUrl: shareFriImg?shareFriImg:''
       }
     }
   },
@@ -1063,12 +1057,6 @@ Page({
     that.setData({
       showCateList: false,hasUserInfo: true
     })
-    // let choseBtnText = that.data.choseBtnText;
-    // setTimeout(()=>{
-    //   if (choseBtnText === '选择分类') {
-    //     that.setData({choseBtnText: '其他分类'})
-    //   }
-    // },200)
   },
   chooseCate (e) {
     let that = this;

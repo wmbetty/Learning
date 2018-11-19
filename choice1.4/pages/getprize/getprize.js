@@ -147,14 +147,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: '参与抽奖',
-      path: `/pages/gcindex/gcindex?isReward=1`,
-      success() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {
-        Api.wxShowToast('分享失败~', 'none', 2000);
-      },
-      complete() {}
+      path: `/pages/gcindex/gcindex?isReward=1`
     }
   }
 })

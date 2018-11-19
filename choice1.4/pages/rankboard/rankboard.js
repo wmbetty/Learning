@@ -201,13 +201,7 @@ Page({
   onShareAppMessage: function () {
     return {
       title: '排行榜',
-      path: `/pages/gcindex/gcindex?isRank=1`,
-      success() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {
-        Api.wxShowToast('分享失败~', 'none', 2000);
-      }
+      path: `/pages/gcindex/gcindex?isRank=1`
     }
   },
   changeTab (e) {

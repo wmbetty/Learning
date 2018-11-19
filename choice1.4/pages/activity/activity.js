@@ -47,14 +47,7 @@ Page({
     return {
       title: title,
       path: `/pages/gcindex/gcindex?actId=${that.data.actId}`,
-      imageUrl: `${img}`,
-      success() {
-        Api.wxShowToast('分享成功~', 'none', 2000);
-      },
-      fail() {
-        Api.wxShowToast('分享失败~', 'none', 2000);
-      },
-      complete() {}
+      imageUrl: `${img}`
     }
   },
   gotoJoin () {

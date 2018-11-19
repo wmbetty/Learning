@@ -161,13 +161,7 @@ Page({
     let that = this;
     return {
       title: that.data.pageTitle,
-      path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}&tptitle=${that.data.pageTitle}`,
-      success() {
-        Api.wxShowToast('分享成功', 'none', 2000);
-      },
-      fail() {
-        Api.wxShowToast('分享失败', 'none', 2000);
-      }
+      path: `/pages/gcindex/gcindex?topicId=${that.data.topicId}&tptitle=${that.data.pageTitle}`
     }
   },
   changeTab (e) {
