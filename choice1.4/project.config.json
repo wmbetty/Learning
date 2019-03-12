@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 21,
+			"current": 20,
 			"list": [
 				{
 					"id": -1,
@@ -155,7 +155,7 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 20,
 					"name": "test",
 					"pathName": "pages/test/test",
 					"query": ""
@@ -163,7 +163,8 @@
 				{
 					"id": -1,
 					"name": "首页",
-					"pathName": "pages/gcindex/gcindex"
+					"pathName": "pages/gcindex/gcindex",
+					"query": ""
 				}
 			]
 		}

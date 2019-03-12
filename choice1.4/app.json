@@ -21,7 +21,8 @@
     "pages/rankboard/rankboard",
     "pages/topicques/topicques",
     "pages/getprize/getprize",
-    "pages/applist/applist"
+    "pages/applist/applist",
+    "pages/test/test"
   ],
   "window": {
     "backgroundTextStyle": "light",
